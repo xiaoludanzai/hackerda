@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.mapper.ext.CourseTimetableExtMapper">
+
+    <select id="selectByStudentRelative" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap"
+            parameterType="com.hackerda.platform.pojo.StudentCourseTimeTable">
+        select
+        course_timetable.id,
+        room_name,
+        room_number,
+        campus_name,
+        continuing_session,
+        course_id,
+        attend_class_teacher,
+        student_count,
+        class_day,
+        class_order,
+        start_week,
+        end_week,
+        class_in_school_week,
+        course_sequence_number,
+        week_description,
+        class_distinct,
+        course_timetable.term_year,
+        course_timetable.term_order,
+        gmt_create
+        from student_course_time_table
+
+        join course_timetable on student_course_time_table.course_timetable_id = course_timetable.id
+        <where>
+            <if test="studentId != null">
+                and student_id = #{studentId}
+            </if>
+            <if test="termYear != null">
+                and student_course_time_table.term_year = #{termYear}
+            </if>
+            <if test="termOrder != null">
+                and student_course_time_table.term_order = #{termOrder}
+            </if>
+        </where>
+
+    </select>
+    <select id="selectByClassRelative" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap"
+            parameterType="com.hackerda.platform.pojo.ClassCourseTimetable">
+        select
+        course_timetable.id,
+        room_name,
+        room_number,
+        campus_name,
+        continuing_session,
+        course_id,
+        attend_class_teacher,
+        student_count,
+        class_day,
+        class_order,
+        start_week,
+        end_week,
+        class_in_school_week,
+        course_sequence_number,
+        week_description,
+        class_distinct,
+        course_timetable.term_year,
+        course_timetable.term_order,
+        gmt_create
+        from class_course_timetable
+
+        join course_timetable on class_course_timetable.course_timetable_id = course_timetable.id
+        <where>
+            <if test="classId != null">
+                and class_id = #{classId}
+            </if>
+            <if test="termYear != null">
+                and class_course_timetable.term_year = #{termYear}
+            </if>
+            <if test="termOrder != null">
+                and class_course_timetable.term_order = #{termOrder}
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into course_timetable
+        (<include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=INTEGER},
+            #{item.roomName,jdbcType=VARCHAR},
+            #{item.roomNumber,jdbcType=VARCHAR},
+            #{item.campusName,jdbcType=VARCHAR},
+            #{item.continuingSession,jdbcType=INTEGER},
+            #{item.courseId,jdbcType=VARCHAR},
+            #{item.attendClassTeacher,jdbcType=VARCHAR},
+            #{item.studentCount,jdbcType=INTEGER},
+            #{item.classDay,jdbcType=INTEGER},
+            #{item.classOrder,jdbcType=INTEGER},
+            #{item.startWeek,jdbcType=INTEGER},
+            #{item.endWeek,jdbcType=INTEGER},
+            #{item.classInSchoolWeek,jdbcType=VARCHAR},
+            #{item.courseSequenceNumber,jdbcType=VARCHAR},
+            #{item.weekDescription,jdbcType=VARCHAR},
+            #{item.classDistinct,jdbcType=INTEGER},
+            #{item.termYear,jdbcType=CHAR},
+            #{item.termOrder,jdbcType=INTEGER},
+            #{item.gmtCreate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+
+    </insert>
+
+    <select id="selectBatch" parameterType="java.util.List" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap">
+        select
+        <include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/>
+        from
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            SELECT <include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/> FROM course_timetable
+            WHERE course_id = #{item.courseId,jdbcType=VARCHAR} and
+            class_day = #{item.classDay,jdbcType=INTEGER} and
+            class_order = #{item.classOrder,jdbcType=INTEGER} and
+            start_week = #{item.startWeek,jdbcType=INTEGER} and
+            end_week = #{item.endWeek,jdbcType=INTEGER} and
+            course_sequence_number = #{item.courseSequenceNumber,jdbcType=VARCHAR} and
+            term_year = #{item.termYear,jdbcType=CHAR} and
+            term_order = #{item.termOrder,jdbcType=INTEGER}
+        </foreach>
+        ) as ct
+
+    </select>
+</mapper>

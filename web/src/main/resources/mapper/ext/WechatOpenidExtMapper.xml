@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.mapper.ext.WechatOpenIdExtMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert  into wechat_openid
+        (<include refid="com.hackerda.platform.mapper.WechatOpenidMapper.Base_Column_List"/>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=INTEGER},
+            #{item.openid,jdbcType=VARCHAR},
+            #{item.account,jdbcType=INTEGER},
+            #{item.gmtCreate,jdbcType=TIMESTAMP},
+            #{item.gmtModified,jdbcType=TIMESTAMP},
+            #{item.isBind,jdbcType=BIT},
+            #{item.appid,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+
+    <select id="selectBySubscribe" parameterType="com.hackerda.platform.pojo.ScheduleTask" resultMap="com.hackerda.platform.mapper.WechatOpenidMapper.BaseResultMap">
+        select
+            wechat_openid.id, wechat_openid.openid, account,
+            wechat_openid.gmt_create, gmt_modified, is_bind,
+            wechat_openid.appid
+        from schedule_task
+
+        join wechat_openid on schedule_task.openid = wechat_openid.openid
+
+        <where>
+            <if test="appid != null">
+                and schedule_task.appid = #{appid}
+            </if>
+            <if test="isSubscribe != null">
+                and is_subscribe = #{isSubscribe}
+            </if>
+            <if test="scene != null">
+                and scene = #{scene}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

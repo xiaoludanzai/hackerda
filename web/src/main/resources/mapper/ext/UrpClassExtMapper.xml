@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.mapper.ext.UrpClassExtMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert ignore into urp_class
+        (id, admission_grade, class_num,
+        class_name, academy_name, academy_num,
+        subject_name, subject_num)
+                VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=INTEGER},
+            #{item.admissionGrade,jdbcType=VARCHAR},
+            #{item.classNum,jdbcType=VARCHAR},
+            #{item.className,jdbcType=VARCHAR},
+            #{item.academyName,jdbcType=VARCHAR},
+            #{item.academyNum,jdbcType=VARCHAR},
+            #{item.subjectName,jdbcType=VARCHAR},
+            #{item.subjectNum,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+</mapper>

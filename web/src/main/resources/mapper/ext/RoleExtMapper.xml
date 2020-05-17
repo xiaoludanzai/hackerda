@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.mapper.ext.RoleExtMapper">
+
+    <select id="selectPermissionById" resultMap="com.hackerda.platform.mapper.PermissionMapper.BaseResultMap">
+        select p.id, p.permission_name, p.permission_code
+        from role_permission rp
+                 join permission p on rp.permission_id = p.id
+        where rp.role_id = #{roleId}
+    </select>
+</mapper>

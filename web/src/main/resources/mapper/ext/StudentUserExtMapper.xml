@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.mapper.ext.StudentUserExtMapper">
+
+
+    <select id="selectRoleByAccount"  resultMap="com.hackerda.platform.mapper.RoleMapper.BaseResultMap">
+        select r.id, r.name, r.code
+        from student_role sr
+                 join role r on sr.role_id = r.id
+        where sr.account = #{account}
+
+    </select>
+</mapper>
