@@ -13,7 +13,7 @@ import com.hackerda.spider.predict.SchoolCaptchaPredictor;
 import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
-import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTableForSpider;
+import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import com.hackerda.spider.support.scheme.Scheme;
 import com.hackerda.spider.support.scheme.SchemeGradeItem;
 import org.apache.http.client.config.RequestConfig;
@@ -81,7 +81,7 @@ public class SpiderIntegrationTest {
     public void getUrpCourseTimeTable(){
 
 
-        UrpCourseTimeTableForSpider table = urpBaseSpider.getUrpCourseTimeTable();
+        UrpCourseTimeTable table = urpBaseSpider.getUrpCourseTimeTable();
 
         System.out.println(table);
     }

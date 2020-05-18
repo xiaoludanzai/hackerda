@@ -3,6 +3,7 @@ package com.hackerda.platform.service.wechat;
 import com.hackerda.platform.interceptor.WxMessageInterceptor;
 import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.platform.utils.ApplicationUtil;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxErrorExceptionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;

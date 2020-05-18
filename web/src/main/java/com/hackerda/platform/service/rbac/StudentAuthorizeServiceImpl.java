@@ -48,7 +48,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
      * @param enablePassword 密码
      * @return 学生信息
      */
-    public StudentUser studentLogin(String account, String enablePassword) throws PasswordUnCorrectException {
+    public StudentUser studentLogin(String account, String enablePassword) {
 
         StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
         if (student != null) {

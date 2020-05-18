@@ -5,9 +5,12 @@ import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.dao.*;
 import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
-import com.hackerda.platform.spider.newmodel.coursetimetable.UrpCourseTimeTable;
-import com.hackerda.platform.spider.newmodel.coursetimetable.UrpCourseTimeTableForSpider;
+
 import com.hackerda.platform.utils.DateUtils;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
+import com.hackerda.spider.exception.UrpRequestException;
+import com.hackerda.spider.support.coursetimetable.TimeAndPlace;
+import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -78,15 +81,15 @@ public class CourseTimeTableService {
 
     List<CourseTimeTableVo> getCourseTimeTableByStudentFromSpider(StudentUser student) {
         try {
-            CompletableFuture<UrpCourseTimeTableForSpider> future =
-                    CompletableFuture.supplyAsync(() -> getCourseTimeTableDetails(student), courseSpiderExecutor);
+            CompletableFuture<UrpCourseTimeTable> future =
+                    CompletableFuture.supplyAsync(() -> newUrpSpiderService.getUrpCourseTimeTable(student), courseSpiderExecutor);
 
-            UrpCourseTimeTableForSpider tableForSpider = future.get(3000L, TimeUnit.MILLISECONDS);
-            if (!hasSchoolCourse(tableForSpider)) {
+            UrpCourseTimeTable tableForSpider = future.get(3000L, TimeUnit.MILLISECONDS);
+            if (!tableForSpider.hasSchoolCourse()) {
                 return getCurrentTermCourseTimetableVOByClazz(student);
             } else {
 
-                List<CourseTimetable> list = tableForSpider.adaptToList();
+                List<CourseTimetable> list = adaptToList(tableForSpider);
                 list.forEach(x -> {
                     try {
                         UrpClassroom room = roomService.getClassRoomByName(x.getRoomName());
@@ -114,6 +117,46 @@ public class CourseTimeTableService {
         } catch (UrpRequestException | InterruptedException | ExecutionException | TimeoutException e) {
             return getCurrentTermCourseTimetableVOByClazz(student);
         }
+    }
+
+    private List<CourseTimetable> adaptToList(UrpCourseTimeTable tableForSpider){
+        return tableForSpider.getDetails()
+                .stream().flatMap(x -> x.values().stream()
+                        .map(course -> {
+                                    List<CourseTimetable> result = Lists.newArrayList();
+                                    String[] termYearAndTermOrder =
+                                            parseTermYearAndTermOrder(course.getCourseRelativeInfo().getExecutiveEducationPlanNumber());
+                                    for (TimeAndPlace timeAndPlace : course.getTimeAndPlaceList()) {
+                                        for (int[] weekArray : TimeAndPlace.parseWeek(timeAndPlace.getWeekDescription())) {
+                                            result.add(
+                                                    new CourseTimetable()
+                                                            .setTermYear(termYearAndTermOrder[0])
+                                                            .setTermOrder(Integer.parseInt(termYearAndTermOrder[1]))
+                                                            .setCourseId(timeAndPlace.getCourseNumber())
+                                                            .setCourseSequenceNumber(timeAndPlace.getCourseSequenceNumber())
+                                                            .setStartWeek(weekArray[0])
+                                                            .setEndWeek(weekArray[1])
+                                                            .setWeekDescription(timeAndPlace.getWeekDescription())
+                                                            .setClassOrder(timeAndPlace.getClassSessions())
+                                                            .setClassDay(timeAndPlace.getClassDay())
+                                                            .setAttendClassTeacher(course.getAttendClassTeacher())
+                                                            .setContinuingSession(timeAndPlace.getContinuingSession())
+                                                            .setCampusName(timeAndPlace.getCampusName())
+                                                            .setRoomName(timeAndPlace.getClassroomName())
+                                                            .setClassInSchoolWeek(timeAndPlace.getClassWeek()));
+                                        }
+                                    }
+                                    return result;
+                                }
+
+                        )).flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+    }
+
+    private String[] parseTermYearAndTermOrder(String executiveEducationPlanNumber) {
+        String[] results = executiveEducationPlanNumber.split("-");
+        return new String[]{results[0] + "-" + results[1], results[2]};
     }
 
     public List<CourseTimeTableVo> getCourseTimeTableByTeacherAccount(String account) {
@@ -169,25 +212,6 @@ public class CourseTimeTableService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 判断爬虫的返回结果是否只有网课
-     */
-    private boolean hasSchoolCourse(UrpCourseTimeTableForSpider tableForSpider) {
-        for (HashMap<String, UrpCourseTimeTable> table : tableForSpider.getDetails()) {
-            for (Map.Entry<String, UrpCourseTimeTable> entry : table.entrySet()) {
-                if (entry.getValue().getTimeAndPlaceList().size() != 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-
-    }
-
-
-    UrpCourseTimeTableForSpider getCourseTimeTableDetails(StudentUser student) {
-        return newUrpSpiderService.getUrpCourseTimeTable(student);
-    }
 
     private void saveRelative(List<Integer> needInsertIds, int account, String termYear, Integer termOrder) {
         for (Integer id : needInsertIds) {

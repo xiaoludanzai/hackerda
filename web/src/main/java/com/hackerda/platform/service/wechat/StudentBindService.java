@@ -10,6 +10,7 @@ import com.hackerda.platform.pojo.vo.StudentVo;
 import com.hackerda.platform.service.ClassService;
 import com.hackerda.platform.service.NewUrpSpiderService;
 import com.hackerda.platform.utils.DESUtil;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

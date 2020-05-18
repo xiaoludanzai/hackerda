@@ -11,6 +11,7 @@ import com.hackerda.platform.pojo.vo.StudentVo;
 import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.platform.service.TeachingEvaluationService;
 import com.hackerda.platform.service.wechat.StudentBindService;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpVerifyCodeException;
 import lombok.extern.slf4j.Slf4j;

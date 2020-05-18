@@ -4,9 +4,7 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.spider.NewUrpSpider;
-import com.hackerda.platform.spider.model.UrpStudentInfo;
 import com.hackerda.platform.spider.newmodel.SearchResult;
-import com.hackerda.platform.spider.newmodel.coursetimetable.UrpCourseTimeTableForSpider;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
@@ -24,8 +22,11 @@ import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.hackerda.platform.utils.DESUtil;
 import com.hackerda.spider.UrpBaseSpider;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.support.UrpGeneralGrade;
+import com.hackerda.spider.support.UrpStudentInfo;
+import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,9 +114,9 @@ public class NewUrpSpiderService {
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public UrpCourseTimeTableForSpider getUrpCourseTimeTable(StudentUser student) {
-        NewUrpSpider spider = getSpider(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        return spider.getUrpCourseTimeTable();
+    public UrpCourseTimeTable getUrpCourseTimeTable(StudentUser student) {
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        return baseSpider.getUrpCourseTimeTable();
     }
 
 
@@ -144,13 +145,13 @@ public class NewUrpSpiderService {
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public StudentUser getStudentUserInfo(String account, String password) {
-        NewUrpSpider spider = getSpider(account, password);
-        UrpStudentInfo urpStudentInfo = spider.getStudentInfo();
+        baseSpider.login(account, password);
+        UrpStudentInfo urpStudentInfo = baseSpider.getStudentInfo();
 
         StudentUser studentUser = new StudentUser();
         //首先将student原有字段赋给studentUser
         studentUser.setAccount(urpStudentInfo.getAccount());
-        studentUser.setPassword(DESUtil.encrypt(urpStudentInfo.getPassword(), account + key));
+        studentUser.setPassword(DESUtil.encrypt(password, account + key));
         studentUser.setName(urpStudentInfo.getName());
         studentUser.setSex(urpStudentInfo.getSex());
         studentUser.setEthnic(urpStudentInfo.getEthnic());

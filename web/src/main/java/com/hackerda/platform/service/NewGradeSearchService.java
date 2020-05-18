@@ -12,6 +12,8 @@ import com.hackerda.platform.pojo.vo.TermGradeVo;
 import com.hackerda.platform.spider.newmodel.grade.scheme.Scheme;
 import com.hackerda.platform.spider.newmodel.grade.scheme.SchemeGradeItem;
 import com.hackerda.platform.utils.DateUtils;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
+import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;

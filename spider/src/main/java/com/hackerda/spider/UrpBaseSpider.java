@@ -15,16 +15,14 @@ import com.hackerda.spider.predict.SchoolCaptchaPredictor;
 import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
-import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTableForSpider;
+import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Request;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.MDC;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -36,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Slf4j
-public class UrpBaseSpider {
+public class UrpBaseSpider implements UrpSpider{
 
     private final String ROOT = "http://xsurp.usth.edu.cn";
     /**
@@ -61,6 +59,8 @@ public class UrpBaseSpider {
 
     private final String COURSE_TIME_TABLE = ROOT + "/student/courseSelect/thisSemesterCurriculum/ajaxStudentSchedule/callback";
     private final String EXAM_TIME = ROOT + "/student/examinationManagement/examPlan/index";
+
+    private Runnable pswErrorCallback = null;
 
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ").omitEmptyStrings().trimResults();
 
@@ -159,14 +159,14 @@ public class UrpBaseSpider {
 
     }
 
-    public UrpCourseTimeTableForSpider getUrpCourseTimeTable() {
+    public UrpCourseTimeTable getUrpCourseTimeTable() {
 
         String result = getContent(COURSE_TIME_TABLE, null);
         String regex = "\"dateList\": [.*]}$";
         result = result.replaceAll(regex, "");
 
 
-        UrpCourseTimeTableForSpider tableForSpider = parseObject(result, UrpCourseTimeTableForSpider.class);
+        UrpCourseTimeTable tableForSpider = parseObject(result, UrpCourseTimeTable.class);
 
         tableForSpider.getDetails().stream()
                 .findFirst().flatMap(detail -> detail.entrySet().stream()
@@ -228,7 +228,6 @@ public class UrpBaseSpider {
         if (content != null) {
             RuntimeException exception = null;
             if (content.contains("badCaptcha")) {
-
                 exception = new UrpVerifyCodeException("verify code error");
             } else if (content.contains("badCredentials")) {
                 exception = new PasswordUnCorrectException("account: " + account);
@@ -239,6 +238,14 @@ public class UrpBaseSpider {
             }
 
             if(exception != null){
+                if(exception instanceof PasswordUnCorrectException && pswErrorCallback != null){
+                    try {
+                        pswErrorCallback.run();
+                    }catch (Throwable throwable){
+                        log.error("run callback error", throwable);
+                    }
+                }
+
                 cleanLoginInfo();
                 throw exception;
             }
@@ -262,6 +269,10 @@ public class UrpBaseSpider {
 
 
         return content;
+
+    }
+
+    public void setPasswordUnCorrectCallBack(Runnable runnable){
 
     }
 

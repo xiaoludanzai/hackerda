@@ -1,11 +1,9 @@
-package com.hackerda.platform.spider.newmodel.coursetimetable;
+package com.hackerda.spider.support.coursetimetable;
 
-import com.hackerda.platform.pojo.CourseTimeTableBasicInfo;
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.Plan;
-import com.hackerda.platform.spider.newmodel.CourseRelativeInfo;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import com.hackerda.spider.support.CourseRelativeInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
  * @date 2019/8/29 21:43
  */
 @Data
-public class UrpCourseTimeTable {
+public class UrpCourseTimeTableItem {
     /**
      * 任课教师
      */
@@ -106,43 +104,12 @@ public class UrpCourseTimeTable {
      */
     private String ywdgFlag;
 
-    /**
-     * 将学生的个人课表信息适配为课表的搜索结果，仅做查询使用。不存库
-     *
-     * @return
-     */
-    public List<CourseTimetable> adapterToCourseTimetable() {
-        List<CourseTimetable> result = Lists.newArrayList();
-        String[] termYearAndTermOrder = parseTermYearAndTermOrder(this.courseRelativeInfo.getExecutiveEducationPlanNumber());
-        for (TimeAndPlace timeAndPlace : timeAndPlaceList) {
-            for (int[] weekArray : TimeAndPlace.parseWeek(timeAndPlace.getWeekDescription())) {
-                result.add(
-                        new CourseTimetable()
-                                .setTermYear(termYearAndTermOrder[0])
-                                .setTermOrder(Integer.parseInt(termYearAndTermOrder[1]))
-                                .setCourseId(timeAndPlace.getCourseNumber())
-                                .setCourseSequenceNumber(timeAndPlace.getCourseSequenceNumber())
-                                .setStartWeek(weekArray[0])
-                                .setEndWeek(weekArray[1])
-                                .setWeekDescription(timeAndPlace.getWeekDescription())
-                                .setClassOrder(timeAndPlace.getClassSessions())
-                                .setClassDay(timeAndPlace.getClassDay())
-                                .setAttendClassTeacher(this.getAttendClassTeacher())
-                                .setContinuingSession(timeAndPlace.getContinuingSession())
-                                .setCampusName(timeAndPlace.getCampusName())
-                                .setRoomName(timeAndPlace.getClassroomName())
-                                .setClassInSchoolWeek(timeAndPlace.getClassWeek()));
-            }
-
-        }
-        return result;
-
-    }
 
     private String[] parseTermYearAndTermOrder(String executiveEducationPlanNumber) {
         String[] results = executiveEducationPlanNumber.split("-");
         return new String[]{results[0] + "-" + results[1], results[2]};
     }
+
 
 
 }

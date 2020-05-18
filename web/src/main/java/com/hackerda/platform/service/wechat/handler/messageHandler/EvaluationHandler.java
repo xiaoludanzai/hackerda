@@ -6,6 +6,7 @@ import com.hackerda.platform.builder.TextBuilder;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.platform.service.TeachingEvaluationService;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
