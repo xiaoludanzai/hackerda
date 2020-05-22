@@ -4,7 +4,7 @@ import com.hackerda.platform.builder.TextBuilder;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.service.NewUrpSpiderService;
 import com.hackerda.platform.service.OpenIdService;
-import com.hackerda.platform.spider.newmodel.examtime.UrpExamTime;
+import com.hackerda.spider.support.UrpExamTime;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -69,34 +69,6 @@ public class ExamMessageHandler implements WxMpMessageHandler {
         }
 
         return new String(stringBuffer);
-    }
-
-
-    private String dateTimeToText(DateTime dateTime) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(dateTime.getHourOfDay()).append(":").append(dateTime.getMinuteOfHour());
-        return new String(stringBuffer);
-    }
-    private String dateTimeYear(DateTime dateTime) { // 判断是哪个学年
-        int month = dateTime.getMonthOfYear();
-        if (month > 2 && month < 9)
-            return (dateTime.getYear() - 1) + "-" + dateTime.getYear();
-        else
-            return dateTime.getYear() + "-" + (dateTime.getYear() - 1);
-    }
-
-    private String dateTimeHour(DateTime dateTime) {
-        if (dateTime.getHourOfDay() < 12)
-            return "上午";
-        else
-            return "下午";
-    }
-    private String dateTimeTerm(DateTime dateTime){ // 判断是哪个学期
-        int month = dateTime.getMonthOfYear();
-        if(month > 2 && month < 9)
-            return "2";
-        else
-            return "1";
     }
 
 }

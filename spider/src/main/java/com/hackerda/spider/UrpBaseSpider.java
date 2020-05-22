@@ -34,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Slf4j
-public class UrpBaseSpider implements UrpSpider{
+public class UrpBaseSpider implements UrpSpider {
 
     private final String ROOT = "http://xsurp.usth.edu.cn";
     /**
@@ -60,22 +60,27 @@ public class UrpBaseSpider implements UrpSpider{
     private final String COURSE_TIME_TABLE = ROOT + "/student/courseSelect/thisSemesterCurriculum/ajaxStudentSchedule/callback";
     private final String EXAM_TIME = ROOT + "/student/examinationManagement/examPlan/index";
 
-    private Runnable pswErrorCallback = null;
-
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ").omitEmptyStrings().trimResults();
 
 
     private final AccountRestTemplate<String> client;
     private final CaptchaPredict captchaPredict;
     private final ICaptchaProvider<CaptchaImage> captchaProvider;
+    private final IExceptionHandler exceptionHandler;
     private String account;
 
 
     public UrpBaseSpider(AccountRestTemplate<String> client, CaptchaPredict captchaPredict,
                          ICaptchaProvider<CaptchaImage> captchaProvider) {
+        this(client, captchaPredict, captchaProvider , null);
+    }
+
+    public UrpBaseSpider(AccountRestTemplate<String> client, CaptchaPredict captchaPredict,
+                         ICaptchaProvider<CaptchaImage> captchaProvider, IExceptionHandler exceptionHandler) {
         this.client = client;
         this.captchaPredict = captchaPredict;
         this.captchaProvider = captchaProvider;
+        this.exceptionHandler = exceptionHandler;
     }
 
 
@@ -237,23 +242,22 @@ public class UrpBaseSpider implements UrpSpider{
                 exception = new UrpEvaluationException("评估未完成无法查看个人信息");
             }
 
-            if(exception != null){
-                if(exception instanceof PasswordUnCorrectException && pswErrorCallback != null){
-                    try {
-                        pswErrorCallback.run();
-                    }catch (Throwable throwable){
-                        log.error("run callback error", throwable);
-                    }
+            if (exception != null) {
+                if(exceptionHandler != null){
+                    exceptionHandler.handle(exception);
                 }
 
-                cleanLoginInfo();
+                if(!(exception instanceof UrpEvaluationException)){
+                    cleanLoginInfo();
+                }
+
                 throw exception;
             }
 
         }
     }
 
-    private String getContent(String url, Map<String, ?> uriVariables) {
+    protected String getContent(String url, Map<String, ?> uriVariables) {
 
         ResponseEntity<String> entity;
 
@@ -269,10 +273,6 @@ public class UrpBaseSpider implements UrpSpider{
 
 
         return content;
-
-    }
-
-    public void setPasswordUnCorrectCallBack(Runnable runnable){
 
     }
 
@@ -299,7 +299,7 @@ public class UrpBaseSpider implements UrpSpider{
         return infoMap;
     }
 
-    void cleanLoginInfo() {
+    protected void cleanLoginInfo() {
         client.setCookies(Collections.emptyList());
     }
 

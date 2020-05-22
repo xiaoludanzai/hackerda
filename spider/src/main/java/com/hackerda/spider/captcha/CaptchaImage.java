@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,7 @@ public class CaptchaImage {
         return encoder.encodeToString(getData());
     }
 
-    public boolean isEmpty() {
-        return data.length == 0;
+    public boolean isValid() {
+        return data.length == 0 || getCookie().isEmpty();
     }
 }

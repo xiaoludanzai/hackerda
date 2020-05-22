@@ -73,13 +73,13 @@ public class PreloadCaptchaProvider extends CaptchaProvider {
     private void startPreLoad() {
         for (int x = 0; x < this.producerCount; x++) {
             executorService.submit(() -> {
+                CaptchaImage task = this.task();
                 while (!Thread.interrupted()) {
                     try {
-                        CaptchaImage task = this.task();
-                        if (task != null && !task.getCookie().isEmpty()) {
-                            queue.offer(task);
-                            preloadCount.getAndIncrement();
-                        }
+                        if(!task.isValid())
+                            queue.put(task);
+                        task = this.task();
+
                     } catch (Throwable throwable) {
                         logger.debug("preload captcha error", throwable);
                     }
@@ -127,6 +127,7 @@ public class PreloadCaptchaProvider extends CaptchaProvider {
         @Override
         public void run() {
             queue.removeIf(x -> isExpire(x.getCreateDate()));
+
         }
 
         boolean isExpire(Date createDate) {
@@ -135,7 +136,7 @@ public class PreloadCaptchaProvider extends CaptchaProvider {
 
     }
 
-    int getPreloadCaptchaSize(){
-        return queue.size();
+    int getProducerCount() {
+        return producerCount;
     }
 }

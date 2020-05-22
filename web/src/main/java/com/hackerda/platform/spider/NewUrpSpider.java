@@ -5,25 +5,19 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.hackerda.platform.exceptions.*;
 import com.hackerda.platform.pojo.Course;
-import com.hackerda.platform.pojo.UrpClassroom;
 import com.hackerda.platform.pojo.constant.RedisKeys;
-import com.hackerda.platform.spider.model.UrpStudentInfo;
 import com.hackerda.platform.spider.model.VerifyCode;
 import com.hackerda.platform.spider.newmodel.SearchResult;
 import com.hackerda.platform.spider.newmodel.SearchResultDateWrapper;
 import com.hackerda.platform.spider.newmodel.course.UrpCourseForSpider;
-import com.hackerda.platform.spider.newmodel.coursetimetable.UrpCourseTimeTableForSpider;
 import com.hackerda.platform.spider.newmodel.emptyroom.EmptyRoomPojo;
 import com.hackerda.platform.spider.newmodel.emptyroom.EmptyRoomPost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
 import com.hackerda.platform.spider.newmodel.examtime.UrpExamTime;
-import com.hackerda.platform.spider.newmodel.grade.detail.GradeDetailSearchPost;
 import com.hackerda.platform.spider.newmodel.grade.detail.UrpGradeDetailForSpider;
-import com.hackerda.platform.spider.newmodel.grade.scheme.Scheme;
 import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
@@ -51,7 +45,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.io.IOException;
-import java.net.ProxySelector;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -76,7 +69,6 @@ public class NewUrpSpider {
         cleanThread.start();
         try {
             stringRedisTemplate = ApplicationUtil.getBean("stringRedisTemplate");
-            proxyselector = ApplicationUtil.getBean("urpSpiderProxySelector");
         } catch (Exception e) {
             log.error("inject error ", e);
         }
@@ -198,7 +190,6 @@ public class NewUrpSpider {
 
     private static final UrpCookieJar COOKIE_JAR = new UrpCookieJar();
 
-    private static ProxySelector proxyselector;
 
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .cookieJar(COOKIE_JAR)
@@ -207,7 +198,6 @@ public class NewUrpSpider {
             .readTimeout(8000L, TimeUnit.MILLISECONDS)
             .addInterceptor(new RetryInterceptor(5))
             .followRedirects(false)
-            .proxySelector(proxyselector)
             .build();
 
     private final static Headers HEADERS = new Headers.Builder()
@@ -290,43 +280,6 @@ public class NewUrpSpider {
         String result = getContent(request);
         return parseObject(result, new TypeReference<List<Map<String, Object>>>() {
         });
-    }
-
-
-    public List<Scheme> getSchemeGrade() {
-
-        Request request = new Request.Builder()
-                .url(SCHEME_GRADE)
-                .headers(HEADERS)
-                .get()
-                .build();
-
-        String content = getContent(request);
-        TypeReference<List<Scheme>> typeReference = new TypeReference<List<Scheme>>() {
-        };
-        return parseObject(content, typeReference);
-
-    }
-
-
-
-
-
-
-    public UrpGradeDetailForSpider getUrpGradeDetail(GradeDetailSearchPost gradeDetailSearchPost) {
-        FormBody.Builder params = new FormBody.Builder();
-        FormBody body = params.add("zxjxjhh", gradeDetailSearchPost.getExecutiveEducationPlanNumber())
-                .add("kch", gradeDetailSearchPost.getCourseNumber())
-                .add("kssj", gradeDetailSearchPost.getExamTime())
-                .add("kxh", gradeDetailSearchPost.getCourseSequenceNumber())
-                .build();
-
-        Request request = new Request.Builder()
-                .url(CURRENT_TERM_GRADE_DETAIL)
-                .post(body)
-                .build();
-        String result = getContent(request);
-        return parseObject(result, gradeDetailTypeReference);
     }
 
     @Deprecated
@@ -469,60 +422,6 @@ public class NewUrpSpider {
         return result;
     }
 
-    public UrpCourseTimeTableForSpider getUrpCourseTimeTable() {
-        Request request = new Request.Builder()
-                .url(COURSE_TIME_TABLE)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String result = getContent(request);
-        String regex = "\"dateList\": [.*]}$";
-        result = result.replaceAll(regex, "");
-        if (log.isDebugEnabled()) {
-            log.debug("{} {} urp course timetable {}", MDC.get("preLoad"), MDC.get("account"), result);
-        }
-
-        UrpCourseTimeTableForSpider tableForSpider = parseObject(result, UrpCourseTimeTableForSpider.class);
-
-        tableForSpider.getDetails().stream()
-                .findFirst().flatMap(detail -> detail.entrySet().stream()
-                .findFirst()).ifPresent(entry -> {
-            String number = entry.getValue().getCourseRelativeInfo().getStudentNumber();
-            if (!account.equals(number)) {
-                log.error("data error preloadTrace:{}  account:{} date:{}", MDC.get("preLoad"), MDC.get("account"), tableForSpider);
-                COOKIE_JAR.clearSession();
-                throw new UrpException(String.format("date error. user account: %s return account %s", account,
-                        number));
-            }
-        });
-        return tableForSpider;
-
-    }
-
-    public UrpStudentInfo getStudentInfo() {
-
-        Request request = new Request.Builder()
-                .url(STUDENT_INFO)
-                .headers(HEADERS)
-                .get()
-                .build();
-
-        Map<String, String> userInfo = parseUserInfo(getContent(request));
-
-        UrpStudentInfo student = new UrpStudentInfo();
-        student.setAccount(Integer.parseInt(account));
-        student.setEthnic(userInfo.get("民族"));
-        student.setSex(userInfo.get("性别"));
-        student.setName(userInfo.get("姓名"));
-        student.setMajor(userInfo.get("专业"));
-        student.setAcademy(userInfo.get("院系"));
-        String s = userInfo.get("班级");
-        student.setClassname(s.endsWith("班") ? s.substring(0, s.length()-1): s);
-        student.setPassword(password);
-        flashCache();
-        return student;
-    }
-
     public List<SearchResult<ClassInfoSearchResult>> getClassInfoSearchResult(SearchClassInfoPost searchClassInfoPost) {
         FormBody.Builder params = new FormBody.Builder();
         FormBody body = params.add("param_value", searchClassInfoPost.getParamValue())
@@ -565,25 +464,6 @@ public class NewUrpSpider {
 
     }
 
-    /**
-     * 通过教务网的班级号查询班级课表
-     *
-     * @param urpClassroom
-     */
-    public List<List<CourseTimetableSearchResult>> getUrpCourseTimeTableByClassroomNum(UrpClassroom urpClassroom) {
-        String url = String.format(CLASSROOM_TIME_TABLE, "2019-2020-1-1", urpClassroom.getCampusNumber(),
-                urpClassroom.getTeachingBuildingNumber(), urpClassroom.getNumber());
-
-        Request request = new Request.Builder()
-                .url(url)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String result = getContent(request);
-
-        return parseObject(result, classCourseSearchResultReference);
-
-    }
 
     /**
      * 通过教务网的课程号查询班级课表

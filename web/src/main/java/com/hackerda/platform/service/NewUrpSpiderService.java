@@ -8,8 +8,6 @@ import com.hackerda.platform.spider.newmodel.SearchResult;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
-import com.hackerda.platform.spider.newmodel.examtime.UrpExamTime;
-import com.hackerda.platform.spider.newmodel.grade.scheme.Scheme;
 import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
@@ -22,11 +20,14 @@ import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.hackerda.platform.utils.DESUtil;
 import com.hackerda.spider.UrpBaseSpider;
+import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpException;
+import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
+import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +54,7 @@ public class NewUrpSpiderService {
     @Value("${student.password.salt}")
     private String key;
     @Autowired
-    private UrpBaseSpider baseSpider;
+    private UrpSpider baseSpider;
 
     /**
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
@@ -110,7 +111,7 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public void checkStudentPassword(String account, String password) {
-        new NewUrpSpider(account, password);
+        baseSpider.login(account, password);
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -171,9 +172,9 @@ public class NewUrpSpiderService {
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<UrpExamTime> getExamTime(String account, String password) {
-        NewUrpSpider spider = getSpider(account, password);
+        baseSpider.login(account, password);
 
-        return spider.getExamTime();
+        return baseSpider.getExamTime();
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -184,8 +185,8 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<Scheme> getSchemeGrade(StudentUser student) {
-        NewUrpSpider spider = getSpider(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        return spider.getSchemeGrade();
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        return baseSpider.getSchemeGrade();
     }
 
 

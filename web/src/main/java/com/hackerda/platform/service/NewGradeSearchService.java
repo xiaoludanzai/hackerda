@@ -9,15 +9,16 @@ import com.hackerda.platform.pojo.constant.RedisKeys;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
 import com.hackerda.platform.pojo.vo.GradeVo;
 import com.hackerda.platform.pojo.vo.TermGradeVo;
-import com.hackerda.platform.spider.newmodel.grade.scheme.Scheme;
-import com.hackerda.platform.spider.newmodel.grade.scheme.SchemeGradeItem;
+
 import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.support.UrpGeneralGrade;
+import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,8 @@ public class NewGradeSearchService {
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private StudentUserDao studentUserDao;
+    @Value("${spider.grade.timeout: 5000}")
+    private Long getGradeTimeout;
 
     private static DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
 
@@ -225,32 +228,13 @@ public class NewGradeSearchService {
     public GradeResultVo getGrade(StudentUser student) {
         GradeResultVo resultVo;
 
-        if(isCurrentFinishFetch(student.getAccount().toString()) && isEverFinishFetch(student.getAccount().toString())){
-
-            resultVo = gradeToResultVo(gradeDao.getGradeByAccount(student.getAccount()));
-            resultVo.setMessage("完成抓取");
-
-            return resultVo;
-        }
+        CompletableFuture<List<Grade>> currentFuture =
+                CompletableFuture.supplyAsync(() -> getCurrentTermGradeSync(student), gradeAutoUpdatePool);
 
 
-        CompletableFuture<List<Grade>> currentFuture;
-        if(isCurrentFinishFetch(student.getAccount().toString())){
-            currentFuture =
-                    CompletableFuture.completedFuture(gradeDao.getCurrentTermGradeByAccount(student.getAccount()));
-        }else {
-            currentFuture =
-                    CompletableFuture.supplyAsync(() -> getCurrentTermGradeSync(student), gradeAutoUpdatePool);
-        }
+        CompletableFuture<List<Grade>> schemeFuture =
+                CompletableFuture.supplyAsync(() -> getSchemeGrade(student), gradeAutoUpdatePool);
 
-        CompletableFuture<List<Grade>> schemeFuture;
-        if(isEverFinishFetch(student.getAccount().toString())){
-            schemeFuture =
-                    CompletableFuture.completedFuture(gradeDao.getEverTermGradeByAccount(student.getAccount()));
-        }else {
-            schemeFuture =
-                    CompletableFuture.supplyAsync(() -> getSchemeGrade(student), gradeAutoUpdatePool);
-        }
 
         CompletableFuture<List<Grade>> completableFuture = currentFuture.thenCombine(schemeFuture,
                 (x, y) -> {
@@ -259,7 +243,7 @@ public class NewGradeSearchService {
                 });
 
         try {
-            List<Grade> gradeList = completableFuture.get(5000L, TimeUnit.MILLISECONDS);
+            List<Grade> gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS);
             resultVo = gradeToResultVo(gradeList);
         } catch (InterruptedException e) {
             resultVo = gradeToResultVo(gradeDao.getGradeByAccount(student.getAccount()));
@@ -287,6 +271,7 @@ public class NewGradeSearchService {
 
         return resultVo;
     }
+
 
     public GradeResultVo gradeToResultVo(List<Grade> gradeList) {
         GradeResultVo gradeResultVo = new GradeResultVo();
@@ -398,7 +383,29 @@ public class NewGradeSearchService {
                 .stream()
                 .map(Scheme::getCjList)
                 .flatMap(Collection::stream)
-                .map(SchemeGradeItem::transToGrade)
+                .map(item -> new Grade()
+                        .setCredit(Double.parseDouble(item.getCredit()))
+                        .setExamTypeCode(item.getExamTypeCode())
+                        .setCoursePropertyName(item.getCourseAttributeName())
+                        .setCoursePropertyCode(item.getCourseAttributeCode())
+                        .setCourseName(item.getCourseName())
+                        .setCourseNumber(item.getId().getCourseNumber())
+                        .setCourseOrder(item.getId().getCourseSequenceNumber())
+                        .setOperator(item.getOperator())
+                        .setOperateTime(item.getOperatingTime())
+                        .setScore(Double.parseDouble(item.getScore()))
+                        .setExamTime(item.getExamTime())
+                        .setAccount(Integer.parseInt(item.getId().getStudentId()))
+                        .setExamTypeCode(item.getExamTypeCode())
+                        .setExamTypeName(item.getExamTypeName())
+                        .setLevelName(item.getGradeName())
+                        .setStandardPoint(item.getStandardScore())
+                        .setLevelPoint(Integer.toString(item.getGradeScore()))
+                        .setGradePoint(Double.parseDouble(item.getGradePointScore()))
+                        .setTermYear(item.getTermYear())
+                        .setTermOrder(item.getTermCode())
+                        .setStudyHour(item.getCycle() == null ? 0 : Integer.parseInt(item.getCycle()))
+                        .setRank(0))
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.hackerda.spider.config;
 
 import com.hackerda.spider.UrpBaseSpider;
+import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.captcha.PreloadCaptchaProvider;
@@ -63,8 +64,8 @@ public class SpiderConfiguration {
 
     @Bean
     @Scope("prototype")
-    public UrpBaseSpider urpBaseSpider(AccountRestTemplate<String> client,
-                                       CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider){
+    public UrpSpider urpBaseSpider(AccountRestTemplate<String> client,
+                                   CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider){
         return new UrpBaseSpider(client, captchaPredict, captchaProvider);
     }
 }

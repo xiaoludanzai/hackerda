@@ -2,36 +2,38 @@ package com.hackerda.spider.captcha;
 
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 public class PreloadCaptchaProviderTest {
 
-    @Test
-    public void get() {
-    }
 
     @Test
     public void testPreLoad() throws InterruptedException {
         int preloadSize = 5;
 
-        CountDownLatch latch = new CountDownLatch(preloadSize);
-        new PreloadCaptchaProvider("dummy://address", 5){
+        AtomicInteger integer = new AtomicInteger(0);
+        PreloadCaptchaProvider provider = new PreloadCaptchaProvider("dummy://address", preloadSize) {
 
             @Override
-            public CaptchaImage task(){
+            public CaptchaImage task() {
                 try {
-                    Thread.sleep(1000L);
+                    Thread.sleep(500L);
                 } catch (InterruptedException e) {
-                    return null;
+                    Thread.currentThread().interrupt();
                 }
-                latch.countDown();
-                return mock(CaptchaImage.class);
+                integer.getAndIncrement();
+                return new CaptchaImage(new byte[1], Collections.emptyList()) {
+                    @Override
+                    public boolean isValid() {
+                        return false;
+                    }
+                };
             }
         };
-
-        assert latch.await(30000L, TimeUnit.MILLISECONDS);
+        Thread.sleep(1000 * 10L);
+        assertEquals(integer.get(), preloadSize+ provider.getProducerCount());
     }
 }

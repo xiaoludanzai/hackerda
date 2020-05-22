@@ -1,6 +1,5 @@
 package com.hackerda.spider.captcha;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
@@ -10,8 +9,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-
-import static org.junit.Assert.*;
 
 public class CaptchaProviderTest {
 
