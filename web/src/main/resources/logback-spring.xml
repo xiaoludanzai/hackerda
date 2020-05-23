@@ -98,7 +98,7 @@
         </filter>
     </appender>
 
-    <logger name="cn.hkxj.platform.controller.wechat" additivity="false">
+    <logger name="com.hackerda.platform.controller.wechat" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="wechatAppender"/>
     </logger>
@@ -128,7 +128,7 @@
         <appender-ref ref="urpSpiderAppender"/>
     </logger>
 
-    <logger name="com.hackerda.platform.aop.ControllerLogger" additivity="false">
+    <logger name="com.hackerda.platform.controller.ControllerLogger" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="requestAppender"/>
     </logger>

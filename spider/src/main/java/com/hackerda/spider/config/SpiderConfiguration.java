@@ -14,6 +14,9 @@ import com.hackerda.spider.predict.SchoolCaptchaPredictor;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -24,16 +27,25 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class SpiderConfiguration {
 
+    @Value("${spider.timeout.request :500}")
+    private int requestTimeout;
+    @Value("${spider.timeout.connect :500}")
+    private int connectTimeout;
+    @Value("${spider.timeout.socket :500}")
+    private int socketTimeout;
+    @Value("${spider.captcha.predict}")
+    private String captchaPredict;
+
     @Bean
     public ClientHttpRequestFactory schoolRequestFactory(){
         // 创建Http请求配置参数
         RequestConfig requestConfig = RequestConfig.custom()
                 // 获取连接超时时间
-                .setConnectionRequestTimeout(2000)
+                .setConnectionRequestTimeout(requestTimeout)
                 // 请求超时时间
-                .setConnectTimeout(500)
+                .setConnectTimeout(connectTimeout)
                 // 响应超时时间
-                .setSocketTimeout(500)
+                .setSocketTimeout(socketTimeout)
                 .setExpectContinueEnabled(true)
                 .setRedirectsEnabled(false)
                 .build();
@@ -53,7 +65,7 @@ public class SpiderConfiguration {
 
     @Bean
     public CaptchaPredict captchaPredict(){
-        return new SchoolCaptchaPredictor(new RestTemplate(), "http://spider.hackerda.com/valid");
+        return new SchoolCaptchaPredictor(new RestTemplate(), captchaPredict);
     }
 
     @Bean
@@ -62,10 +74,5 @@ public class SpiderConfiguration {
                 ".jpg");
     }
 
-    @Bean
-    @Scope("prototype")
-    public UrpSpider urpBaseSpider(AccountRestTemplate<String> client,
-                                   CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider){
-        return new UrpBaseSpider(client, captchaPredict, captchaProvider);
-    }
+
 }

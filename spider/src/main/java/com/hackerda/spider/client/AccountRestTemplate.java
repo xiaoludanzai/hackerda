@@ -19,4 +19,8 @@ public interface AccountRestTemplate<T> extends RestOperations {
     T getAccount();
 
     void setCookies(List<HttpCookie> listCookie);
+
+    boolean hasLogin();
+
+    void clearLoginInfo();
 }

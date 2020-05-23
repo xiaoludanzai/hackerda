@@ -1,4 +1,4 @@
-package com.hackerda.platform.aop;
+package com.hackerda.platform.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class ControllerLogger {
 
-    @Pointcut("execution(public * cn.hkxj.platform.controller..*Controller.*(..))")
+    @Pointcut("execution(public * com.hackerda.platform.controller..*Controller.*(..))")
     public void addAdvice() {
     }
 

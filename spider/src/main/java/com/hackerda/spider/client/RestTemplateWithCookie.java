@@ -10,7 +10,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -32,26 +35,25 @@ public abstract class RestTemplateWithCookie extends RestTemplate {
 
     public abstract List<HttpCookie> getCookies();
 
-    public abstract void setCookies(List<HttpCookie> cookies);
+    public abstract void setCookiesFromResponse(HttpHeaders headers);
 
-    private void processHeaders(HttpHeaders headers) {
+    List<HttpCookie> processHeadersCookie(HttpHeaders headers) {
         final List<String> cooks = headers.get(HttpHeaders.SET_COOKIE);
         if (cooks != null && !cooks.isEmpty()) {
-            cooks.stream().map(HttpCookie::parse).forEachOrdered((cook) -> {
-                cook.forEach((a) -> {
-                    List<HttpCookie> cookies = getCookies();
-                    cookies.stream().filter(x -> a.getName().equals(x.getName())).findAny().ifPresent(cookies::remove);
-                    cookies.add(a);
-                });
-            });
+            return cooks.stream().map(HttpCookie::parse)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
         }
+
+        return Collections.emptyList();
     }
 
     @Override
     protected <T> T doExecute(URI url, HttpMethod method, final RequestCallback requestCallback, final ResponseExtractor<T> responseExtractor) throws RestClientException {
-        final List<HttpCookie> cookies = getCookies();
+
 
         return super.doExecute(url, method, chr -> {
+            final List<HttpCookie> cookies = getCookies();
             if (cookies != null) {
                 StringBuilder sb = new StringBuilder();
                 for (HttpCookie cookie : cookies) {
@@ -61,7 +63,7 @@ public abstract class RestTemplateWithCookie extends RestTemplate {
             }
             requestCallback.doWithRequest(chr);
         }, chr -> {
-            processHeaders(chr.getHeaders());
+            setCookiesFromResponse(chr.getHeaders());
             return responseExtractor.extractData(chr);
         });
     }

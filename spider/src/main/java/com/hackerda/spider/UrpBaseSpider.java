@@ -67,7 +67,7 @@ public class UrpBaseSpider implements UrpSpider {
     private final CaptchaPredict captchaPredict;
     private final ICaptchaProvider<CaptchaImage> captchaProvider;
     private final IExceptionHandler exceptionHandler;
-    private String account;
+    private String account = "";
 
 
     public UrpBaseSpider(AccountRestTemplate<String> client, CaptchaPredict captchaPredict,
@@ -86,7 +86,15 @@ public class UrpBaseSpider implements UrpSpider {
 
     public void login(String account, String password) {
         this.account = account;
+        client.setAccount(account);
+        synchronized (account.intern()){
+            if(!this.client.hasLogin()){
+                login0(account, password);
+            }
+        }
+    }
 
+    protected void login0(String account, String password){
         CaptchaImage preLoad = captchaProvider.get();
         String predict = captchaPredict.predict(preLoad);
 
@@ -100,21 +108,21 @@ public class UrpBaseSpider implements UrpSpider {
 
         ResponseEntity<String> data = postFormData(map, CHECK, String.class);
 
-
         if (data.getStatusCode().is3xxRedirection()) {
             List<String> locationList = data.getHeaders().get(HttpHeaders.LOCATION);
             if (locationList != null && !locationList.isEmpty()) {
                 String location = locationList.get(0);
                 if (StringUtils.isEmpty(location)) {
-                    cleanLoginInfo();
+                    client.clearLoginInfo();
                     throw new UrpRequestException(CHECK, data.getStatusCodeValue(), data.getBody());
                 }
             }
-
         }
 
         checkResult(data.getBody());
+
     }
+
 
     public UrpStudentInfo getStudentInfo() {
 
@@ -235,7 +243,7 @@ public class UrpBaseSpider implements UrpSpider {
             if (content.contains("badCaptcha")) {
                 exception = new UrpVerifyCodeException("verify code error");
             } else if (content.contains("badCredentials")) {
-                exception = new PasswordUnCorrectException("account: " + account);
+                exception = new PasswordUnCorrectException("urp spider password not correct");
             } else if (content.contains("invalidSession") || content.contains("login")) {
                 exception = new UrpSessionExpiredException("session expired");
             } else if (content.contains("没有完成评估")) {
@@ -244,16 +252,18 @@ public class UrpBaseSpider implements UrpSpider {
 
             if (exception != null) {
                 if(exceptionHandler != null){
-                    exceptionHandler.handle(exception);
+                    try {
+                        exceptionHandler.handle(exception, account);
+                    }catch (Throwable throwable){
+                        log.error("exceptionHandler execute error", throwable);
+                    }
                 }
 
                 if(!(exception instanceof UrpEvaluationException)){
-                    cleanLoginInfo();
+                    client.clearLoginInfo();
                 }
-
                 throw exception;
             }
-
         }
     }
 
@@ -271,9 +281,7 @@ public class UrpBaseSpider implements UrpSpider {
 
         checkResult(content);
 
-
         return content;
-
     }
 
 
@@ -299,9 +307,6 @@ public class UrpBaseSpider implements UrpSpider {
         return infoMap;
     }
 
-    protected void cleanLoginInfo() {
-        client.setCookies(Collections.emptyList());
-    }
 
     private <T> T parseObject(String text, TypeReference<T> type) {
         try {

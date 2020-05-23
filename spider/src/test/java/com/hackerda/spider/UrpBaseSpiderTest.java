@@ -1,47 +1,77 @@
 package com.hackerda.spider;
 
-import com.hackerda.spider.captcha.ICaptchaProvider;
+import com.google.common.collect.Lists;
+import com.hackerda.spider.client.AccountRestTemplate;
 import com.hackerda.spider.client.UrpRestTemplate;
-import com.hackerda.spider.exception.UrpSessionExpiredException;
-import com.hackerda.spider.predict.CaptchaPredict;
+import com.hackerda.spider.exception.PasswordUnCorrectException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
-import java.util.Map;
+import java.net.HttpCookie;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.*;
+
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class UrpBaseSpiderTest {
 
 
     @Test
-    public void checkExceptionCallBack() throws InterruptedException {
+    public void passwordErrorCallBack() {
 
-        CountDownLatch latch = new CountDownLatch(2);
-        IExceptionHandler handler = e -> latch.countDown();
-        UrpBaseSpider spider = new UrpBaseSpider(null, null, null, handler){
+        AccountRestTemplate client = mock(AccountRestTemplate.class);
+        IExceptionHandler handler = mock(IExceptionHandler.class);
+
+        UrpBaseSpider spider = new UrpBaseSpider(client, null, null, handler);
+
+        assertThatExceptionOfType(PasswordUnCorrectException.class)
+                .isThrownBy(() -> spider.checkResult("badCredentials"));
+
+        verify(client).clearLoginInfo();
+        verify(handler).handle(any(PasswordUnCorrectException.class), any());
+    }
 
 
+    @Test
+    public void testSameAccountCurrentLogin() throws InterruptedException {
+        UrpRestTemplate<String> client = spy(new UrpRestTemplate<>());
+
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicInteger count = new AtomicInteger(0);
+        UrpBaseSpider spider = new UrpBaseSpider(client, null, null){
             @Override
-            protected void cleanLoginInfo() {
-                latch.countDown();
+            protected void login0(String account, String password) {
+                count.getAndIncrement();
+                client.setAccount(account);
+                client.setCookies(Lists.newArrayList(new HttpCookie("key", "value")));
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    latch.countDown();
+                }
             }
         };
 
-        spider.checkResult("badCredentials");
+        new Thread(() -> spider.login("test", "test")).start();
+        new Thread(() -> spider.login("test", "test")).start();
 
-        assertTrue(latch.await(100L, TimeUnit.MILLISECONDS));
+        // mock login
+        Thread.sleep(2000L);
+
+        assertThat(latch.await(500L, TimeUnit.MILLISECONDS));
+
+        assertThat(count.get() == 1);
+
+        verify(client, times(2)).hasLogin();
+
+        verify(client, times(1)).setCookies(anyList());
+
 
 
     }

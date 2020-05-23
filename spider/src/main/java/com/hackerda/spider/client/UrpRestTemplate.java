@@ -3,8 +3,10 @@ package com.hackerda.spider.client;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.cookie.MemoryCookiePersist;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestFactory;
 
+import javax.naming.OperationNotSupportedException;
 import java.net.HttpCookie;
 import java.util.List;
 
@@ -22,33 +24,47 @@ public class UrpRestTemplate<T> extends RestTemplateWithCookie implements Accoun
 
     private final TransmittableThreadLocal<T> accountTL = new TransmittableThreadLocal<>();
 
-    private final AccountCookiePersist<T> cookiePersistor;
+    private final AccountCookiePersist<T> cookiePersist;
 
     public UrpRestTemplate() {
-        cookiePersistor = new MemoryCookiePersist<>();
+        cookiePersist = new MemoryCookiePersist<>();
     }
 
     public UrpRestTemplate(AccountCookiePersist<T> accountCookiePersist) {
-        this.cookiePersistor = accountCookiePersist;
+        this.cookiePersist = accountCookiePersist;
     }
-
 
     public UrpRestTemplate(ClientHttpRequestFactory factory, AccountCookiePersist<T> accountCookiePersist) {
         super(factory);
-        this.cookiePersistor = accountCookiePersist;
+        this.cookiePersist = accountCookiePersist;
     }
 
 
     @Override
     public List<HttpCookie> getCookies() {
-        return cookiePersistor.getByAccount(getAccount());
+
+        return cookiePersist.getByAccount(getAccount());
+    }
+
+    @Override
+    public void setCookiesFromResponse(HttpHeaders headers) {
+        cookiePersist.saveByAccount(super.processHeadersCookie(headers), getAccount());
     }
 
     @Override
     public void setCookies(List<HttpCookie> cookieList) {
-        cookiePersistor.saveByAccount(cookieList, getAccount());
+        cookiePersist.saveByAccount(cookieList, getAccount());
     }
 
+    @Override
+    public boolean hasLogin() {
+        return !(cookiePersist.getByAccount(getAccount()) == null);
+    }
+
+    @Override
+    public void clearLoginInfo() {
+        cookiePersist.clearByAccount(getAccount());
+    }
 
     @Override
     public void setAccount(T account) {
@@ -57,7 +73,12 @@ public class UrpRestTemplate<T> extends RestTemplateWithCookie implements Accoun
 
     @Override
     public T getAccount() {
-        return accountTL.get();
+        T acoount = accountTL.get();
+        if(acoount == null){
+            throw new UnsupportedOperationException("account has not set");
+        }
+
+        return acoount;
     }
 
 

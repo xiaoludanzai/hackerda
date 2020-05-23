@@ -17,7 +17,6 @@ public class MemoryCookiePersistTest {
     @Before
     public void before(){
         persist = new MemoryCookiePersist<>();
-
     }
 
 
@@ -48,7 +47,6 @@ public class MemoryCookiePersistTest {
         for(int x = 0; x< 3; x++){
             persist.saveByAccount(new ArrayList<>(), Integer.toString(x));
         }
-
         assertEquals(persist.loadAll().size(), count);
     }
 }
