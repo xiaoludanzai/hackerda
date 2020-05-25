@@ -213,4 +213,8 @@ public class UrpCommonSpider extends UrpBaseSpider implements UrpSpider{
         }
 
     }
+
+    public static void main(String[] args) {
+
+    }
 }
