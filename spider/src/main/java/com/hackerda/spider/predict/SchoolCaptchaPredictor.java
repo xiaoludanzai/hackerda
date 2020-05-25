@@ -75,15 +75,4 @@ public class SchoolCaptchaPredictor implements CaptchaPredict {
         private String data;
     }
 
-
-    public static void main(String[] args) {
-        RestTemplate template = new RestTemplate();
-
-        CaptchaPredict predictor = new SchoolCaptchaPredictor(template, "http://127.0.0.1:10086/valid");
-        CaptchaProvider provider = new CaptchaProvider(template, "http://xsurp.usth.edu.cn/img/captcha.jpg");
-        CaptchaImage image = provider.get();
-        image.write("");
-        String s = predictor.predict(image);
-        System.out.println(s);
-    }
 }

@@ -87,14 +87,5 @@ public class CaptchaProvider implements ICaptchaProvider<CaptchaImage> {
     }
 
 
-    public static void main(String[] args) {
-        CaptchaProvider provider = new CaptchaProvider(new RestTemplate(), "http://xsurp.usth.edu.cn/img/captcha.jpg");
-
-        CaptchaImage image = provider.get();
-
-        System.out.println(image);
-
-        image.write("");
-    }
 
 }
