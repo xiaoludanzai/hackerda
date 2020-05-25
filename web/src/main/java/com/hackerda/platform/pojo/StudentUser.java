@@ -37,4 +37,13 @@ public class StudentUser {
     public String getEnablePassword(String key) {
         return DESUtil.decrypt(this.password, key);
     }
+
+
+    /**
+     * 获取年级
+     * @return 2017级返回2017
+     */
+    public String getGrade(){
+        return account.toString().substring(0, 4);
+    }
 }

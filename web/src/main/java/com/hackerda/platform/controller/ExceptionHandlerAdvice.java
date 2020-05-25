@@ -42,8 +42,6 @@ public class ExceptionHandlerAdvice {
 	public WebResponse handleException(Exception e) {
 		if (e instanceof PasswordUnCorrectException) {
 			return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), e.getMessage());
-		} else if (e instanceof ReadTimeoutException) {
-			return WebResponse.fail(ErrorCode.READ_TIMEOUT.getErrorCode(), e.getMessage());
 		}else if(e instanceof UrpRequestException) {
 			return WebResponse.fail(ErrorCode.LOGIN_ERROR.getErrorCode(), "can`t verify user");
 		}else if(e instanceof UrpEvaluationException) {

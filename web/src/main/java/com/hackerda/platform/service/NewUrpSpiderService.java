@@ -30,7 +30,9 @@ import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
@@ -53,14 +55,14 @@ public class NewUrpSpiderService {
     private OpenIdService openIdService;
     @Value("${student.password.salt}")
     private String key;
-    @Autowired
-    private UrpSpider baseSpider;
+
 
     /**
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
     List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUser student) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getCurrentGeneralGrade();
     }
@@ -111,11 +113,13 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public void checkStudentPassword(String account, String password) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(account, password);
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public UrpCourseTimeTable getUrpCourseTimeTable(StudentUser student) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getUrpCourseTimeTable();
     }
@@ -146,6 +150,7 @@ public class NewUrpSpiderService {
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public StudentUser getStudentUserInfo(String account, String password) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(account, password);
         UrpStudentInfo urpStudentInfo = baseSpider.getStudentInfo();
 
@@ -172,8 +177,8 @@ public class NewUrpSpiderService {
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<UrpExamTime> getExamTime(String account, String password) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(account, password);
-
         return baseSpider.getExamTime();
     }
 
@@ -185,6 +190,7 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<Scheme> getSchemeGrade(StudentUser student) {
+        UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getSchemeGrade();
     }
@@ -199,5 +205,10 @@ public class NewUrpSpiderService {
             throw e;
         }
 
+    }
+
+    @Lookup
+    public UrpSpider getBaseSpider(){
+        return null;
     }
 }

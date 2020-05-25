@@ -35,7 +35,7 @@ public class SubscribeService {
                 .map(x-> openIdService.getStudentByOpenId(x.getOpenid(), x.getAppid()))
                 .filter(Objects::nonNull)
                 .filter(StudentUser::getIsCorrect)
-                .filter(x-> !newGradeSearchService.isCurrentFinishFetch(x.getAccount().toString()))
+//                .filter(x-> !newGradeSearchService.isCurrentFinishFetch(x.getAccount().toString()))
                 .collect(Collectors.toSet());
 
 

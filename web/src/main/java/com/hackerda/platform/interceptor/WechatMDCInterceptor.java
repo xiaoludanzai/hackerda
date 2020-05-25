@@ -27,7 +27,7 @@ public class WechatMDCInterceptor extends MDCInterceptor {
             request.getReader().lines().forEach(stringBuilder::append);
             body = stringBuilder.toString();
         } catch (IOException e) {
-            log.error("get input stream error {}", e);
+            log.error("get input stream error ", e);
         }
         if (StringUtils.isNotEmpty(body)) {
             WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(body);

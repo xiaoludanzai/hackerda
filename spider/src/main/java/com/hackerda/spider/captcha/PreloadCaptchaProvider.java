@@ -33,7 +33,6 @@ public class PreloadCaptchaProvider extends CaptchaProvider {
      */
     private final static int DEFAULT_PRELOAD_SIZE = 10;
     private final int producerCount;
-    private final AtomicInteger preloadCount;
     Timer lbTimer = new Timer("Expire-captcha-cleaner",
             true);
 
@@ -62,7 +61,6 @@ public class PreloadCaptchaProvider extends CaptchaProvider {
                         new LinkedBlockingQueue<>(producerCount)): executorService;
 
         this.producerCount = producerCount;
-        this.preloadCount = new AtomicInteger(preloadSize);
         startPreLoad();
         startCleaner();
     }

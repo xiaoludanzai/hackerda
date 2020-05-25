@@ -18,6 +18,7 @@ import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,11 +47,11 @@ public class NewGradeSearchService {
     @Resource
     private GradeDao gradeDao;
     @Resource
-    private StringRedisTemplate stringRedisTemplate;
-    @Resource
     private StudentUserDao studentUserDao;
     @Value("${spider.grade.timeout: 5000}")
-    private Long getGradeTimeout;
+    private int getGradeTimeout;
+    @Autowired
+    private GpaRanker gpaRanker;
 
     private static DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
 
@@ -144,7 +145,12 @@ public class NewGradeSearchService {
                 throw (PasswordUnCorrectException) cause;
             }
 
-            List<GradeVo> gradeVoList = gradeToVo(gradeDao.getCurrentTermGradeByAccount(student.getAccount()));
+            List<GradeVo> gradeVoList =
+                    gradeDao.getCurrentTermGradeByAccount(student.getAccount())
+                            .stream()
+                            .map(Grade::toVo)
+                            .sorted()
+                            .collect(Collectors.toList());;
 
             if (cause instanceof UrpEvaluationException) {
                 if (gradeVoList.isEmpty()) {
@@ -157,7 +163,11 @@ public class NewGradeSearchService {
 
             return gradeVoList;
         } catch (InterruptedException | TimeoutException e) {
-            return gradeToVo(gradeDao.getCurrentTermGradeByAccount(student.getAccount()));
+            return gradeDao.getCurrentTermGradeByAccount(student.getAccount())
+                    .stream()
+                    .map(Grade::toVo)
+                    .sorted()
+                    .collect(Collectors.toList());
         }
 
         return gradeDetailList;
@@ -172,7 +182,11 @@ public class NewGradeSearchService {
      */
     public List<GradeVo> getCurrentTermGradeVoSync(StudentUser student) {
 
-        return gradeToVo(getCurrentTermGradeSync(student));
+        return getCurrentTermGradeSync(student)
+                .stream()
+                .map(Grade::toVo)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public List<Grade> getCurrentTermGradeSync(StudentUser student) {
@@ -186,26 +200,10 @@ public class NewGradeSearchService {
         // 新的数据插入，原有得数据更新
         saveUpdateGrade(updateList);
 
-        if(checkFinishUpdate(updateList)){
-            addCurrentFinishFetchAccount(student.getAccount().toString());
-        }
 
         return updateList;
     }
 
-
-    public boolean checkFinishUpdate(List<Grade> gradeList){
-        boolean finishUpdate = true;
-
-        for (Grade grade : gradeList) {
-            if(grade.getScore() == -1){
-                finishUpdate = false;
-                break;
-            }
-        }
-
-        return finishUpdate;
-    }
     public GradeResultVo getGrade(String account, String password) {
         return getGrade(account);
 
@@ -214,7 +212,6 @@ public class NewGradeSearchService {
     public GradeResultVo getGrade(String account) {
         StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
         return getGrade(student);
-
     }
 
     /**
@@ -231,10 +228,8 @@ public class NewGradeSearchService {
         CompletableFuture<List<Grade>> currentFuture =
                 CompletableFuture.supplyAsync(() -> getCurrentTermGradeSync(student), gradeAutoUpdatePool);
 
-
         CompletableFuture<List<Grade>> schemeFuture =
                 CompletableFuture.supplyAsync(() -> getSchemeGrade(student), gradeAutoUpdatePool);
-
 
         CompletableFuture<List<Grade>> completableFuture = currentFuture.thenCombine(schemeFuture,
                 (x, y) -> {
@@ -244,9 +239,9 @@ public class NewGradeSearchService {
 
         try {
             List<Grade> gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS);
-            resultVo = gradeToResultVo(gradeList);
+            resultVo = new GradeResultVo(gradeList);
         } catch (InterruptedException e) {
-            resultVo = gradeToResultVo(gradeDao.getGradeByAccount(student.getAccount()));
+            resultVo = new GradeResultVo(gradeDao.getGradeByAccount(student.getAccount()));
             resultVo.setErrorCode(ErrorCode.SYSTEM_ERROR.getErrorCode()).setMessage(e.getMessage());
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
@@ -256,115 +251,20 @@ public class NewGradeSearchService {
             if (cause instanceof UrpEvaluationException) {
                 throw (UrpEvaluationException) cause;
             } else {
-                resultVo = gradeToResultVo(gradeDao.getGradeByAccount(student.getAccount()));
+                resultVo = new GradeResultVo(gradeDao.getGradeByAccount(student.getAccount()));
                 resultVo.setErrorCode(ErrorCode.SYSTEM_ERROR.getErrorCode());
                 resultVo.setMessage(cause.getMessage());
                 log.error("get grade error", cause);
             }
 
-
-
         } catch (TimeoutException e) {
-            resultVo = gradeToResultVo(gradeDao.getGradeByAccount(student.getAccount()));
+            resultVo = new GradeResultVo(gradeDao.getGradeByAccount(student.getAccount()));
             resultVo.setErrorCode(ErrorCode.READ_TIMEOUT.getErrorCode()).setMessage("抓取超时");
         }
 
+        resultVo.gpaRank(student, gpaRanker);
+
         return resultVo;
-    }
-
-
-    public GradeResultVo gradeToResultVo(List<Grade> gradeList) {
-        GradeResultVo gradeResultVo = new GradeResultVo();
-        List<TermGradeVo> termGradeVoList = gradeToTermGradeList(gradeList);
-        gradeResultVo.setTermGradeList(termGradeVoList);
-
-        Double sumScore = 0.0;
-        double sumCredit = 0.0;
-
-        List<GradeVo> collect = termGradeVoList.stream().flatMap(x -> x.getGradeList().stream()).collect(Collectors.toList());
-
-        for (GradeVo gradeVo : collect) {
-            sumScore = gradeVo.getGradePoint() + sumScore;
-            if(gradeVo.getCoursePropertyCode().equals("003") && StringUtils.isNotEmpty(gradeVo.getCourse().getCredit())){
-                sumCredit = Double.parseDouble(gradeVo.getCourse().getCredit()) + sumCredit;
-            }
-        }
-
-        int size = collect.size();
-
-        if(size == 0){
-            return gradeResultVo;
-        }
-        double f = sumScore / size;
-
-        BigDecimal b = new BigDecimal(f);
-
-        gradeResultVo.setGpa(b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-        gradeResultVo.setOptionalCourseCredit(sumCredit);
-
-
-        return gradeResultVo;
-
-
-    }
-
-    public List<TermGradeVo> gradeToTermGradeList(List<Grade> gradeList) {
-        SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
-
-        return gradeList.stream()
-                .collect(Collectors.groupingBy(x -> new Term(x.getTermYear(), x.getTermOrder())))
-                .entrySet().stream()
-                .map(x -> new TermGradeVo()
-                        .setTermYear(x.getKey().getTermYear())
-                        .setTermOrder(x.getKey().getOrder())
-                        .setGradeList(gradeToVo(x.getValue()))
-                        .setCurrentTerm(schoolTime.getTerm().equals(x.getKey()))
-                )
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
-    }
-
-    public List<GradeVo> gradeToVo(List<Grade> gradeList) {
-        return gradeList.stream().map(x ->
-        {
-            Course course = new Course();
-            course.setCredit(x.getCredit().toString());
-            course.setExamType(x.getExamTypeName());
-            course.setExamTypeCode(x.getExamTypeCode());
-            course.setCourseOrder(x.getCourseOrder());
-            course.setNum(x.getCourseNumber());
-            course.setName(x.getCourseName());
-            course.setTermYear(x.getTermYear());
-            course.setTermOrder(x.getTermOrder());
-            return new GradeVo()
-                    .setCourse(course)
-                    .setAccount(x.getAccount())
-                    .setScore(x.getScore())
-                    .setGradePoint(x.getGradePoint())
-                    .setLevelName(x.getLevelName())
-                    .setLevelPoint(x.getLevelPoint())
-                    .setRank(x.getRank())
-                    .setReplaceCourseNumber(x.getReplaceCourseNumber())
-                    .setRemark(x.getRemark())
-                    .setRetakeCourseMark(x.getRetakeCourseMark())
-                    .setRetakecourseModeCode(x.getRetakecourseModeCode())
-                    .setRetakeCourseModeExplain(x.getRetakeCourseModeExplain())
-                    .setUnpassedReasonCode(x.getUnpassedReasonCode())
-                    .setUnpassedReasonExplain(x.getUnpassedReasonExplain())
-                    .setStandardPoint(x.getStandardPoint())
-                    .setTermYear(x.getTermYear())
-                    .setTermOrder(x.getTermOrder())
-                    .setUpdate(x.isUpdate())
-                    .setCoursePropertyCode(x.getCoursePropertyCode())
-                    .setCoursePropertyName(x.getCoursePropertyName())
-                    .setExamTime(DateUtils.localDateToDate(x.getExamTime(), DateUtils.YYYY_MM_DD_PATTERN))
-                    .setExamTimeStr(x.getExamTime())
-                    .setOperateTime(parseGradeOperateTime(x.getOperateTime()))
-                    .setOperator(x.getOperator());
-        })
-                .sorted()
-                .collect(Collectors.toList());
-
     }
 
     public List<Grade> getSchemeGrade(StudentUser student) {
@@ -373,7 +273,6 @@ public class NewGradeSearchService {
 
         gradeDao.insertBatch(gradeList);
 
-        addEverFinishFetchAccount(student.getAccount().toString());
         return gradeList;
 
     }
@@ -409,13 +308,6 @@ public class NewGradeSearchService {
                 .collect(Collectors.toList());
     }
 
-    private Date parseGradeOperateTime(String text) {
-        if (text.length() == 12) {
-            text = text + "00";
-        }
-        return DateUtils.localDateToDate(text, DateUtils.PATTERN_WITHOUT_SPILT);
-    }
-
     /**
      * 返回新一个新成绩的list，旧的的成绩会被过滤
      */
@@ -439,7 +331,6 @@ public class NewGradeSearchService {
         // 这个逻辑是处理教务网同一个课程返回两个结果，那么选择有成绩的结果
         Map<String, Grade> spiderGradeMap = gradeList.stream()
                 .collect(Collectors.toMap(keyMapper, x -> x,binaryOperator));
-
 
         Map<String, Grade> dbGradeMap = gradeListFromDb.stream()
                 .collect(Collectors.toMap(keyMapper, x -> x, binaryOperator));
@@ -479,8 +370,6 @@ public class NewGradeSearchService {
             gradeDao.updateByPrimaryKeySelective(grade);
         }
         gradeDao.insertBatch(newList);
-
-
     }
 
 
@@ -506,42 +395,6 @@ public class NewGradeSearchService {
             buffer.append("- - - - - - - - - - - - - -");
         }
         return buffer.toString();
-    }
-
-    public boolean isCurrentFinishFetch(String account){
-
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        String currentKey = RedisKeys.CURRENT_GRAD_FINISH_ACCOUNT.genKey(term.getTermYear() + term.getOrder());
-        return isFinishFetch(currentKey, account);
-    }
-
-    private boolean isEverFinishFetch(String account){
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        String everKey = RedisKeys.EVER_GRAD_FINISH_ACCOUNT.genKey(term.getTermYear() + term.getOrder());
-        return isFinishFetch(everKey, account);
-    }
-
-    private boolean isFinishFetch(String key, String account){
-
-        SetOperations<String, String> opsForSet = stringRedisTemplate.opsForSet();
-        return BooleanUtils.toBoolean(opsForSet.isMember(key, account));
-    }
-
-    private void addCurrentFinishFetchAccount(String account){
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        addFinishFetchAccount(RedisKeys.CURRENT_GRAD_FINISH_ACCOUNT.genKey(term.getTermYear()+term.getOrder()),
-                account);
-    }
-
-    private void addEverFinishFetchAccount(String account){
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        addFinishFetchAccount(RedisKeys.EVER_GRAD_FINISH_ACCOUNT.genKey(term.getTermYear()+term.getOrder()),
-                account);
-    }
-
-    private void addFinishFetchAccount(String key, String account){
-        SetOperations<String, String> opsForSet = stringRedisTemplate.opsForSet();
-        opsForSet.add(key, account);
     }
 
 }

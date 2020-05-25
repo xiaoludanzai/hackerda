@@ -34,7 +34,7 @@ public class GradeController {
     @RequestMapping(value = "/grade", method = RequestMethod.POST)
     public WebResponse getGrade(@RequestParam("account") String account,
                                      @RequestParam("password") String password) {
-        GradeResultVo result = newGradeSearchService.getGrade(account, password);
+        GradeResultVo result = newGradeSearchService.getGrade(account);
         return WebResponse.success(result);
     }
 

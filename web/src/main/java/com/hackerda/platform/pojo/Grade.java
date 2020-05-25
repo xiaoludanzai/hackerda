@@ -1,5 +1,6 @@
 package com.hackerda.platform.pojo;
 
+import com.hackerda.platform.pojo.vo.GradeVo;
 import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @Accessors(chain = true)
@@ -172,6 +174,54 @@ public class Grade {
         Term term = DateUtils.getCurrentSchoolTime().getTerm();
         return this.getTermYear().equals(term.getTermYear()) && this.getTermOrder().equals(term.getOrder());
 
+    }
+
+
+
+    public GradeVo toVo(){
+        Course course = new Course();
+        course.setCredit(this.getCredit().toString());
+        course.setExamType(this.getExamTypeName());
+        course.setExamTypeCode(this.getExamTypeCode());
+        course.setCourseOrder(this.getCourseOrder());
+        course.setNum(this.getCourseNumber());
+        course.setName(this.getCourseName());
+        course.setTermYear(this.getTermYear());
+        course.setTermOrder(this.getTermOrder());
+        return new GradeVo()
+                .setCourse(course)
+                .setAccount(this.getAccount())
+                .setScore(this.getScore())
+                .setGradePoint(this.getGradePoint())
+                .setLevelName(this.getLevelName())
+                .setLevelPoint(this.getLevelPoint())
+                .setRank(this.getRank())
+                .setReplaceCourseNumber(this.getReplaceCourseNumber())
+                .setRemark(this.getRemark())
+                .setRetakeCourseMark(this.getRetakeCourseMark())
+                .setRetakecourseModeCode(this.getRetakecourseModeCode())
+                .setRetakeCourseModeExplain(this.getRetakeCourseModeExplain())
+                .setUnpassedReasonCode(this.getUnpassedReasonCode())
+                .setUnpassedReasonExplain(this.getUnpassedReasonExplain())
+                .setStandardPoint(this.getStandardPoint())
+                .setTermYear(this.getTermYear())
+                .setTermOrder(this.getTermOrder())
+                .setUpdate(this.isUpdate())
+                .setCoursePropertyCode(Optional.ofNullable(this.getCoursePropertyCode()).orElse(""))
+                .setCoursePropertyName(this.getCoursePropertyName())
+                .setExamTime(DateUtils.localDateToDate(this.getExamTime(), DateUtils.YYYY_MM_DD_PATTERN))
+                .setExamTimeStr(this.getExamTime())
+                .setOperateTime(parseGradeOperateTime(this.getOperateTime()))
+                .setOperator(this.getOperator());
+
+
+    }
+
+    private Date parseGradeOperateTime(String text) {
+        if (text.length() == 12) {
+            text = text + "00";
+        }
+        return DateUtils.localDateToDate(text, DateUtils.PATTERN_WITHOUT_SPILT);
     }
 
 

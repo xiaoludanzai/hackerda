@@ -57,7 +57,10 @@ public enum RedisKeys {
      */
     EVER_GRAD_FINISH_ACCOUNT("EVER_GRAD_FINISH_ACCOUNT"),
 
-
+    /**
+     * GPA 排名
+     */
+    GPA_RANK("GPA_RANK_ZSET"),
     ;
     private String name;
 
@@ -65,12 +68,13 @@ public enum RedisKeys {
         this.name=name;
     }
 
-    public String genKey(String key){
-        return name + "_" + key;
+    public String genKey(String... key){
+        return name + "_" + String.join("_", key);
     }
 
     public String getName(){
         return this.name;
     }
+
 
 }

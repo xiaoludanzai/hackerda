@@ -1,6 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.spider.UrpBaseSpider;
+import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.captcha.PreloadCaptchaProvider;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import org.junit.Test;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
 public class NewUrpSpiderServiceTest {
 
     @Autowired
-    private UrpBaseSpider urpBaseSpider;
+    private UrpSpider urpBaseSpider;
 
     @Test
     public void getCurrentGeneralGrade() {

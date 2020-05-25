@@ -29,6 +29,12 @@ public class CaptchaProvider implements ICaptchaProvider<CaptchaImage> {
 
     private final String captchaUrl;
 
+
+    public CaptchaProvider(String captchaUrl) {
+        this.restOperations = new RestTemplate();
+        this.captchaUrl = captchaUrl;
+    }
+
     public CaptchaProvider(RestOperations restOperations, String captchaUrl) {
         this.restOperations = restOperations;
         this.captchaUrl = captchaUrl;

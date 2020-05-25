@@ -4,8 +4,10 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.dao.WechatBindRecordDao;
 import com.hackerda.platform.dao.WechatOpenIdDao;
 import com.hackerda.platform.exceptions.OpenidExistException;
-import com.hackerda.platform.exceptions.ReadTimeoutException;
-import com.hackerda.platform.pojo.*;
+import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.pojo.UrpClass;
+import com.hackerda.platform.pojo.WechatBindRecord;
+import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.pojo.vo.StudentVo;
 import com.hackerda.platform.service.ClassService;
 import com.hackerda.platform.service.NewUrpSpiderService;
@@ -57,7 +59,6 @@ public class StudentBindService {
      * @param account  学生教务网账号
      * @param password 学生教务网密码
      * @throws PasswordUnCorrectException 密码不正确异常
-     * @throws ReadTimeoutException       读取信息超时异常
      * @throws OpenidExistException       Openid已存在
      */
     public StudentVo studentBind(String openid, String account, String password, String appid) throws OpenidExistException {
