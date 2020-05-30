@@ -8,6 +8,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
+import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.predict.CaptchaPredict;
 import com.hackerda.spider.support.UrpExamTime;
@@ -52,23 +53,15 @@ public class UrpCommonSpider extends UrpBaseSpider implements UrpSpider{
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ").omitEmptyStrings().trimResults();
 
 
-    public UrpCommonSpider(RestOperations client, CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider) {
-        super(client, captchaPredict, captchaProvider);
+    public UrpCommonSpider(RestOperations client, CaptchaPredict captchaPredict,
+                           ICaptchaProvider<CaptchaImage> captchaProvider, AccountCookiePersist<String> cookiePersist) {
+        super(client, captchaPredict, captchaProvider, cookiePersist);
     }
 
-    public UrpCommonSpider(RestOperations client, CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider, IExceptionHandler exceptionHandler) {
-        super(client, captchaPredict, captchaProvider, exceptionHandler);
-    }
-
-
-    public void login(String account, String password) {
-        this.account = account;
-
-        synchronized (account.intern()){
-            if(cookiePersist.getByAccount(account) == null){
-                super.login(account, password);
-            }
-        }
+    public UrpCommonSpider(RestOperations client, CaptchaPredict captchaPredict,
+                           ICaptchaProvider<CaptchaImage> captchaProvider, AccountCookiePersist<String> cookiePersist
+            , IExceptionHandler exceptionHandler) {
+        super(client, captchaPredict, captchaProvider, cookiePersist, exceptionHandler);
     }
 
 
@@ -197,13 +190,6 @@ public class UrpCommonSpider extends UrpBaseSpider implements UrpSpider{
         return infoMap;
     }
 
-    private <T> T parseObject(String text, TypeReference<T> type) {
-        try {
-            return JSON.parseObject(text, type);
-        } catch (JSONException e) {
-            throw new UrpException("json 解析异常", e);
-        }
-    }
 
     private <T> T parseObject(String text, Class<T> clazz) {
         try {

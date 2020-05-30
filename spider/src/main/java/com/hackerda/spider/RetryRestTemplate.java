@@ -37,9 +37,8 @@ public class RetryRestTemplate extends RestTemplate {
 
         RetryTemplate template = new RetryTemplate();
 
-        return template.execute((RetryCallback<T, RestClientException>) context -> {
-            return RetryRestTemplate.super.doExecute(url, method, requestCallback, responseExtractor);
-        });
+        return template.execute((RetryCallback<T, RestClientException>)
+                context -> RetryRestTemplate.super.doExecute(url, method, requestCallback, responseExtractor));
 
 
     }

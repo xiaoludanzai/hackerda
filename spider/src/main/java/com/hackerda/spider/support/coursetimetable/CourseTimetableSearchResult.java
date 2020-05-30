@@ -1,15 +1,12 @@
 /**
  * Copyright 2019 bejson.com
  */
-package com.hackerda.platform.spider.newmodel.searchclass;
+package com.hackerda.spider.support.coursetimetable;
 
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.UrpClassroom;
-import com.hackerda.platform.spider.newmodel.coursetimetable.TimeAndPlace;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
-import java.util.List;
+
 import java.util.stream.Collectors;
 
 /**
@@ -179,31 +176,5 @@ public class CourseTimetableSearchResult {
         return termName.substring(0, 9);
     }
 
-
-    public List<CourseTimetable> transToCourseTimetable() {
-        return TimeAndPlace.parseWeek(weekDescription).stream().map(x ->
-                new CourseTimetable()
-                        .setCourseId(id.courseId)
-                        .setCourseSequenceNumber(id.courseOrderNumber)
-                        .setAttendClassTeacher(teacherName)
-                        .setCampusName(campusName)
-                        .setClassDay(id.classWeek)
-                        .setClassOrder(id.classOrderInWeek)
-                        .setStudentCount(studentCount)
-                        .setContinuingSession(continuingSession)
-                        .setRoomNumber(classRoomNumber)
-                        .setRoomName(classRoomName)
-                        .setClassInSchoolWeek(id.classInSchoolWeek)
-                        .setTermYear(getTermYear())
-                        .setTermOrder(getTermOrder())
-                        .setWeekDescription(weekDescription)
-                        .setStartWeek(x[0])
-                        .setEndWeek(x[1])
-                        .setClassDistinct(TimeAndPlace.parseDistinct(id.classInSchoolWeek, x[0], x[1])))
-
-                .collect(Collectors.toList());
-
-
-    }
 
 }

@@ -15,7 +15,7 @@ public class MemoryCookiePersist<T> implements AccountCookiePersist<T> {
 
     public MemoryCookiePersist() {
         accountCookieCache = CacheBuilder.newBuilder()
-                .maximumSize(100)
+                .maximumSize(1000)
                 .expireAfterAccess(20L, TimeUnit.MINUTES)
                 .build();
     }

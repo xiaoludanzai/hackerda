@@ -4,6 +4,7 @@ package com.hackerda.spider;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.config.SpiderConfiguration;
+import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.predict.CaptchaPredict;
 import com.hackerda.spider.predict.SchoolCaptchaPredictor;
 import com.hackerda.spider.support.UrpExamTime;
@@ -117,8 +118,9 @@ public class SpiderIntegrationTest {
 
         @Bean
         public UrpSpider urpBaseSpider(RestTemplate client,
-                                           CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider){
-            return new UrpCommonSpider(client, captchaPredict, captchaProvider);
+                                           CaptchaPredict captchaPredict,
+                                       ICaptchaProvider<CaptchaImage> captchaProvider, AccountCookiePersist<String> cookiePersist){
+            return new UrpCommonSpider(client, captchaPredict, captchaProvider, cookiePersist);
         }
 
         @Bean

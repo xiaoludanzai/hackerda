@@ -9,6 +9,7 @@ import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.config.SpiderConfiguration;
+import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.predict.CaptchaPredict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,9 +35,10 @@ public class BasicsConfig {
     @Bean
     @Scope("prototype")
     public UrpSpider urpBaseSpider(RestTemplate client,
-                                   CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider){
+                                   CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
+                                   AccountCookiePersist<String> cookiePersist){
 
-        return new UrpCommonSpider(client, captchaPredict, captchaProvider, spiderExceptionHandler);
+        return new UrpCommonSpider(client, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
     }
 
 }

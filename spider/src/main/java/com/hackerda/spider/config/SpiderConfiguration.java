@@ -48,7 +48,7 @@ public class SpiderConfiguration {
     }
 
     @Bean
-    public AccountCookiePersist<String> accountCookiePersist(){
+    public AccountCookiePersist<String> cookiePersist(){
         return new MemoryCookiePersist<>();
     }
 
@@ -59,6 +59,14 @@ public class SpiderConfiguration {
     public CaptchaPredict captchaPredict(RestTemplate spiderTemplate){
         return new SchoolCaptchaPredictor(spiderTemplate, captchaPredict);
     }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AccountCookiePersist<String> captchaPredict(){
+        return new MemoryCookiePersist<>();
+    }
+
 
     @Bean
     @ConditionalOnMissingBean

@@ -1,38 +1,23 @@
 package com.hackerda.spider;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.TypeReference;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.cookie.MemoryCookiePersist;
 import com.hackerda.spider.exception.*;
 import com.hackerda.spider.predict.CaptchaPredict;
-import com.hackerda.spider.support.UrpExamTime;
-import com.hackerda.spider.support.UrpGeneralGrade;
-import com.hackerda.spider.support.UrpStudentInfo;
-import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
-import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 
 import java.net.HttpCookie;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 public class UrpBaseSpider {
@@ -43,32 +28,42 @@ public class UrpBaseSpider {
      */
     private final String CHECK = ROOT + "/j_spring_security_check";
 
-
-
     private final RestOperations client;
     private final CaptchaPredict captchaPredict;
     private final ICaptchaProvider<CaptchaImage> captchaProvider;
     private final IExceptionHandler exceptionHandler;
-    final static AccountCookiePersist<String> cookiePersist = new MemoryCookiePersist<>();
+    private final AccountCookiePersist<String> cookiePersist;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     String account = "";
 
 
     public UrpBaseSpider(RestOperations client, CaptchaPredict captchaPredict,
-                         ICaptchaProvider<CaptchaImage> captchaProvider) {
-        this(client, captchaPredict, captchaProvider , null);
+                         ICaptchaProvider<CaptchaImage> captchaProvider, AccountCookiePersist<String> cookiePersist) {
+        this(client, captchaPredict, captchaProvider , cookiePersist, null);
     }
 
     public UrpBaseSpider(RestOperations client, CaptchaPredict captchaPredict,
-                         ICaptchaProvider<CaptchaImage> captchaProvider, IExceptionHandler exceptionHandler) {
+                         ICaptchaProvider<CaptchaImage> captchaProvider, AccountCookiePersist<String> cookiePersist,
+                         IExceptionHandler exceptionHandler) {
         this.client = client;
         this.captchaPredict = captchaPredict;
         this.captchaProvider = captchaProvider;
+        this.cookiePersist = cookiePersist;
         this.exceptionHandler = exceptionHandler;
     }
 
 
+    protected void login0(String account, String password){
+        setAccount(account);
 
-    protected void login(String account, String password){
         CaptchaImage preLoad = captchaProvider.get();
         String predict = captchaPredict.predict(preLoad);
 
@@ -97,26 +92,42 @@ public class UrpBaseSpider {
 
 
         if (data.getStatusCode().is3xxRedirection()) {
-            List<String> locationList = data.getHeaders().get(HttpHeaders.LOCATION);
-            if (locationList != null && !locationList.isEmpty()) {
-                String location = locationList.get(0);
-                if (StringUtils.isEmpty(location)) {
-                    cookiePersist.clearByAccount(this.account);
-                    throw new UrpRequestException(CHECK, data.getStatusCodeValue(), data.getBody());
-                }
+            String location = getLocationFromHeader(data.getHeaders());
+
+            if (StringUtils.isEmpty(location)) {
+                throw new UrpRequestException(CHECK, data.getStatusCodeValue(), data.getBody());
             }
+
+            checkResult(location);
+
+            cookiePersist.saveByAccount(preLoad.getCookie(), account);
+        }else {
+            throw new UrpRequestException(CHECK, data.getStatusCodeValue(), data.getBody());
         }
 
-        checkResult(data.getBody());
-
-        cookiePersist.saveByAccount(preLoad.getCookie(), account);
 
     }
 
 
+    public void login(String account, String password){
+        synchronized (account.intern()){
+            if(!hasLogin()){
+                login0(account, password);
+            }
+        }
+    }
+
+    private String getLocationFromHeader(HttpHeaders httpHeaders){
+        List<String> locationList = httpHeaders.get(HttpHeaders.LOCATION);
+        if (locationList != null && !locationList.isEmpty()){
+            return locationList.get(0);
+        }
+
+        return "";
+    }
 
 
-    <T> ResponseEntity<T> postFormData(HttpEntity<MultiValueMap<String, String>> request, String url,
+    protected <T> ResponseEntity<T> postFormData(HttpEntity<MultiValueMap<String, String>> request, String url,
                                        Class<T> resultType) {
 
         return client.postForEntity(url, request, resultType);
@@ -146,7 +157,7 @@ public class UrpBaseSpider {
                     }
                 }
 
-                if(!(exception instanceof UrpEvaluationException)){
+                if(!(exception instanceof UrpEvaluationException) && hasLogin()){
                     cookiePersist.clearByAccount(account);
                 }
                 throw exception;
@@ -154,6 +165,7 @@ public class UrpBaseSpider {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     protected String getContent(String url) {
 
         HttpHeaders headers = new HttpHeaders();
@@ -181,6 +193,23 @@ public class UrpBaseSpider {
             return sb.toString();
         }
         return "";
+    }
+
+    <T> T parseObject(String text, TypeReference<T> type) {
+        try {
+            return JSON.parseObject(text, type);
+        } catch (JSONException e) {
+            throw new UrpException("json 解析异常", e);
+        }
+    }
+
+    public boolean hasLogin(){
+        String account = getAccount();
+        if(account == null || account.length() == 0){
+            return false;
+        }
+
+        return !(cookiePersist.getByAccount(account) == null);
     }
 
 }

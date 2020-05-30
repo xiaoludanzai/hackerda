@@ -586,32 +586,6 @@ public class NewUrpSpider {
         return parseObject(getContent(request), typeReference);
     }
 
-    /**
-     * 查询课程信息
-     *
-     * @param searchCoursePost
-     */
-    public SearchResultDateWrapper<SearchCourseResult> searchCourseBasicInfo(SearchCoursePost searchCoursePost) {
-        FormBody.Builder params = new FormBody.Builder();
-        FormBody body = params
-                .add("kkxsh", searchCoursePost.getAcademyCode())
-                .add("kcm", searchCoursePost.getCourseName())
-                .add("kch", searchCoursePost.getCourseNumber())
-                .add("pageSize", searchCoursePost.getPageSize())
-                .add("pageNum", searchCoursePost.getPageNum())
-                .build();
-
-        Request request = new Request.Builder()
-                .url(COURSE_BASIC_INFO)
-                .headers(HEADERS)
-                .post(body)
-                .build();
-
-        TypeReference<SearchResultDateWrapper<SearchCourseResult>> typeReference =
-                new TypeReference<SearchResultDateWrapper<SearchCourseResult>>() {
-                };
-        return parseObject(getContent(request), typeReference);
-    }
 
     public TeachingEvaluation searchTeachingEvaluationInfo() {
         Request request = new Request.Builder()
@@ -692,29 +666,7 @@ public class NewUrpSpider {
         }
 
     }
-
-    /**
-     * 解析学生信息页面的html
-     */
-    private Map<String, String> parseUserInfo(String html) {
-
-        HashMap<String, String> infoMap = new HashMap<>();
-        Document document = Jsoup.parse(html);
-        Elements elements = document.getElementsByClass("profile-info-row");
-        for (Element e : elements) {
-            Elements name = e.getElementsByClass("profile-info-name");
-            List<Element> nameList = Lists.newArrayList(name.iterator());
-            Elements value = e.getElementsByClass("profile-info-value");
-            List<Element> valueList = Lists.newArrayList(value.iterator());
-
-            for (int x = 0; x < nameList.size(); x++) {
-                infoMap.put(nameList.get(x).text(), valueList.get(x).text());
-            }
-        }
-
-        return infoMap;
-    }
-
+    
 
     private static byte[] execute(Request request) {
         try (Response response = CLIENT.newCall(request).execute()) {
