@@ -24,13 +24,6 @@ public class GradeController {
     private NewGradeSearchService newGradeSearchService;
 
 
-    @RequestMapping(value = "/nowGradeV2", method = RequestMethod.POST)
-    public WebResponse getNowGradeV2(@RequestParam("account") String account,
-                                     @RequestParam("password") String password) {
-        List<GradeVo> result = newGradeSearchService.getCurrentTermGrade(account, password);
-        return WebResponse.success(result);
-    }
-
     @RequestMapping(value = "/grade", method = RequestMethod.POST)
     public WebResponse getGrade(@RequestParam("account") String account,
                                      @RequestParam("password") String password) {

@@ -121,11 +121,6 @@ public class NewGradeSearchService {
     }
 
 
-    public List<GradeVo> getCurrentTermGrade(String account, String password) {
-        StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
-        return getCurrentTermGrade(student);
-    }
-
     /**
      * 这个方法是提供给前端使用，当抓取超时或者错误得时候会从数据库中读取数据，能保证一个有返回
      *
