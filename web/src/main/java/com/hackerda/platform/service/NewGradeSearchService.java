@@ -295,7 +295,7 @@ public class NewGradeSearchService {
                         .setLevelName(item.getGradeName())
                         .setStandardPoint(item.getStandardScore())
                         .setLevelPoint(Integer.toString(item.getGradeScore()))
-                        .setGradePoint(Double.parseDouble(item.getGradePointScore()))
+                        .setGradePoint(Double.parseDouble(Optional.ofNullable(item.getGradePointScore()).orElse("0")))
                         .setTermYear(item.getTermYear())
                         .setTermOrder(item.getTermCode())
                         .setStudyHour(item.getCycle() == null ? 0 : Integer.parseInt(item.getCycle()))

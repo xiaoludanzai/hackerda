@@ -42,7 +42,6 @@ public class RestFilter extends BasicHttpAuthenticationFilter {
             }catch (AuthenticationException e){
                 sendChallenge(request, response);
             }
-
         }
 
         return true;

@@ -77,10 +77,9 @@ public class CourseTimeTableServiceTest {
     @Test
     public void runba() throws InterruptedException {
 
-        ExecutorService service = Executors.newFixedThreadPool(4);
+        ExecutorService service = Executors.newFixedThreadPool(8);
         List<StudentUser> users = studentUserDao.selectAllStudent()
                 .stream()
-                .filter(x-> x.getAccount().toString().startsWith("2017"))
                 .filter(StudentUser::getIsCorrect)
                 .collect(Collectors.toList());
         CountDownLatch latch = new CountDownLatch(users.size());

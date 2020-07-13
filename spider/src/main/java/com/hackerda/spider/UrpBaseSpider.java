@@ -6,7 +6,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.cookie.AccountCookiePersist;
-import com.hackerda.spider.cookie.MemoryCookiePersist;
 import com.hackerda.spider.exception.*;
 import com.hackerda.spider.predict.CaptchaPredict;
 import lombok.extern.slf4j.Slf4j;
