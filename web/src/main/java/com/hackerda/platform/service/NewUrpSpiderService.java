@@ -61,7 +61,7 @@ public class NewUrpSpiderService {
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUser student) {
+    public List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUser student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getCurrentGeneralGrade();

@@ -199,11 +199,6 @@ public class NewGradeSearchService {
         return updateList;
     }
 
-    public GradeResultVo getGrade(String account, String password) {
-        return getGrade(account);
-
-    }
-
     public GradeResultVo getGrade(String account) {
         StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
         return getGrade(student);
