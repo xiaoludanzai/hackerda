@@ -9,12 +9,11 @@ import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
 import com.hackerda.platform.service.CourseTimeTableService;
-import com.hackerda.platform.service.NewGradeSearchService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;

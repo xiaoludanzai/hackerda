@@ -9,7 +9,6 @@ import com.hackerda.platform.pojo.vo.GradeVo;
 import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeGradeData;
 import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeMessage;
 import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeValue;
-import com.hackerda.platform.service.NewGradeSearchService;
 import com.hackerda.platform.service.SubscribeService;
 import com.hackerda.platform.service.wechat.SendMessageService;
 import com.hackerda.spider.exception.UrpEvaluationException;
@@ -41,13 +40,6 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
     private static ExecutorService gradeAutoUpdatePool = new MDCThreadPool(8, 8,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "gradeUpdate"));
 
-    private static final String ERROR_CONTENT = "请更新你的账号\n" +
-            "你的账号密码可能有误，请点击这里的链接进行更新。否则部分功能将无法使用\n";
-    private static final String BIND_URL = "https://platform.hackerda.com/platform/bind";
-
-
-    @Resource
-    private NewGradeSearchService newGradeSearchService;
     @Resource
     private TemplateBuilder templateBuilder;
     @Resource
@@ -180,13 +172,13 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
 
 
     List<GradeVo> getUpdateList(StudentUser student) {
-
-        List<GradeVo> termGrade = newGradeSearchService.getCurrentTermGradeVoSync(student);
-        return termGrade.stream()
-                .filter(GradeVo::isUpdate)
-                .filter(x -> !x.getScore().equals(-1.0))
-                .filter(x-> !x.getCoursePropertyCode().equals("003"))
-                .collect(Collectors.toList());
+        return null;
+//        List<GradeVo> termGrade = newGradeSearchService.getCurrentTermGradeVoSync(student);
+//        return termGrade.stream()
+//                .filter(GradeVo::isUpdate)
+//                .filter(x -> !x.getScore().equals(-1.0))
+//                .filter(x-> !x.getCoursePropertyCode().equals("003"))
+//                .collect(Collectors.toList());
     }
 
     /**

@@ -24,7 +24,6 @@ public class SubscribeService {
 
     private ScheduleTaskDao scheduleTaskDao;
     private OpenIdService openIdService;
-    private NewGradeSearchService newGradeSearchService;
 
 
 
