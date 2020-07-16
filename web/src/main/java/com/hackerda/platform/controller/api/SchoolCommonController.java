@@ -5,6 +5,7 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.grade.GradeQueryService;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.WebResponse;
+import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
 import com.hackerda.platform.service.CourseTimeTableService;
@@ -33,8 +34,14 @@ public class SchoolCommonController {
     @RequestMapping(value = "/grade")
     public WebResponse getNowGradeV2() {
         String account = SecurityUtils.getSubject().getPrincipal().toString();
+
         StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
         GradeResultVo grade = gradeQueryService.getGrade(student);
+
+        if (grade.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode()){
+            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或密码错误");
+        }
+
         return WebResponse.success(grade);
     }
 

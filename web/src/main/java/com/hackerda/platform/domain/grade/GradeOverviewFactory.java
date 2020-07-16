@@ -24,6 +24,11 @@ public class GradeOverviewFactory {
 
         GradeOverviewBO bo = new GradeOverviewBO(allByStudent);
 
+        if(bo.fetchSuccess()){
+            bo.setErrorCode(0);
+        }
+
+
         GpaRanker.RankResult rankResult = gpaRanker.rank(student, bo.getGpa());
 
         bo.setGpaRank(rankResult.getRank());

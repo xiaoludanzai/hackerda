@@ -22,6 +22,10 @@ public class GradeOverviewBO {
 
     private double optionalCourseCredit;
 
+    private int errorCode;
+
+    private String errorMsg;
+
     public GradeOverviewBO (List<TermGradeBO> termGradeList) {
         this.termGradeList = termGradeList;
 
@@ -64,11 +68,6 @@ public class GradeOverviewBO {
         return Collections.emptyList();
     }
 
-    public List<GradeBO> getCurrentTermNewGrade(){
-        return Collections.emptyList();
-    }
-
-
     public List<GradeBO> getNewGrade(){
         if(!CollectionUtils.isEmpty(termGradeList)) {
             return termGradeList.stream().map(TermGradeBO::getGradeList)
@@ -78,6 +77,23 @@ public class GradeOverviewBO {
         }
         return Collections.emptyList();
     }
+
+    public boolean fetchSuccess(){
+        if(CollectionUtils.isEmpty(termGradeList)){
+            return false;
+        }
+
+        boolean success = true;
+
+        for (TermGradeBO gradeBO : termGradeList) {
+            if(!gradeBO.isFetchSuccess()){
+                success = false;
+                break;
+            }
+        }
+        return success;
+    }
+
 
 
 }

@@ -5,6 +5,8 @@ import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.pojo.Grade;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class GradeAdapter {
 
@@ -95,7 +97,9 @@ public class GradeAdapter {
         bo.setRetakecourseModeCode(grade.getRetakecourseModeCode());
         bo.setRetakeCourseModeExplain(grade.getRetakeCourseModeExplain());
 
-        bo.setScore(grade.getScore());
+
+        BigDecimal b = BigDecimal.valueOf(grade.getScore());
+        bo.setScore(b.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
         bo.setStandardPoint(grade.getStandardPoint());
         bo.setStudyHour(grade.getStudyHour());
 

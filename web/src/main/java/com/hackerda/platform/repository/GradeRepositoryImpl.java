@@ -102,7 +102,7 @@ public class GradeRepositoryImpl implements GradeRepository {
                     .map(x-> gradeAdapter.toBO(x))
                     .collect(Collectors.toList());
 
-            gradeList = checkUpdate(student, gradeList);
+            gradeList = checkUpdate(student.getAccount(), gradeList);
 
         } catch (Exception e) {
             gradeList = gradeDao.getGradeByAccount(student.getAccount()).stream()
@@ -138,7 +138,7 @@ public class GradeRepositoryImpl implements GradeRepository {
                 msg = "评估未完成，无法查看成绩";
             } else {
                 errorCode = ErrorCode.SYSTEM_ERROR.getErrorCode();
-                msg = "评估未完成，无法查看成绩";
+                msg = exception.getMessage();
                 log.error("get grade error", exception);
             }
 
@@ -179,8 +179,8 @@ public class GradeRepositoryImpl implements GradeRepository {
     /**
      * 返回新一个新成绩的list，旧的的成绩会被过滤
      */
-    public List<GradeBO> checkUpdate(StudentUser student, List<GradeBO> gradeList) {
-        List<GradeBO> gradeListFromDb = gradeDao.getGradeByAccount(student.getAccount())
+    public List<GradeBO> checkUpdate(int account, List<GradeBO> gradeList) {
+        List<GradeBO> gradeListFromDb = gradeDao.getGradeByAccount(account)
                 .stream().map(x-> gradeAdapter.toBO(x)).collect(Collectors.toList());
 
         // 如果数据库之前没有保存过该学号成绩，则直接返回抓取结果

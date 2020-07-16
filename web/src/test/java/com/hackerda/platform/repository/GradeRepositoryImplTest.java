@@ -4,8 +4,12 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
+import com.hackerda.platform.mapper.GradeMapper;
 import com.hackerda.platform.pojo.StudentUser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSession;
+import org.assertj.core.util.Lists;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,9 +31,21 @@ public class GradeRepositoryImplTest {
     private GradeRepository gradeRepository;
     @Autowired
     private StudentUserDao userDao;
+    @Autowired
+    private GradeMapper gradeMapper;
+
+
+    @Before
+    public void init(){
+
+    }
+
 
     @Test
     public void testUpdate(){
+
+
+        gradeMapper.truncate();
 
         StudentUser user = userDao.selectStudentByAccount(2017025838);
 

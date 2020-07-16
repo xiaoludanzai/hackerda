@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -32,4 +33,7 @@ public interface GradeMapper {
     int updateByPrimaryKeySelective(Grade record);
 
     int updateByPrimaryKey(Grade record);
+
+    @Update("truncate table grade")
+    void truncate();
 }

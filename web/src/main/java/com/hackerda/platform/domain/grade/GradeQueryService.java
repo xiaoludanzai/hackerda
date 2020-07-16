@@ -20,15 +20,29 @@ public class GradeQueryService {
 
     public GradeResultVo getGrade(StudentUser studentUser) {
 
-        GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
-
-        List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
-        gradeRepository.update(updateGrade);
-
-        List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
-        gradeRepository.save(newGrade);
+        GradeOverviewBO gradeOverviewBO = getOverview(studentUser);
 
         return gradeTransfer.adapter2VO(gradeOverviewBO);
+
+    }
+
+    private GradeOverviewBO getOverview(StudentUser studentUser) {
+        GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
+
+        if(gradeOverviewBO.fetchSuccess()){
+            List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
+            gradeRepository.update(updateGrade);
+
+            List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
+            gradeRepository.save(newGrade);
+
+        }
+        return gradeOverviewBO;
+    }
+
+    public GradeOverviewBO getGradeOverview(StudentUser studentUser) {
+
+        return getOverview(studentUser);
 
     }
 

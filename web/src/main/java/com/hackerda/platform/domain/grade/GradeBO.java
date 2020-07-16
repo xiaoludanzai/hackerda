@@ -6,11 +6,15 @@ import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Date;
 
 @Data
 public class GradeBO {
+
+    @EqualsAndHashCode.Exclude
     private CourseBO course;
 
     @EqualsAndHashCode.Exclude
@@ -77,8 +81,9 @@ public class GradeBO {
 
     private Integer termOrder;
 
+    @EqualsAndHashCode.Exclude
     private boolean update = false;
-
+    @EqualsAndHashCode.Exclude
     private boolean newGrade = false;
 
     @EqualsAndHashCode.Exclude
@@ -133,6 +138,37 @@ public class GradeBO {
             this.operateTime = this.operateTime + "00";
         }
         return operateTime;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GradeBO gradeBO = (GradeBO) o;
+
+        return new EqualsBuilder()
+                .append(account, gradeBO.account)
+                .append(score, gradeBO.score)
+                .append(courseName, gradeBO.courseName)
+                .append(courseNumber, gradeBO.courseNumber)
+                .append(courseOrder, gradeBO.courseOrder)
+                .append(termYear, gradeBO.termYear)
+                .append(termOrder, gradeBO.termOrder)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(account)
+                .append(score)
+                .append(courseName)
+                .append(courseNumber)
+                .append(courseOrder)
+                .append(termYear)
+                .append(termOrder)
+                .toHashCode();
     }
 }
