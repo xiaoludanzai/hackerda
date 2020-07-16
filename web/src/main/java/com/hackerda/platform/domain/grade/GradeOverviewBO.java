@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class GradeOverviewBO {
 
         // count gpa
         for (GradeBO grade : collect) {
-            double credit = grade.getCredit();
+            double credit = grade.getCourseCredit();
             sumCredit += credit;
             sumGradePoint += grade.getCreditGradePoint();
             if(grade.isOptional()){
@@ -55,8 +56,8 @@ public class GradeOverviewBO {
 
     public List<GradeBO> getUpdateGrade(){
         if(!CollectionUtils.isEmpty(termGradeList)) {
-            return termGradeList.get(0).getGradeList()
-                    .stream()
+            return termGradeList.stream().map(TermGradeBO::getGradeList)
+                    .flatMap(Collection::stream)
                     .filter(GradeBO::isUpdate)
                     .collect(Collectors.toList());
         }
@@ -67,7 +68,16 @@ public class GradeOverviewBO {
         return Collections.emptyList();
     }
 
-    public List<GradeBO> getGradeNeedToSave(){
+
+    public List<GradeBO> getNewGrade(){
+        if(!CollectionUtils.isEmpty(termGradeList)) {
+            return termGradeList.stream().map(TermGradeBO::getGradeList)
+                    .flatMap(Collection::stream)
+                    .filter(GradeBO::isNewGrade)
+                    .collect(Collectors.toList());
+        }
         return Collections.emptyList();
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.hackerda.platform.pojo;
 
+import com.hackerda.platform.pojo.vo.CourseVO;
 import com.hackerda.platform.pojo.vo.GradeVo;
 import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
@@ -179,7 +180,7 @@ public class Grade {
 
 
     public GradeVo toVo(){
-        Course course = new Course();
+        CourseVO course = new CourseVO();
         course.setCredit(this.getCredit().toString());
         course.setExamType(this.getExamTypeName());
         course.setExamTypeCode(this.getExamTypeCode());

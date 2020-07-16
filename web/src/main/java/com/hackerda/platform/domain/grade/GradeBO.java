@@ -1,6 +1,8 @@
 package com.hackerda.platform.domain.grade;
 
+import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.pojo.Course;
+import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +11,7 @@ import java.util.Date;
 
 @Data
 public class GradeBO {
-    private Course course;
+    private CourseBO course;
 
     @EqualsAndHashCode.Exclude
     private Integer id;
@@ -101,7 +103,7 @@ public class GradeBO {
         return getScore() != -1;
     }
 
-    public double getCredit() {
+    public double getCourseCredit() {
         String creditStr = getCourse().getCredit();
         if(StringUtils.isNotEmpty(creditStr)){
             return Double.parseDouble(creditStr);
@@ -114,7 +116,23 @@ public class GradeBO {
      * @return
      */
     public double getCreditGradePoint() {
-        return getGradePoint() * getCredit();
+        return getGradePoint() * getCourseCredit();
     }
 
+
+    public Date getOperateTime(){
+        if (this.operateTime.length() == 12) {
+            this.operateTime = this.operateTime + "00";
+        }
+        return DateUtils.localDateToDate(this.operateTime, DateUtils.PATTERN_WITHOUT_SPILT);
+
+    }
+
+    public String getOperateTimeStr() {
+        if (this.operateTime.length() == 12) {
+            this.operateTime = this.operateTime + "00";
+        }
+        return operateTime;
+
+    }
 }

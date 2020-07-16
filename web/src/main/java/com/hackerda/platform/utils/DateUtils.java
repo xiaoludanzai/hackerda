@@ -72,11 +72,6 @@ public class DateUtils {
         return DateTimeFormatter.ofPattern(pattern).format(localDateTime);
     }
 
-    public static LocalDateTime string2LocalDateTime(String time, String pattern) {
-        return LocalDate.parse(time, DateTimeFormatter.ofPattern(pattern)).atStartOfDay();
-    }
-
-
     /**
      * 格式化时间转换为标准Java时间
      * @return
@@ -84,7 +79,6 @@ public class DateUtils {
     public static Date localDateToDate(String time, String pattern) {
 
         SimpleDateFormat format =  new SimpleDateFormat(pattern);
-
 
         try {
             return format.parse(time);

@@ -29,19 +29,13 @@ import java.util.stream.Collectors;
 @Service
 public class UrpCourseService {
 
-    @Resource
-    private UrpCourseDao urpCourseDao;
+
     @Resource
     private CourseDao courseDao;
 
     @Resource
     private NewUrpSpiderService newUrpSpiderService;
-    @Resource
-    private UrpSearchService urpSearchService;
 
-    private static final Cache<String, UrpCourse> cache = CacheBuilder.newBuilder()
-            .maximumSize(500)
-            .build();
 
     private static final Cache<String, Course> currentTermCourseCache = CacheBuilder.newBuilder()
             .maximumSize(2000)

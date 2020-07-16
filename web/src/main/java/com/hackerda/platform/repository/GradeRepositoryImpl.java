@@ -17,10 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,23 +42,41 @@ public class GradeRepositoryImpl implements GradeRepository {
     @Value("${spider.grade.timeout: 5000}")
     private int getGradeTimeout;
 
-    private static ExecutorService gradeAutoUpdatePool = new MDCThreadPool(8, 8,
+    private final ExecutorService gradeAutoUpdatePool = new MDCThreadPool(8, 8,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "gradeSearch"));
 
 
     @Override
     public void save(List<GradeBO> gradeList) {
+        if(CollectionUtils.isEmpty(gradeList)){
+            return;
+        }
+
         List<Grade> list = gradeList.stream().map(x -> gradeAdapter.toDO(x)).collect(Collectors.toList());
+
+        if(CollectionUtils.isEmpty(list)){
+            return;
+        }
+
         gradeDao.insertBatch(list);
     }
 
     @Override
     public void update(List<GradeBO> gradeList) {
+        if(CollectionUtils.isEmpty(gradeList)){
+            return;
+        }
+
         List<Grade> list = gradeList.stream().map(x -> gradeAdapter.toDO(x)).collect(Collectors.toList());
 
         for (Grade grade : list) {
-            gradeDao.updateByPrimaryKeySelective(grade);
+            gradeDao.updateByUniqueIndex(grade);
         }
+    }
+
+    @Override
+    public void delete(GradeBO grade) {
+        gradeDao.deleteByUniqueIndex(gradeAdapter.toDO(grade));
     }
 
     @Override
@@ -71,23 +94,29 @@ public class GradeRepositoryImpl implements GradeRepository {
                     return x;
                 });
 
-        List<Grade> gradeList;
+        List<GradeBO> gradeList;
         Exception exception = null;
         try {
-            gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS);
+            gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS)
+                    .stream()
+                    .map(x-> gradeAdapter.toBO(x))
+                    .collect(Collectors.toList());
+
+            gradeList = checkUpdate(student, gradeList);
+
         } catch (Exception e) {
-            gradeList =
-                    gradeDao.getGradeByAccount(student.getAccount());
+            gradeList = gradeDao.getGradeByAccount(student.getAccount()).stream()
+                            .map(x-> gradeAdapter.toBO(x))
+                            .collect(Collectors.toList());
             exception = e;
         }
 
-        List<TermGradeBO> termGradeList =
-                gradeToTermGradeList(gradeList.stream()
-                        .map(x-> gradeAdapter.toBO(x))
-                        .collect(Collectors.toList()));
+        List<TermGradeBO> termGradeList = gradeToTermGradeList(gradeList);
 
         if(exception != null){
             handleException(termGradeList, exception);
+        }else {
+            termGradeList.forEach(x-> x.setFetchSuccess(true));
         }
 
         return termGradeList;
@@ -146,4 +175,57 @@ public class GradeRepositoryImpl implements GradeRepository {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * 返回新一个新成绩的list，旧的的成绩会被过滤
+     */
+    public List<GradeBO> checkUpdate(StudentUser student, List<GradeBO> gradeList) {
+        List<GradeBO> gradeListFromDb = gradeDao.getGradeByAccount(student.getAccount())
+                .stream().map(x-> gradeAdapter.toBO(x)).collect(Collectors.toList());
+
+        // 如果数据库之前没有保存过该学号成绩，则直接返回抓取结果
+        if (CollectionUtils.isEmpty(gradeListFromDb)) {
+            gradeList.forEach(x-> x.setNewGrade(true));
+            return gradeList;
+        }
+
+        // 课程得唯一id作为map的key
+        Function<GradeBO, String> keyMapper = grade -> grade.getCourseNumber() + grade.getCourseOrder();
+
+        // 这个逻辑是处理教务网同一个课程返回两个结果，那么选择有成绩的结果
+        BinaryOperator<GradeBO> binaryOperator = (oldValue, newValue) -> {
+            if (oldValue.getScore() == -1) {
+                return newValue;
+            } else {
+                return oldValue;
+            }
+        };
+
+
+        Map<String, GradeBO> spiderGradeMap = gradeList.stream()
+                .collect(Collectors.toMap(keyMapper, x -> x,binaryOperator));
+
+        Map<String, GradeBO> dbGradeMap = gradeListFromDb.stream()
+                .collect(Collectors.toMap(keyMapper, x -> x, binaryOperator));
+
+        List<GradeBO> resultList = spiderGradeMap.entrySet().stream()
+                .map(entry -> {
+                    GradeBO grade = dbGradeMap.remove(entry.getKey());
+                    if (grade == null) {
+                        entry.getValue().setNewGrade(true);
+                        return entry.getValue();
+                    }
+
+                    if (!Objects.equals(grade, entry.getValue())) {
+                        entry.getValue().setUpdate(true);
+                        return entry.getValue();
+                    }
+
+                    return grade;
+                }).collect(Collectors.toList());
+
+        resultList.addAll(dbGradeMap.values());
+
+        return resultList;
+    }
 }

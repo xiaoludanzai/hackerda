@@ -14,6 +14,8 @@ public class GradeQueryService {
     private GradeOverviewFactory factory;
     @Autowired
     private GradeRepository gradeRepository;
+    @Autowired
+    private GradeTransfer gradeTransfer;
 
 
     public GradeResultVo getGrade(StudentUser studentUser) {
@@ -21,13 +23,14 @@ public class GradeQueryService {
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 
         List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
-
         gradeRepository.update(updateGrade);
 
-        gradeRepository.save(gradeOverviewBO.getGradeNeedToSave());
+        List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
+        gradeRepository.save(newGrade);
 
-        return null;
+        return gradeTransfer.adapter2VO(gradeOverviewBO);
 
     }
+
 
 }

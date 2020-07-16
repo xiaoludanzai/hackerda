@@ -10,5 +10,7 @@ public interface GradeRepository {
 
     void update(List<GradeBO> gradeList);
 
+    void delete(GradeBO grade);
+
     List<TermGradeBO> getAllByStudent(StudentUser studentUser);
 }

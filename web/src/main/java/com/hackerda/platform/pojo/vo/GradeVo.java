@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class GradeVo implements Comparable{
-    private Course course;
+    private CourseVO course;
 
     private Integer account;
 

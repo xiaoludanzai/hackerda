@@ -35,6 +35,10 @@ public class GradeResultVo {
 
     private String message;
 
+    public GradeResultVo() {
+
+
+    }
 
     public GradeResultVo(List<Grade> gradeList){
         List<TermGradeVo> termGradeVoList = gradeToTermGradeList(gradeList);

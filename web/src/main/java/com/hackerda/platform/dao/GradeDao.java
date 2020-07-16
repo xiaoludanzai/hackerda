@@ -68,14 +68,6 @@ public class GradeDao {
     }
 
 
-    public List<Grade> getEverTermGradeByAccount(int account) {
-        List<Grade> gradeList = getGradeByAccount(account);
-
-        return gradeList.stream().filter(grade -> !grade.isCurrentTermGrade())
-                .collect(Collectors.toList());
-    }
-
-
     public List<Grade> getGradeByAccount(int account) {
         return selectByPojo(new Grade()
                 .setAccount(account));
@@ -96,5 +88,17 @@ public class GradeDao {
                 .andCourseNumberEqualTo(grade.getCourseNumber());
 
         gradeExtMapper.updateByExampleSelective(grade, example);
+    }
+
+    public void deleteByUniqueIndex(Grade grade) {
+        GradeExample example = new GradeExample();
+        example.createCriteria()
+                .andAccountEqualTo(grade.getAccount())
+                .andTermYearEqualTo(grade.getTermYear())
+                .andTermOrderEqualTo(grade.getTermOrder())
+                .andCourseOrderEqualTo(grade.getCourseOrder())
+                .andCourseNumberEqualTo(grade.getCourseNumber());
+
+        gradeExtMapper.deleteByExample(example);
     }
 }
