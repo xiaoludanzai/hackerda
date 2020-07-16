@@ -92,7 +92,7 @@ public class GradeBO {
      * @return
      */
     public boolean isOptional(){
-        return getCoursePropertyCode().equals("003");
+        return getCoursePropertyCode().equals("003") || getCoursePropertyCode().equals("005");
     }
 
     /**

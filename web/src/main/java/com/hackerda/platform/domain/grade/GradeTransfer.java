@@ -37,7 +37,10 @@ public class GradeTransfer {
         vo.setCurrentTerm(termGradeBO.isCurrentTerm());
         vo.setTermOrder(termGradeBO.getTermOrder());
         vo.setTermYear(termGradeBO.getTermYear());
-        vo.setGradeList(termGradeBO.getGradeList().stream().map(this::adapter2VO).collect(Collectors.toList()));
+        vo.setGradeList(termGradeBO.getGradeList().stream()
+                .map(this::adapter2VO)
+                .sorted()
+                .collect(Collectors.toList()));
 
         return vo;
     }

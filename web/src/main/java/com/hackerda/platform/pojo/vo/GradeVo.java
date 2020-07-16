@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class GradeVo implements Comparable{
+public class GradeVo implements Comparable<GradeVo>{
     private CourseVO course;
 
     private Integer account;
@@ -63,16 +63,15 @@ public class GradeVo implements Comparable{
     private boolean update = false;
 
     @Override
-    public int compareTo(@NonNull Object o) {
-        GradeVo o1 = (GradeVo) o;
-        if(o1.getTermYear().compareTo(this.getTermYear()) == 0){
-            if(o1.getTermOrder().compareTo(this.getTermOrder()) == 0){
-                return o1.getOperateTime().compareTo(this.getOperateTime());
+    public int compareTo(@NonNull GradeVo gradeVo) {
+        if(gradeVo.getTermYear().compareTo(this.getTermYear()) == 0){
+            if(gradeVo.getTermOrder().compareTo(this.getTermOrder()) == 0){
+                return gradeVo.getOperateTime().compareTo(this.getOperateTime());
             }else {
-                return o1.getTermOrder().compareTo(this.getTermOrder());
+                return gradeVo.getTermOrder().compareTo(this.getTermOrder());
             }
         }else {
-            return o1.getTermYear().compareTo(this.getTermYear());
+            return gradeVo.getTermYear().compareTo(this.getTermYear());
         }
 
     }
