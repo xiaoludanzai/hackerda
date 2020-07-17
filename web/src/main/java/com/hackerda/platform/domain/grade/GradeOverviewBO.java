@@ -94,6 +94,17 @@ public class GradeOverviewBO {
         return success;
     }
 
+    public List<GradeBO> getNeedToSendGrade(){
+        if(!CollectionUtils.isEmpty(termGradeList)){
+            return termGradeList.get(0).getGradeList()
+                    .stream()
+                    .filter(GradeBO::hasScore)
+                    .filter(x-> x.isUpdate() || x.isNewGrade())
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
 
 
 }

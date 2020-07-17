@@ -1,24 +1,19 @@
 package com.hackerda.platform.task;
 
 import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.builder.TemplateBuilder;
-import com.hackerda.platform.config.wechat.WechatTemplateProperties;
+import com.hackerda.platform.domain.grade.GradeBO;
+import com.hackerda.platform.domain.grade.GradeMsgSender;
+import com.hackerda.platform.domain.grade.GradeOverviewBO;
+import com.hackerda.platform.domain.grade.GradeQueryService;
 import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.constant.MiniProgram;
-import com.hackerda.platform.pojo.vo.GradeVo;
-import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeGradeData;
-import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeMessage;
-import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeValue;
 import com.hackerda.platform.service.SubscribeService;
-import com.hackerda.platform.service.wechat.SendMessageService;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,13 +36,11 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "gradeUpdate"));
 
     @Resource
-    private TemplateBuilder templateBuilder;
-    @Resource
-    private WechatTemplateProperties wechatTemplateProperties;
-    @Resource
     private SubscribeService subscribeService;
-    @Resource
-    private SendMessageService sendMessageService;
+    @Autowired
+    private GradeQueryService gradeQueryService;
+    @Autowired
+    private GradeMsgSender gradeMsgSender;
 
     private static final BlockingQueue<UrpFetchTask> queue = new LinkedBlockingQueue<>();
 
@@ -113,10 +106,6 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
 
     }
 
-    void processScheduleTask(StudentUser student) {
-        processScheduleTask(new UrpFetchTask(student));
-    }
-
     /**
      * 处理每一个定时任务
      */
@@ -126,59 +115,11 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
         if (student == null) {
             return;
         }
-        List<GradeVo> updateList = getUpdateList(student);
 
-        if (!CollectionUtils.isEmpty(updateList)) {
-            for (GradeVo gradeVo : updateList) {
-                sendGradeToAccount(student, gradeVo);
-            }
+        GradeOverviewBO overview = gradeQueryService.getGradeOverview(student);
+        List<GradeBO> sendGrade = overview.getNeedToSendGrade();
+        gradeMsgSender.sendUpdateGradeToStudent(student, sendGrade);
 
-        }
-    }
-
-    public void sendMessageToApp(StudentUser student, GradeVo gradeVo){
-        SubscribeMessage<SubscribeGradeData> appMessage = new SubscribeMessage<>();
-        appMessage.setTemplateId("dmE0nyulM8OVcUs-KojDxCYECrKTmzOGDkEUUm2T5UE")
-                .setPage(MiniProgram.GRADE_PATH.getValue())
-                .setData(new SubscribeGradeData()
-                        .setCourseName(new SubscribeValue(gradeVo.getCourse().getName()))
-                        .setName(new SubscribeValue(student.getName()))
-                        .setScore(new SubscribeValue(gradeVo.getScore().toString()))
-                        .setRemark(new SubscribeValue("如需获取新提醒，请重新点击订阅~")));
-        sendMessageService.sendAppTemplateMessage(appMessage, student.getAccount());
-
-    }
-
-    public void sendMessageToPlus(StudentUser student, GradeVo gradeVo){
-        List<WxMpTemplateData> templateData = templateBuilder.gradeToTemplateData(student, gradeVo);
-        WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
-        miniProgram.setAppid(MiniProgram.APP_ID);
-        miniProgram.setPagePath(MiniProgram.GRADE_PATH.getValue());
-        WxMpTemplateMessage templateMessage =
-                templateBuilder.build("", templateData, wechatTemplateProperties.getPlusGradeUpdateTemplateId(),
-                        miniProgram);
-
-        sendMessageService.sendPlusTemplateMessageByAccount(templateMessage, student.getAccount());
-
-
-    }
-
-    public void sendGradeToAccount(StudentUser student, GradeVo gradeVo) {
-
-        sendMessageToApp(student, gradeVo);
-        sendMessageToPlus(student, gradeVo);
-
-    }
-
-
-    List<GradeVo> getUpdateList(StudentUser student) {
-        return null;
-//        List<GradeVo> termGrade = newGradeSearchService.getCurrentTermGradeVoSync(student);
-//        return termGrade.stream()
-//                .filter(GradeVo::isUpdate)
-//                .filter(x -> !x.getScore().equals(-1.0))
-//                .filter(x-> !x.getCoursePropertyCode().equals("003"))
-//                .collect(Collectors.toList());
     }
 
     /**

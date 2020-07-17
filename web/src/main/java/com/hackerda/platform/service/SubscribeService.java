@@ -22,10 +22,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SubscribeService {
 
-    private ScheduleTaskDao scheduleTaskDao;
-    private OpenIdService openIdService;
-
-
+    private final ScheduleTaskDao scheduleTaskDao;
+    private final OpenIdService openIdService;
 
     public Set<StudentUser> getGradeUpdateSubscribeStudent(){
         List<ScheduleTask> scheduleTaskList = scheduleTaskDao.selectByPojo(new ScheduleTask().setScene(Integer.parseInt(SubscribeScene.GRADE_AUTO_UPDATE.getScene())));
@@ -34,10 +32,7 @@ public class SubscribeService {
                 .map(x-> openIdService.getStudentByOpenId(x.getOpenid(), x.getAppid()))
                 .filter(Objects::nonNull)
                 .filter(StudentUser::getIsCorrect)
-//                .filter(x-> !newGradeSearchService.isCurrentFinishFetch(x.getAccount().toString()))
                 .collect(Collectors.toSet());
-
-
     }
 
 }

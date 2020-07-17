@@ -76,10 +76,6 @@ public class MiniProgramService {
                     .setTaskCount(0)
             );
         }
-
-
-
-
     }
 
     @Retryable(value = Exception.class, maxAttempts = 3)

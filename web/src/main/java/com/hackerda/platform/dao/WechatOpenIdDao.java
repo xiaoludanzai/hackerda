@@ -25,6 +25,9 @@ public class WechatOpenIdDao {
         if (wechatOpenid.getAppid() != null) {
             criteria.andAppidEqualTo(wechatOpenid.getAppid());
         }
+        if (wechatOpenid.getAccount() != null) {
+            criteria.andAccountEqualTo(wechatOpenid.getAccount());
+        }
 
         return wechatOpenIdExtMapper.selectByExample(example);
     }
