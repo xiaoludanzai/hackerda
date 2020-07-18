@@ -1,11 +1,11 @@
 package com.hackerda.platform.task;
 
 import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.domain.grade.GradeBO;
-import com.hackerda.platform.domain.grade.GradeMsgSender;
-import com.hackerda.platform.domain.grade.GradeOverviewBO;
-import com.hackerda.platform.domain.grade.GradeQueryService;
+import com.hackerda.platform.domain.grade.*;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.repository.student.StudentUserRepository;
 import com.hackerda.platform.service.SubscribeService;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
@@ -35,12 +35,12 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
     private static ExecutorService gradeAutoUpdatePool = new MDCThreadPool(8, 8,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "gradeUpdate"));
 
-    @Resource
-    private SubscribeService subscribeService;
     @Autowired
     private GradeQueryService gradeQueryService;
     @Autowired
     private GradeMsgSender gradeMsgSender;
+    @Autowired
+    private StudentUserRepository studentUserRepository;
 
     private static final BlockingQueue<UrpFetchTask> queue = new LinkedBlockingQueue<>();
 
@@ -58,7 +58,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
         while (true) {
             try {
 
-                Set<UrpFetchTask> fetchTasks = subscribeService.getGradeUpdateSubscribeStudent()
+                Set<UrpFetchTask> fetchTasks = studentUserRepository.getSubscribe(SubscribeScene.GRADE_AUTO_UPDATE)
                         .stream().map(UrpFetchTask::new)
                         .collect(Collectors.toSet());
 
@@ -111,7 +111,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
      */
     private void processScheduleTask(UrpFetchTask urpFetchTask) {
 
-        StudentUser student = urpFetchTask.student;
+        StudentUserBO student = urpFetchTask.student;
         if (student == null) {
             return;
         }
@@ -138,9 +138,9 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
     @Data
     private static class UrpFetchTask {
         private int timeoutCount;
-        private StudentUser student;
+        private StudentUserBO student;
 
-        UrpFetchTask(StudentUser student) {
+        UrpFetchTask(StudentUserBO student) {
             this.student = student;
         }
     }

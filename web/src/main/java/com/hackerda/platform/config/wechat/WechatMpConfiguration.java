@@ -1,6 +1,8 @@
 package com.hackerda.platform.config.wechat;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.interceptor.StudentInfoInterceptor;
 import com.hackerda.platform.interceptor.WechatOpenIdInterceptor;
 import com.hackerda.platform.service.wechat.WxMessageRouter;
@@ -38,6 +40,9 @@ public class WechatMpConfiguration {
 
     @Resource
     private WechatMpPlusProperties wechatMpPlusProperties;
+
+    @Resource
+    private MiniProgramProperties miniProgramProperties;
 
     @Resource
     private CourseMessageHandler courseMessageHandler;
@@ -102,6 +107,19 @@ public class WechatMpConfiguration {
         mpServices.put(wechatMpProProperties.getAppId(), wxProMpService);
         return Boolean.TRUE;
     }
+
+    @Bean
+    public Map<String , WechatPlatform> wechatPlatformMap(){
+
+        ImmutableMap.Builder<String, WechatPlatform> builder = ImmutableMap.builder();
+
+        return builder.put(wechatMpPlusProperties.getAppId(), WechatPlatform.HKXJ_PLUS)
+                .put(wechatMpProProperties.getAppId(), WechatPlatform.HKXJ_PRO)
+                .put(miniProgramProperties.getAppId(), WechatPlatform.HKXJ_APP)
+                .build();
+
+    }
+
 
     private WxMpMessageRouter newRouter(WxMpService wxMpService) {
         final WxMessageRouter newRouter = new WxMessageRouter(wxMpService);

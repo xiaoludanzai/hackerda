@@ -5,6 +5,7 @@ import com.hackerda.platform.dao.GradeDao;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Grade;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentUser;
@@ -80,7 +81,7 @@ public class GradeRepositoryImpl implements GradeRepository {
     }
 
     @Override
-    public List<TermGradeBO> getAllByStudent(StudentUser student) {
+    public List<TermGradeBO> getAllByStudent(StudentUserBO student) {
 
         CompletableFuture<List<Grade>> currentFuture =
                 CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getCurrentTermGrade(student), gradeAutoUpdatePool);

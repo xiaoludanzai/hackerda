@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.StudentUser;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface GradeRepository {
 
     void delete(GradeBO grade);
 
-    List<TermGradeBO> getAllByStudent(StudentUser studentUser);
+    List<TermGradeBO> getAllByStudent(StudentUserBO studentUser);
 }

@@ -4,8 +4,10 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
 import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.repository.student.StudentUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.assertj.core.util.Lists;
@@ -33,6 +35,8 @@ public class GradeRepositoryImplTest {
     private StudentUserDao userDao;
     @Autowired
     private GradeMapper gradeMapper;
+    @Autowired
+    private StudentUserRepository studentUserRepository;
 
 
     @Before
@@ -47,7 +51,7 @@ public class GradeRepositoryImplTest {
 
         gradeMapper.truncate();
 
-        StudentUser user = userDao.selectStudentByAccount(2017025838);
+        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 
@@ -70,7 +74,7 @@ public class GradeRepositoryImplTest {
     @Test
     public void testNewGrade(){
 
-        StudentUser user = userDao.selectStudentByAccount(2017025838);
+        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 

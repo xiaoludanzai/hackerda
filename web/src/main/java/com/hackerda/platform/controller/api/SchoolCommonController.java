@@ -26,16 +26,13 @@ public class SchoolCommonController {
     private CourseTimeTableService courseTimeTableService;
     @Autowired
     private GradeQueryService gradeQueryService;
-    @Autowired
-    private StudentUserDao studentUserDao;
 
     @RequiresAuthentication
     @RequestMapping(value = "/grade")
     public WebResponse getNowGradeV2() {
         String account = SecurityUtils.getSubject().getPrincipal().toString();
 
-        StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
-        GradeResultVo grade = gradeQueryService.getGrade(student);
+        GradeResultVo grade = gradeQueryService.getGrade(Integer.parseInt(account));
 
         if (grade.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode()){
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或密码错误");

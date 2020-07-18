@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.student;
 
+import com.hackerda.platform.domain.WechatPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,12 +20,15 @@ public class WechatOpenidBO {
 
     private String appId;
 
+    private WechatPlatform wechatPlatform;
+
     private List<WechatSubscribeBO> wechatSubscribeBOList;
 
-    public WechatOpenidBO(String openid, Boolean isBind, String appId){
+    public WechatOpenidBO(String openid, Boolean isBind, String appId, WechatPlatform wechatPlatform){
         this.openid = openid;
         this.appId = appId;
         this.isBind = isBind;
+        this.wechatPlatform = wechatPlatform;
     }
 
     @Override

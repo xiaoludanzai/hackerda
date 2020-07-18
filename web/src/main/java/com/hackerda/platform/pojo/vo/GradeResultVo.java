@@ -101,12 +101,5 @@ public class GradeResultVo {
     }
 
 
-    public void gpaRank(StudentUser studentUser, GpaRanker gpaRanker){
-
-        GpaRanker.RankResult rankResult = gpaRanker.rank(studentUser, this.gpa);
-        this.gpaRank = rankResult.getRank();
-        this.gpaRankSize = rankResult.getSize();
-    }
-
 
 }

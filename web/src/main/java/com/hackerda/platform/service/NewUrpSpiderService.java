@@ -1,6 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.spider.NewUrpSpider;
@@ -61,7 +62,7 @@ public class NewUrpSpiderService {
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUser student) {
+    public List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getCurrentGeneralGrade();
@@ -189,7 +190,7 @@ public class NewUrpSpiderService {
 
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<Scheme> getSchemeGrade(StudentUser student) {
+    public List<Scheme> getSchemeGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
         return baseSpider.getSchemeGrade();

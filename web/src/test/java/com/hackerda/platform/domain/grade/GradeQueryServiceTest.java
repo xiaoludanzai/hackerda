@@ -1,9 +1,11 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
+import com.hackerda.platform.repository.student.StudentUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,12 +27,13 @@ import static org.assertj.core.api.Assertions.*;
 public class GradeQueryServiceTest {
     @Autowired
     private GradeQueryService gradeQueryService;
-    @Autowired
-    private StudentUserDao userDao;
+
     @Autowired
     private GradeRepository repository;
     @Autowired
     private GradeMapper gradeMapper;
+    @Autowired
+    private StudentUserRepository studentUserRepository;
 
 
     @Test
@@ -38,7 +41,7 @@ public class GradeQueryServiceTest {
 
         gradeMapper.truncate();
 
-        StudentUser user = userDao.selectStudentByAccount(2017025838);
+        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
         GradeOverviewBO bo = gradeQueryService.getGradeOverview(user);
 

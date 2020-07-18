@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.service.GpaRanker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class GradeOverviewFactory {
     private GpaRanker gpaRanker;
 
 
-    public GradeOverviewBO create(StudentUser student) {
+    public GradeOverviewBO create(StudentUserBO student) {
 
 
         List<TermGradeBO> allByStudent = gradeRepository.getAllByStudent(student);

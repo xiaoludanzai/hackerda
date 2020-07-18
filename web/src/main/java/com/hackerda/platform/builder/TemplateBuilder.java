@@ -1,6 +1,7 @@
 package com.hackerda.platform.builder;
 
 import com.hackerda.platform.domain.grade.GradeBO;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
@@ -217,7 +218,7 @@ public class TemplateBuilder {
     }
 
 
-    public List<WxMpTemplateData> gradeToTemplateData(StudentUser student, GradeBO grade){
+    public List<WxMpTemplateData> gradeToTemplateData(StudentUserBO student, GradeBO grade){
         List<WxMpTemplateData> templateDataList = new ArrayList<>();
 
         WxMpTemplateData first = new WxMpTemplateData();

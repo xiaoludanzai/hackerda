@@ -1,7 +1,9 @@
 package com.hackerda.platform.domain.grade;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
+import com.hackerda.platform.repository.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ public class GradeQueryService {
     private GradeRepository gradeRepository;
     @Autowired
     private GradeTransfer gradeTransfer;
+    @Autowired
+    private StudentUserRepository studentUserRepository;
 
 
-    public GradeResultVo getGrade(StudentUser studentUser) {
+    public GradeResultVo getGrade(StudentUserBO studentUser) {
 
         GradeOverviewBO gradeOverviewBO = getOverview(studentUser);
 
@@ -26,7 +30,14 @@ public class GradeQueryService {
 
     }
 
-    private GradeOverviewBO getOverview(StudentUser studentUser) {
+    public GradeResultVo getGrade(int account) {
+        StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
+        GradeOverviewBO gradeOverviewBO = getOverview(studentUserBO);
+        return gradeTransfer.adapter2VO(gradeOverviewBO);
+
+    }
+
+    private GradeOverviewBO getOverview(StudentUserBO studentUser) {
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 
         if(gradeOverviewBO.fetchSuccess()){
@@ -40,7 +51,7 @@ public class GradeQueryService {
         return gradeOverviewBO;
     }
 
-    public GradeOverviewBO getGradeOverview(StudentUser studentUser) {
+    public GradeOverviewBO getGradeOverview(StudentUserBO studentUser) {
 
         return getOverview(studentUser);
 

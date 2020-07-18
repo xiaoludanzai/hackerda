@@ -1,6 +1,7 @@
 package com.hackerda.platform.domain.student;
 
 import com.hackerda.platform.pojo.WechatOpenid;
+import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -29,5 +30,18 @@ public class StudentUserBO {
     private String className;
 
     private List<WechatOpenidBO> wechatOpenidList;
+
+    /**
+     * 获取年级
+     * @return 2017级返回2017
+     */
+    public String getGrade(){
+        return account.toString().substring(0, 4);
+    }
+
+
+    public String getEnablePassword(String key) {
+        return DESUtil.decrypt(this.password, key);
+    }
 
 }

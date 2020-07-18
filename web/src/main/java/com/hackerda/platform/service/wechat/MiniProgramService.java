@@ -119,7 +119,7 @@ public class MiniProgramService {
         HttpEntity<String> request = new HttpEntity<>(JSON.toJSONString(message), headers);
         log.info("send mini app subscribe message data {}", message);
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, request , String.class );
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request , String.class);
             log.info("send mini app subscribe message success response {}", response.getBody());
         }catch (Exception e){
             log.error("send mini app subscribe message error", e);
