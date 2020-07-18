@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.student;
 
+import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
@@ -42,6 +43,33 @@ public class StudentUserBO {
 
     public String getEnablePassword(String key) {
         return DESUtil.decrypt(this.password, key);
+    }
+
+    public boolean hasBindApp() {
+        return getAppOpenid() != null;
+    }
+
+
+    public WechatOpenidBO getAppOpenid(){
+        for (WechatOpenidBO wechatOpenidBO : wechatOpenidList) {
+            if(wechatOpenidBO.getWechatPlatform() == WechatPlatform.HKXJ_APP){
+                return wechatOpenidBO;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasBindPlus() {
+        return getPlusOpenid() != null;
+    }
+
+    public WechatOpenidBO getPlusOpenid(){
+        for (WechatOpenidBO wechatOpenidBO : wechatOpenidList) {
+            if(wechatOpenidBO.getWechatPlatform() == WechatPlatform.HKXJ_PLUS){
+                return wechatOpenidBO;
+            }
+        }
+        return null;
     }
 
 }
