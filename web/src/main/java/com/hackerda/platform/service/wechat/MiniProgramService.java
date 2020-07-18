@@ -61,6 +61,11 @@ public class MiniProgramService {
 
     public void subscribe(String templateId, String openid){
         SubscribeScene scene = SubscribeScene.getByMiniProgramTemplateId(templateId);
+        if(scene == null){
+            log.warn("templateId {} scene is null", templateId);
+            return;
+        }
+
         List<ScheduleTask> taskList = scheduleTaskDao.selectByPojo(new ScheduleTask()
                 .setAppid(miniProgramProperties.getAppId())
                 .setOpenid(openid)
@@ -78,7 +83,7 @@ public class MiniProgramService {
         }
     }
 
-    @Retryable(value = Exception.class, maxAttempts = 3)
+    @Retryable(value = Exception.class)
     public String getAccessToken() {
         ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
         if(isAccessTokenExpire()){
@@ -102,7 +107,7 @@ public class MiniProgramService {
 
 
 
-    public void sendSubscribeMessage(SubscribeMessage message) {
+    public void sendSubscribeMessage(SubscribeMessage<?> message) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);

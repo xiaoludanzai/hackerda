@@ -2,12 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hackerda.platform.mapper.ext.StudentUserExtMapper">
 
+    <resultMap id="WechatStudentUserMap" type="com.hackerda.platform.pojo.WechatStudentUserDO">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="account" property="account" jdbcType="INTEGER" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="ethnic" property="ethnic" jdbcType="VARCHAR" />
+        <result column="urpclass_num" property="urpClassNum" jdbcType="INTEGER" />
+        <result column="is_correct" property="isCorrect" jdbcType="BIT" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+        <result column="academy_name" property="academyName" jdbcType="VARCHAR" />
+        <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+        <result column="class_name" property="className" jdbcType="VARCHAR" />
+        <result column="openid" property="openId" jdbcType="VARCHAR" />
+        <result column="appid" property="appId" jdbcType="VARCHAR" />
+        <result column="is_bind" property="isBind" jdbcType="BIT" />
+        <result column="is_subscribe" property="isSubscribe" jdbcType="TINYINT" />
+        <result column="scene" property="scene" jdbcType="INTEGER" />
+    </resultMap>
+
 
     <select id="selectRoleByAccount"  resultMap="com.hackerda.platform.mapper.RoleMapper.BaseResultMap">
         select r.id, r.name, r.code
         from student_role sr
                  join role r on sr.role_id = r.id
         where sr.account = #{account}
+
+    </select>
+
+    <select id="getWechatUserByAccount" resultMap="WechatStudentUserMap">
+        select su.id, su.account, password, name, sex, ethnic, urpclass_num, is_correct, academy_name, subject_name,
+               class_name, su.gmt_create, su.gmt_modified,  wo.openid, is_bind, wo.appid, scene, is_subscribe
+        from student_user su
+            left join wechat_openid wo on su.account = wo.account
+            left join schedule_task st on wo.openid = st.openid and wo.appid = st.appid
+
+        where su.account = #{account}
+
+    </select>
+
+    <select id="getWechatUserByAccountList" resultMap="WechatStudentUserMap">
+        select su.id, su.account, password, name, sex, ethnic, urpclass_num, is_correct, academy_name, subject_name,
+               class_name, su.gmt_create, su.gmt_modified,  wo.openid, is_bind, wo.appid, scene, is_subscribe
+        from student_user su
+                 left join wechat_openid wo on su.account = wo.account
+                 left join schedule_task st on wo.openid = st.openid and wo.appid = st.appid
+
+        where su.account in
+        <foreach collection="collection" item="account" index="index" open="(" close=")" separator=",">
+            #{account}
+        </foreach>
 
     </select>
 </mapper>

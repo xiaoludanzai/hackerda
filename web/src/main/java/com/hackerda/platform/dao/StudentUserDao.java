@@ -1,14 +1,11 @@
 package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.ext.StudentUserExtMapper;
-import com.hackerda.platform.pojo.Role;
-import com.hackerda.platform.pojo.Student;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.StudentUserExample;
-import com.hackerda.platform.pojo.example.StudentExample;
+import com.hackerda.platform.pojo.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -62,8 +59,15 @@ public class StudentUserDao {
     }
 
     public List<Role> selectRoleByAccount(String account){
-
         return studentUserExtMapper.selectRoleByAccount(Integer.parseInt(account));
+    }
+
+    public List<WechatStudentUserDO> getWechatUserByAccount(Integer account){
+        return studentUserExtMapper.getWechatUserByAccount(account);
+    }
+
+    public List<WechatStudentUserDO> getWechatUserByAccountList(Collection<Integer> account){
+        return studentUserExtMapper.getWechatUserByAccountList(account);
     }
 
 }

@@ -1,12 +1,13 @@
-package com.hackerda.platform.domain.student;
+package com.hackerda.platform.pojo;
 
-import com.hackerda.platform.pojo.WechatOpenid;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
-public class StudentUserBO {
+public class WechatStudentUserDO {
+
+    private Integer id;
 
     private Integer account;
 
@@ -28,6 +29,17 @@ public class StudentUserBO {
 
     private String className;
 
-    private List<WechatOpenidBO> wechatOpenidList;
+    private String appId;
 
+    private String openId;
+
+    private Boolean isBind;
+
+    private Boolean isSubscribe;
+
+    private Integer scene;
+
+    private Date gmtCreate;
+
+    private Date gmtModified;
 }
