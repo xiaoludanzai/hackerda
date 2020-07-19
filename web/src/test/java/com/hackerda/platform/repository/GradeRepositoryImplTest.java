@@ -1,28 +1,25 @@
 package com.hackerda.platform.repository;
 
-import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.repository.student.StudentUserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
-import org.assertj.core.util.Lists;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -32,23 +29,14 @@ public class GradeRepositoryImplTest {
     @Autowired
     private GradeRepository gradeRepository;
     @Autowired
-    private StudentUserDao userDao;
-    @Autowired
     private GradeMapper gradeMapper;
     @Autowired
     private StudentUserRepository studentUserRepository;
 
 
-    @Before
-    public void init(){
-
-    }
-
 
     @Test
     public void testUpdate(){
-
-
         gradeMapper.truncate();
 
         StudentUserBO user = studentUserRepository.getByAccount(2017025838);
@@ -66,8 +54,6 @@ public class GradeRepositoryImplTest {
         List<GradeBO> update = termGradeBOList2.get(0).getUpdate();
 
         assert update.size() == 1;
-
-
     }
 
 
@@ -85,8 +71,8 @@ public class GradeRepositoryImplTest {
         List<GradeBO> newGrade = termGradeBOList2.get(0).getNew();
 
         assert newGrade.size() == 1;
-
-
     }
+
+
 
 }

@@ -1,9 +1,7 @@
 package com.hackerda.platform.controller.api;
 
 
-import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.grade.GradeQueryService;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.WebResponse;
 import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;

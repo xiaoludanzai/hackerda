@@ -1,12 +1,13 @@
 package com.hackerda.platform.task;
 
 import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.domain.grade.*;
+import com.hackerda.platform.domain.grade.GradeBO;
+import com.hackerda.platform.domain.grade.GradeMsgSender;
+import com.hackerda.platform.domain.grade.GradeOverviewBO;
+import com.hackerda.platform.domain.grade.GradeQueryService;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.constant.SubscribeScene;
 import com.hackerda.platform.repository.student.StudentUserRepository;
-import com.hackerda.platform.service.SubscribeService;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
 import lombok.Data;
@@ -17,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
