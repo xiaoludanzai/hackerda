@@ -18,33 +18,13 @@ public class GradeVo implements Comparable<GradeVo>{
 
     private Double gradePoint;
 
-    private String levelName;
-
-    private String levelPoint;
-
     private Integer rank;
 
     private Date operateTime;
 
-    private String operator;
-
     private Date examTime;
 
     private String examTimeStr;
-
-    private String unpassedReasonCode;
-
-    private String unpassedReasonExplain;
-
-    private String remark;
-
-    private String replaceCourseNumber;
-
-    private String retakeCourseMark;
-
-    private String retakecourseModeCode;
-
-    private String retakeCourseModeExplain;
 
     private String standardPoint;
 
