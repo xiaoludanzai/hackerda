@@ -86,7 +86,7 @@ public class GradeOverviewBO {
         boolean success = true;
 
         for (TermGradeBO gradeBO : termGradeList) {
-            if(!gradeBO.isFetchSuccess()){
+            if(!gradeBO.isFetchSuccess() && !gradeBO.isFinishFetch()){
                 success = false;
                 break;
             }
@@ -110,10 +110,19 @@ public class GradeOverviewBO {
      * @return 完成抓取则返回true
      */
     public boolean isEverGradeFinishFetch(){
+        if (!CollectionUtils.isEmpty(termGradeList)) {
+            List<TermGradeBO> gradeBOList = termGradeList.stream()
+                    .filter(termGradeBO -> !termGradeBO.isCurrentTerm())
+                    .collect(Collectors.toList());
 
-        return fetchSuccess();
+            for (TermGradeBO grade : gradeBOList) {
+                if(!grade.isFinishFetch()){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
-
-
 
 }

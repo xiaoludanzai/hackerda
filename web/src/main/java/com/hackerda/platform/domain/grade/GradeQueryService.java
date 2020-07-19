@@ -34,14 +34,11 @@ public class GradeQueryService {
     private GradeOverviewBO getOverview(StudentUserBO studentUser) {
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 
-        if(gradeOverviewBO.fetchSuccess()){
-            List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
-            gradeRepository.update(updateGrade);
+        List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
+        gradeRepository.update(updateGrade);
 
-            List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
-            gradeRepository.save(newGrade);
-
-        }
+        List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
+        gradeRepository.save(newGrade);
 
         if(gradeOverviewBO.isEverGradeFinishFetch()){
             eventPublisher.publishGradeFetchFinish(studentUser.getAccount().toString());

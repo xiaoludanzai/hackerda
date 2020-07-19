@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -42,7 +39,6 @@ public class GradeRepositoryImpl implements GradeRepository {
     private GradeAdapter gradeAdapter;
     @Autowired
     private FetchStatusRecorder recorder;
-
     @Value("${spider.grade.timeout: 5000}")
     private int getGradeTimeout;
 
@@ -86,50 +82,52 @@ public class GradeRepositoryImpl implements GradeRepository {
     @Override
     public List<TermGradeBO> getAllByStudent(StudentUserBO student) {
 
-        CompletableFuture<List<Grade>> currentFuture =
-                CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getCurrentTermGrade(student), gradeAutoUpdatePool);
+        CompletableFuture<List<TermGradeBO>> currentFuture =
+                CompletableFuture.supplyAsync(() -> {
+                            List<TermGradeBO> gradeBOList = gradeToTermGradeList(gradeSpiderFacade.getCurrentTermGrade(student));
+                            gradeBOList.forEach(x-> x.setFetchSuccess(true));
+                            return gradeBOList;
+                        },
+                        gradeAutoUpdatePool);
 
-        CompletableFuture<List<Grade>> schemeFuture = getSchemeFuture(student);
+        CompletableFuture<List<TermGradeBO>> schemeFuture = getSchemeFuture(student);
 
-        CompletableFuture<List<Grade>> completableFuture = currentFuture.thenCombine(schemeFuture,
+        CompletableFuture<List<TermGradeBO>> completableFuture = currentFuture.thenCombine(schemeFuture,
                 (x, y) -> {
                     x.addAll(y);
                     return x;
                 });
 
-        List<GradeBO> gradeList;
+        List<TermGradeBO> gradeList;
         Exception exception = null;
         try {
-            gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS)
-                    .stream()
-                    .map(x-> gradeAdapter.toBO(x))
-                    .collect(Collectors.toList());
+            gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS);
 
             gradeList = checkUpdate(student.getAccount(), gradeList);
 
         } catch (Exception e) {
-            gradeList = gradeDao.getGradeByAccount(student.getAccount()).stream()
-                            .map(x-> gradeAdapter.toBO(x))
-                            .collect(Collectors.toList());
+            gradeList = gradeToTermGradeList(gradeDao.getGradeByAccount(student.getAccount()));
             exception = e;
         }
 
-        List<TermGradeBO> termGradeList = gradeToTermGradeList(gradeList);
-
         if(exception != null){
-            handleException(termGradeList, exception);
-        }else {
-            termGradeList.forEach(x-> x.setFetchSuccess(true));
+            handleException(gradeList, exception);
         }
 
-        return termGradeList;
+        return gradeList;
     }
 
-    private CompletableFuture<List<Grade>> getSchemeFuture(StudentUserBO student) {
+    private CompletableFuture<List<TermGradeBO>> getSchemeFuture(StudentUserBO student) {
         if (recorder.needToFetch(FetchScene.EVER_GRADE, student.getAccount().toString())) {
-            return CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getSchemeGrade(student), gradeAutoUpdatePool);
+            return CompletableFuture.supplyAsync(() -> {
+                List<TermGradeBO> gradeBOList = gradeToTermGradeList(gradeSpiderFacade.getSchemeGrade(student));
+                gradeBOList.forEach(x-> x.setFetchSuccess(true));
+                return gradeBOList;
+            }, gradeAutoUpdatePool);
         }else {
-            return CompletableFuture.completedFuture(gradeDao.getEverTermGradeByAccount(student.getAccount()));
+            List<TermGradeBO> termGradeBOList = gradeToTermGradeList(gradeDao.getEverTermGradeByAccount(student.getAccount()));
+            termGradeBOList.forEach(x-> x.setFinishFetch(true));
+            return CompletableFuture.completedFuture(termGradeBOList);
         }
     }
 
@@ -170,7 +168,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 
     }
 
-    private List<TermGradeBO> gradeToTermGradeList(List<GradeBO> gradeList) {
+    private List<TermGradeBO> gradeToTermGradeList(List<Grade> gradeList) {
         SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
 
         return gradeList.stream()
@@ -179,7 +177,25 @@ public class GradeRepositoryImpl implements GradeRepository {
                 .map(x -> new TermGradeBO()
                         .setTermYear(x.getKey().getTermYear())
                         .setTermOrder(x.getKey().getOrder())
-                        .setGradeList((x.getValue()))
+                        .setGradeList((x.getValue().stream()
+                                .map(grade -> gradeAdapter.toBO(grade))
+                                .collect(Collectors.toList())))
+                        .setCurrentTerm(schoolTime.getTerm().equals(x.getKey()))
+                )
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+    }
+
+    private List<TermGradeBO> gradeBOToTermGradeList(List<GradeBO> gradeList) {
+        SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
+
+        return gradeList.stream()
+                .collect(Collectors.groupingBy(x -> new Term(x.getTermYear(), x.getTermOrder())))
+                .entrySet().stream()
+                .map(x -> new TermGradeBO()
+                        .setTermYear(x.getKey().getTermYear())
+                        .setTermOrder(x.getKey().getOrder())
+                        .setGradeList(x.getValue())
                         .setCurrentTerm(schoolTime.getTerm().equals(x.getKey()))
                 )
                 .sorted(Comparator.reverseOrder())
@@ -190,14 +206,21 @@ public class GradeRepositoryImpl implements GradeRepository {
     /**
      * 返回新一个新成绩的list，旧的的成绩会被过滤
      */
-    public List<GradeBO> checkUpdate(int account, List<GradeBO> gradeList) {
+    public List<TermGradeBO> checkUpdate(int account, List<TermGradeBO> termGradeBOList) {
+
+        List<GradeBO> gradeList = termGradeBOList.stream()
+                .filter(x-> !x.isFinishFetch())
+                .map(TermGradeBO::getGradeList)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         List<GradeBO> gradeListFromDb = gradeDao.getGradeByAccount(account)
                 .stream().map(x-> gradeAdapter.toBO(x)).collect(Collectors.toList());
 
         // 如果数据库之前没有保存过该学号成绩，则直接返回抓取结果
         if (CollectionUtils.isEmpty(gradeListFromDb)) {
             gradeList.forEach(x-> x.setNewGrade(true));
-            return gradeList;
+            return gradeBOToTermGradeList(gradeList);
         }
 
         // 课程得唯一id作为map的key
@@ -237,6 +260,6 @@ public class GradeRepositoryImpl implements GradeRepository {
 
         resultList.addAll(dbGradeMap.values());
 
-        return resultList;
+        return gradeBOToTermGradeList(resultList);
     }
 }

@@ -20,7 +20,7 @@ public class TermGradeBO implements Comparable<TermGradeBO> {
 
     private boolean fetchSuccess;
 
-    private boolean needToFetch;
+    private boolean finishFetch;
 
     private String errorMsg;
 
