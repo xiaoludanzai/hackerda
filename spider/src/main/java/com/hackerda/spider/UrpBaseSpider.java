@@ -111,7 +111,6 @@ public class UrpBaseSpider {
         setAccount(account);
         synchronized (account.intern()){
             if(!hasLogin()){
-                log.info(" login account {}", account);
                 login0(account, password);
             }
         }
