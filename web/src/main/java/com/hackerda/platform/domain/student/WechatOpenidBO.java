@@ -4,6 +4,7 @@ import com.hackerda.platform.domain.WechatPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -27,7 +28,7 @@ public class WechatOpenidBO {
     public WechatOpenidBO(String openid, Boolean isBind, String appId, WechatPlatform wechatPlatform){
         this.openid = openid;
         this.appId = appId;
-        this.isBind = isBind;
+        this.isBind = BooleanUtils.toBoolean(isBind);
         this.wechatPlatform = wechatPlatform;
     }
 

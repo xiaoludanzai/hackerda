@@ -9,7 +9,9 @@ import com.hackerda.platform.service.wechat.WxMessageRouter;
 import com.hackerda.platform.service.wechat.handler.messageHandler.*;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
+import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpMenuService;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
@@ -30,7 +32,7 @@ import java.util.Map;
  * @author Binary Wang(https://github.com/binarywang)
  */
 @Configuration
-@ComponentScan(basePackages = "cn.hkxj.platform.config.*")
+@ComponentScan(basePackages = "com.hackerda.platform.config.*")
 @Component
 @EnableConfigurationProperties(value = {WechatMpProProperties.class, WechatMpPlusProperties.class, WechatTemplateProperties.class})
 public class WechatMpConfiguration {
@@ -223,10 +225,10 @@ public class WechatMpConfiguration {
         WxMenu menu = new WxMenu();
 
         List<WxMenuButton> buttons = new ArrayList<>();
-        WxMenuButton button1 = new WxMenuButton();
-        button1.setName("一键教评");
-        button1.setType("click");
-        button1.setKey("evaluation");
+//        WxMenuButton button1 = new WxMenuButton();
+//        button1.setName("一键教评");
+//        button1.setType("click");
+//        button1.setKey("evaluation");
 
         WxMenuButton button2 = new WxMenuButton();
         button2.setName("用户绑定");
@@ -241,19 +243,19 @@ public class WechatMpConfiguration {
         button3.setPagePath("pages/index/index");
         button3.setUrl("http://mp.weixin.qq.com");
 
-        buttons.add(button1);
+//        buttons.add(button1);
         buttons.add(button2);
         buttons.add(button3);
 
         menu.setButtons(buttons);
         System.out.println(menu.toJson());
-//        try {
-//            WxMpMenuService menuService = service.getMenuService();
-//
-//            menuService.menuCreate(menu);
-//        } catch (WxErrorException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            WxMpMenuService menuService = service.getMenuService();
+
+            menuService.menuCreate(menu);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Map<String, WxMpMessageRouter> getRouters() {
