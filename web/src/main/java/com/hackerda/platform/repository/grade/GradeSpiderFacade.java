@@ -1,4 +1,4 @@
-package com.hackerda.platform.repository;
+package com.hackerda.platform.repository.grade;
 
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;

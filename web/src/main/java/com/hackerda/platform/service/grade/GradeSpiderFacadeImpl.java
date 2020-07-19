@@ -1,11 +1,9 @@
 package com.hackerda.platform.service.grade;
 
-import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Grade;
 import com.hackerda.platform.pojo.GradeDetail;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.repository.GradeSpiderFacade;
+import com.hackerda.platform.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import com.hackerda.spider.support.scheme.Scheme;

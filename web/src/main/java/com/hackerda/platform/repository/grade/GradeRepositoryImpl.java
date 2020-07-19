@@ -1,4 +1,4 @@
-package com.hackerda.platform.repository;
+package com.hackerda.platform.repository.grade;
 
 import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.dao.GradeDao;
@@ -8,9 +8,10 @@ import com.hackerda.platform.domain.grade.TermGradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Grade;
 import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.repository.FetchScene;
+import com.hackerda.platform.repository.FetchStatusRecorder;
 import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpEvaluationException;
@@ -39,6 +40,8 @@ public class GradeRepositoryImpl implements GradeRepository {
     private GradeSpiderFacade gradeSpiderFacade;
     @Autowired
     private GradeAdapter gradeAdapter;
+    @Autowired
+    private FetchStatusRecorder recorder;
 
     @Value("${spider.grade.timeout: 5000}")
     private int getGradeTimeout;
@@ -86,8 +89,7 @@ public class GradeRepositoryImpl implements GradeRepository {
         CompletableFuture<List<Grade>> currentFuture =
                 CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getCurrentTermGrade(student), gradeAutoUpdatePool);
 
-        CompletableFuture<List<Grade>> schemeFuture =
-                CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getSchemeGrade(student), gradeAutoUpdatePool);
+        CompletableFuture<List<Grade>> schemeFuture = getSchemeFuture(student);
 
         CompletableFuture<List<Grade>> completableFuture = currentFuture.thenCombine(schemeFuture,
                 (x, y) -> {
@@ -121,6 +123,14 @@ public class GradeRepositoryImpl implements GradeRepository {
         }
 
         return termGradeList;
+    }
+
+    private CompletableFuture<List<Grade>> getSchemeFuture(StudentUserBO student) {
+        if (recorder.needToFetch(FetchScene.EVER_GRADE, student.getAccount().toString())) {
+            return CompletableFuture.supplyAsync(() -> gradeSpiderFacade.getSchemeGrade(student), gradeAutoUpdatePool);
+        }else {
+            return CompletableFuture.completedFuture(gradeDao.getEverTermGradeByAccount(student.getAccount()));
+        }
     }
 
 

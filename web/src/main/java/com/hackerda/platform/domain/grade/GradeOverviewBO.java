@@ -53,7 +53,7 @@ public class GradeOverviewBO {
         if(sumCredit != 0){
             double f = sumGradePoint / sumCredit;
             BigDecimal b = new BigDecimal(f);
-            this.setGpa(b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            this.setGpa(b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
     }
 
@@ -103,6 +103,15 @@ public class GradeOverviewBO {
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 以往的成绩是否已经完成抓取
+     * @return 完成抓取则返回true
+     */
+    public boolean isEverGradeFinishFetch(){
+
+        return fetchSuccess();
     }
 
 

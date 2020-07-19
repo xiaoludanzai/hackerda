@@ -1,6 +1,7 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.event.EventPublisher;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
 import com.hackerda.platform.repository.student.StudentUserRepository;
@@ -20,15 +21,8 @@ public class GradeQueryService {
     private GradeTransfer gradeTransfer;
     @Autowired
     private StudentUserRepository studentUserRepository;
-
-
-    public GradeResultVo getGrade(StudentUserBO studentUser) {
-
-        GradeOverviewBO gradeOverviewBO = getOverview(studentUser);
-
-        return gradeTransfer.adapter2VO(gradeOverviewBO);
-
-    }
+    @Autowired
+    private EventPublisher eventPublisher;
 
     public GradeResultVo getGrade(int account) {
         StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
@@ -48,6 +42,11 @@ public class GradeQueryService {
             gradeRepository.save(newGrade);
 
         }
+
+        if(gradeOverviewBO.isEverGradeFinishFetch()){
+            eventPublisher.publishGradeFetchFinish(studentUser.getAccount().toString());
+        }
+
         return gradeOverviewBO;
     }
 

@@ -5,6 +5,7 @@ import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
+import com.hackerda.platform.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.repository.student.StudentUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -17,9 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -32,7 +32,10 @@ public class GradeRepositoryImplTest {
     private GradeMapper gradeMapper;
     @Autowired
     private StudentUserRepository studentUserRepository;
-
+    @MockBean
+    private GradeSpiderFacade gradeSpiderFacade;
+    @Autowired
+    private FetchStatusRecorder fetchStatusRecorder;
 
 
     @Test
@@ -78,9 +81,19 @@ public class GradeRepositoryImplTest {
 
         StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
-        List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
+        fetchStatusRecorder.removeRecord(FetchScene.EVER_GRADE, "2017025838");
 
+        when(gradeSpiderFacade.getSchemeGrade(any())).thenReturn(Collections.emptyList());
 
+        gradeRepository.getAllByStudent(user);
+
+        fetchStatusRecorder.recordFinish(FetchScene.EVER_GRADE, "2017025838");
+
+        gradeRepository.getAllByStudent(user);
+
+        verify(gradeSpiderFacade, times(1)).getSchemeGrade(any());
+
+        assertThat(fetchStatusRecorder.needToFetch(FetchScene.EVER_GRADE, "2017025837")).isFalse();
     }
 
 

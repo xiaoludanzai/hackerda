@@ -58,6 +58,13 @@ public class GradeDao {
         return gradeExtMapper.selectByExample(gradeExample);
     }
 
+    public List<Grade> getEverTermGradeByAccount(int account) {
+        List<Grade> gradeList = getGradeByAccount(account);
+
+        return gradeList.stream().filter(grade -> !grade.isCurrentTermGrade())
+                .collect(Collectors.toList());
+    }
+
 
     public List<Grade> getCurrentTermGradeByAccount(int account) {
         SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
