@@ -73,6 +73,16 @@ public class GradeRepositoryImplTest {
         assert newGrade.size() == 1;
     }
 
+    @Test
+    public void testGetGrade(){
+
+        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+
+        List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
+
+
+    }
+
 
 
 }

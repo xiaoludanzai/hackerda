@@ -61,7 +61,7 @@ public class UrpBaseSpider {
 
 
     protected void login0(String account, String password){
-        setAccount(account);
+
 
         CaptchaImage preLoad = captchaProvider.get();
         String predict = captchaPredict.predict(preLoad);
@@ -107,10 +107,11 @@ public class UrpBaseSpider {
 
     }
 
-
     public void login(String account, String password){
+        setAccount(account);
         synchronized (account.intern()){
             if(!hasLogin()){
+                log.info(" login account {}", account);
                 login0(account, password);
             }
         }
@@ -208,7 +209,7 @@ public class UrpBaseSpider {
             return false;
         }
 
-        return !(cookiePersist.getByAccount(account) == null);
+        return cookiePersist.getByAccount(account) != null;
     }
 
 }
