@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @Service
 public class CourseTimeTableService {
 
-    private static final String NO_COURSE_TEXT = "今天没有课呐，可以出去浪了~\n";
     @Resource
     private RoomService roomService;
     @Resource

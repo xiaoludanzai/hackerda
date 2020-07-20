@@ -3,8 +3,10 @@ package com.hackerda.platform.dao;
 import com.hackerda.platform.mapper.ext.CourseTimetableExtMapper;
 import com.hackerda.platform.pojo.ClassCourseTimetable;
 import com.hackerda.platform.pojo.CourseTimetable;
+import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentCourseTimeTable;
 import com.hackerda.platform.pojo.example.CourseTimetableExample;
+import com.hackerda.platform.utils.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -129,5 +131,15 @@ public class CourseTimeTableDao {
             return list;
         }
         return courseTimetableExtMapper.selectBatch(list);
+    }
+
+    public List<CourseTimetable> getCurrentTermTableByAccount(Integer account){
+        SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
+
+        StudentCourseTimeTable table = new StudentCourseTimeTable()
+                .setStudentId(account)
+                .setTermOrder(schoolTime.getTerm().getOrder())
+                .setTermYear(schoolTime.getTerm().getTermYear());
+        return courseTimetableExtMapper.selectByStudentRelative(table);
     }
 }

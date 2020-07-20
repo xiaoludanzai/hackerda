@@ -125,6 +125,13 @@ public class NewUrpSpiderService {
         return baseSpider.getUrpCourseTimeTable();
     }
 
+    @Retryable(value = UrpException.class, maxAttempts = 3)
+    public UrpCourseTimeTable getUrpCourseTimeTable(StudentUserBO student) {
+        UrpSpider baseSpider = getBaseSpider();
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        return baseSpider.getUrpCourseTimeTable();
+    }
+
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public TeachingEvaluation searchTeachingEvaluationInfo(StudentUser student) {

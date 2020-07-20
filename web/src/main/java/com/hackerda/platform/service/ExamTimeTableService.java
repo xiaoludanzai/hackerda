@@ -136,15 +136,15 @@ public class ExamTimeTableService {
                                 .setExamDay(x.getDay())
                                 .setExamWeekOfTerm(x.getSchoolWek());
 
+                        Course course;
                         if (exam.getExamName().contains("开学补考")){
-                            Course course = urpCourseService.getCourse(x.getCourseNum(), x.getCourseNum(), "2019-2020", 1, null);
-                            exam.setCourse(course);
+                            course = urpCourseService.getCourse(x.getCourseNum(), x.getCourseNum(), "2019-2020", 1, null);
                         }else {
 
-                            Course course = urpCourseService.getCurrentTermCourse(x.getCourseNum(), x.getCourseOrder(),
+                            course = urpCourseService.getCurrentTermCourse(x.getCourseNum(), x.getCourseOrder(),
                                     new Course().setCourseOrder(x.getCourseOrder()));
-                            exam.setCourse(course);
                         }
+                        exam.setCourse(course);
 
                         return exam;
                     })
