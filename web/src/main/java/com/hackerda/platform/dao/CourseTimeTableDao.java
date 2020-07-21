@@ -126,7 +126,7 @@ public class CourseTimeTableDao {
         courseTimetableExtMapper.updateByExampleSelective(courseTimetable, example);
     }
 
-    public List<CourseTimetable> selectBatch(List<CourseTimetable> list){
+    public List<CourseTimetable> selectBatchByKey(List<CourseTimetable> list){
         if(CollectionUtils.isEmpty(list)){
             return list;
         }
@@ -142,4 +142,9 @@ public class CourseTimeTableDao {
                 .setTermYear(schoolTime.getTerm().getTermYear());
         return courseTimetableExtMapper.selectByStudentRelative(table);
     }
+
+    public void insertBatchStudentRelative(List<StudentCourseTimeTable> relativeList){
+        courseTimetableExtMapper.insertBatchStudentRelative(relativeList);
+    };
+
 }

@@ -1,7 +1,7 @@
 package com.hackerda.platform.domain.course.timetable;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.elasticsearch.CourseTimeTableRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 public class CourseTimetableFactory {
 
     @Autowired
-    private CourseTimeTableRepository courseTimeTableRepository;
+    private CourseTimetableRepository courseTimeTableRepository;
 
     public CourseTimeTableOverview createCurrent(StudentUserBO studentUserBO){
-
-        return null;
+        return courseTimeTableRepository.getCurrentTermTable(studentUserBO);
     }
 
 }

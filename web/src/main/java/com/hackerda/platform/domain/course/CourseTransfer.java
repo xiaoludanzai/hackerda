@@ -4,7 +4,7 @@ import com.hackerda.platform.pojo.vo.CourseVO;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CourseAdapter {
+public class CourseTransfer {
 
 
     public CourseVO adapter2VO(CourseBO bo){

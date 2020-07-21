@@ -4,6 +4,8 @@ import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Date;
 
@@ -68,4 +70,37 @@ public class CourseTimetable {
                 .setTermYear(getTermYear());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CourseTimetable that = (CourseTimetable) o;
+
+        return new EqualsBuilder()
+                .append(courseId, that.courseId)
+                .append(classDay, that.classDay)
+                .append(classOrder, that.classOrder)
+                .append(startWeek, that.startWeek)
+                .append(endWeek, that.endWeek)
+                .append(courseSequenceNumber, that.courseSequenceNumber)
+                .append(termYear, that.termYear)
+                .append(termOrder, that.termOrder)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(courseId)
+                .append(classDay)
+                .append(classOrder)
+                .append(startWeek)
+                .append(endWeek)
+                .append(courseSequenceNumber)
+                .append(termYear)
+                .append(termOrder)
+                .toHashCode();
+    }
 }

@@ -128,4 +128,21 @@
         ) as ct
 
     </select>
+
+    <insert id="insertBatchStudentRelative" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into course_timetable
+        (<include refid="com.hackerda.platform.mapper.StudentCourseTimeTableMapper.Base_Column_List"/>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=INTEGER},
+            #{item.studentId,jdbcType=INTEGER},
+            #{item.courseTimetableId,jdbcType=INTEGER},
+            #{item.termYear,jdbcType=CHAR},
+            #{item.termOrder,jdbcType=INTEGER},
+            )
+        </foreach>
+
+    </insert>
+
 </mapper>

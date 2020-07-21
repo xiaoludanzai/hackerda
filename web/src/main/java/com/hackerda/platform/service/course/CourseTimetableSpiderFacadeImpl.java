@@ -3,8 +3,12 @@ package com.hackerda.platform.service.course;
 import com.google.common.collect.Lists;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.pojo.CourseTimetable;
+import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.repository.course.timetable.CourseTimetableSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
+import com.hackerda.platform.service.UrpSearchService;
+import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.spider.support.coursetimetable.TimeAndPlace;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +23,11 @@ public class CourseTimetableSpiderFacadeImpl implements CourseTimetableSpiderFac
 
     @Autowired
     private NewUrpSpiderService newUrpSpiderService;
+    @Autowired
+    private UrpSearchService urpSearchService;
 
     @Override
-    public List<CourseTimetableBO> getCurrentTermTable(StudentUserBO studentUserBO) {
+    public List<CourseTimetable> getCurrentTermTableByAccount(StudentUserBO studentUserBO) {
 
         UrpCourseTimeTable timeTable = newUrpSpiderService.getUrpCourseTimeTable(studentUserBO);
 
@@ -29,13 +35,13 @@ public class CourseTimetableSpiderFacadeImpl implements CourseTimetableSpiderFac
         return timeTable.getDetails()
                 .stream().flatMap(x -> x.values().stream()
                         .map(course -> {
-                                    List<CourseTimetableBO> result = Lists.newArrayList();
+                                    List<CourseTimetable> result = Lists.newArrayList();
                                     String[] termYearAndTermOrder =
                                             parseTermYearAndTermOrder(course.getCourseRelativeInfo().getExecutiveEducationPlanNumber());
                                     for (TimeAndPlace timeAndPlace : course.getTimeAndPlaceList()) {
                                         for (int[] weekArray : TimeAndPlace.parseWeek(timeAndPlace.getWeekDescription())) {
                                             result.add(
-                                                    new CourseTimetableBO()
+                                                    new CourseTimetable()
                                                             .setTermYear(termYearAndTermOrder[0])
                                                             .setTermOrder(Integer.parseInt(termYearAndTermOrder[1]))
                                                             .setCourseId(timeAndPlace.getCourseNumber())
@@ -57,6 +63,12 @@ public class CourseTimetableSpiderFacadeImpl implements CourseTimetableSpiderFac
 
                         )).flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseTimetable> getCurrentTermTableByClassID(StudentUserBO studentUserBO) {
+        Term term = DateUtils.getCurrentSchoolTime().getTerm();
+        return  urpSearchService.searchCourse(term.getTermYear(), term.getOrder(), studentUserBO.getUrpClassNum().toString());
     }
 
     private String[] parseTermYearAndTermOrder(String executiveEducationPlanNumber) {

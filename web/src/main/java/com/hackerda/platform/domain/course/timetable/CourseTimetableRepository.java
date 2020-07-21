@@ -10,6 +10,8 @@ public interface CourseTimetableRepository {
 
     CourseTimeTableOverview getCurrentTermTable(StudentUserBO studentUserBO);
 
+    CourseTimeTableOverview getCurrentTermByClassId(StudentUserBO studentUserBO);
+
     void saveByStudent(List<CourseTimetableBO> tableList, StudentUserBO studentUserBO);
 
     void saveByClass(List<CourseTimetableBO> tableList, StudentUserBO studentUserBO);

@@ -290,7 +290,7 @@ public class CourseTimeTableService {
         if(CollectionUtils.isEmpty(timetableList)){
 
             List<CourseTimetable> spiderResult = urpSearchService.searchCourse(term.getTermYear(), term.getOrder(), classNum);
-            List<CourseTimetable> selectBatch = courseTimeTableDao.selectBatch(spiderResult);
+            List<CourseTimetable> selectBatch = courseTimeTableDao.selectBatchByKey(spiderResult);
             try {
                 if (spiderResult.size() == selectBatch.size()){
                     List<ClassCourseTimetable> collect = selectBatch.stream()
