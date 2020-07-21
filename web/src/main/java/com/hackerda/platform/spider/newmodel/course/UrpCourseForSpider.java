@@ -1,6 +1,5 @@
 package com.hackerda.platform.spider.newmodel.course;
 
-import com.hackerda.platform.pojo.UrpCourse;
 import lombok.Data;
 
 /**
@@ -195,54 +194,5 @@ public class UrpCourseForSpider {
      */
     private String zyxkdx;
 
-    public UrpCourse convertToUrpCourse(){
-        UrpCourse urpCourse = new UrpCourse();
-        urpCourse.setUndergraduatePostgraduateFlag(this.getBybz());
-        urpCourse.setRemark(this.getBz());
-        urpCourse.setStandardPersonNumber(this.getBzrs());
-        urpCourse.setReferenceBook(this.getCks());
-        urpCourse.setTeachingMaterial(this.getJc());
-        urpCourse.setTotalHourInClass(this.getJkzxs());
-        urpCourse.setJsm(this.getJsm());
-        urpCourse.setEndDate(this.getJsrq());
-        urpCourse.setJxdg(this.getJxdg());
-        urpCourse.setTeachingMethod(this.getJxfssm());
-        urpCourse.setCourseNumber(this.getKch());
-        urpCourse.setBasicNameOfCourse(this.getKcjbmc());
-        urpCourse.setCourseType(this.getKclbmc());
-        urpCourse.setCourseName(this.getKcm());
-        urpCourse.setCourseDescription(this.getKcsm());
-        urpCourse.setCourseStatus(this.getKcztdm());
-        urpCourse.setSemester(this.getKkxq());
-        urpCourse.setTotalHourInClass(this.getKnzxs());
-        urpCourse.setCourseFeeClassCode(this.getKsflbdm());
-        urpCourse.setExaminationName(this.getKslxmc());
-        urpCourse.setStartDate(this.getKsrq());
-        urpCourse.setExtracurricularCredit(this.getKwxf());
-        urpCourse.setExtracurricularTotalHour(this.getKwzxs());
-        urpCourse.setContentAbstract(this.getNrjj());
-        urpCourse.setOnComputerHour(this.getQzsjzxs());
-        urpCourse.setNumberCoeffcientCode(this.getRsxsdm());
-        urpCourse.setChargeCategoryName(this.getSflbmc());
-        urpCourse.setPracticeWeek(this.getSjzs());
-        urpCourse.setDesignTotalHour(this.getSjzxs());
-        urpCourse.setDesignHomeworkTotalHour(this.getSjzyzxs());
-        urpCourse.setExperimentHour(this.getSyzxs());
-        urpCourse.setTeachingStaff(this.getSzdw());
-        urpCourse.setDiscussCounselingTotalHour(this.getTlfdzxs());
-        urpCourse.setCredit(this.getXf());
-        urpCourse.setSubjectCategoryNumber(this.getXkmlh());
-        urpCourse.setSubjectCategoryName(this.getXkmlm());
-        urpCourse.setCampusNumber(this.getXqh());
-        urpCourse.setCampusName(this.getXqm());
-        urpCourse.setClassHour(this.getXs());
-        urpCourse.setAcademy(this.getXsh());
-        urpCourse.setXxkch(this.getXxkch());
-        urpCourse.setEnglishSyllabus(this.getYwjxdg());
-        urpCourse.setEnglishCourseName(this.getYwkcm());
-        urpCourse.setEnglishContentBrief(this.getYwnrjj());
-        urpCourse.setCourseType(this.getZyxkdx());
-        return urpCourse;
-    }
 }
 

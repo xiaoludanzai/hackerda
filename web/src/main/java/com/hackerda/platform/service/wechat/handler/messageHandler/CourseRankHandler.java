@@ -1,29 +1,19 @@
 package com.hackerda.platform.service.wechat.handler.messageHandler;
 
 import com.hackerda.platform.builder.TextBuilder;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.UrpCourse;
-import com.hackerda.platform.pojo.constant.RedisKeys;
 import com.hackerda.platform.service.OpenIdService;
-import com.hackerda.platform.spider.newmodel.searchclass.ClassCourseHour;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Map;
 
 @Slf4j
@@ -40,48 +30,49 @@ public class CourseRankHandler implements WxMpMessageHandler {
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) {
-        String appId = wxMpService.getWxMpConfigStorage().getAppId();
-        String openid = wxMpXmlMessage.getFromUser();
-        StudentUser student = openIdService.getStudentByOpenId(openid, appId);
-
-        HashOperations<String, String, String> hash = redisTemplate.opsForHash();
-        String urpClassCode = student.getUrpclassNum().toString();
-
-        if(StringUtils.isEmpty(urpClassCode)){
-            return textBuilder.build("没有查询到你的排名", wxMpXmlMessage, wxMpService);
-        }
-        ClassCourseHour courseHour = JSON.parseObject(hash.get(RedisKeys.CLASS_COURSE_HOUR_DETAIL.getName(), urpClassCode), ClassCourseHour.class);
-        if(courseHour == null){
-            return textBuilder.build("没有查询到你的排名", wxMpXmlMessage, wxMpService);
-        }
-
-        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
-        Long rank = zSet.reverseRank(RedisKeys.CLASS_COURSE_HOUR_RANK.getName(), urpClassCode);
-        String percent;
-        if(rank == 1){
-            percent = "100%";
-        }else if(rank == 780){
-            percent = "0%";
-        }else {
-            percent = percent((780 - rank),780);
-        }
-        String result = String.format(template, courseHour.getClassInfo().getClassName(), courseHour.getCourseHourCount(),
-                rank, percent);
-        StringBuffer buffer = new StringBuffer(result);
-        ArrayList<UrpCourse> courses = new ArrayList<>(courseHour.getUrpCourseSet());
-        courses.sort(Comparator.comparingInt(UrpCourse::getClassHour).reversed());
-        buffer.append(String.format("\n\n本学期一共有%d节课", courses.size())).append("\n\n");
-
-        int count = 1;
-        for (UrpCourse course : courses) {
-            buffer.append(count).append("  ").append(course.getCourseName()).append("  ").append("学时:").append(course.getClassHour()).append("\n");
-            count ++;
-        }
-        buffer.append("\n").append("回复【订阅】可以比78%的黑科大人" +
-                "提前知道课表、考试成绩、考试时间。");
-
-
-        return textBuilder.build(buffer.toString(), wxMpXmlMessage, wxMpService);
+//        String appId = wxMpService.getWxMpConfigStorage().getAppId();
+//        String openid = wxMpXmlMessage.getFromUser();
+//        StudentUser student = openIdService.getStudentByOpenId(openid, appId);
+//
+//        HashOperations<String, String, String> hash = redisTemplate.opsForHash();
+//        String urpClassCode = student.getUrpclassNum().toString();
+//
+//        if(StringUtils.isEmpty(urpClassCode)){
+//            return textBuilder.build("没有查询到你的排名", wxMpXmlMessage, wxMpService);
+//        }
+//        ClassCourseHour courseHour = JSON.parseObject(hash.get(RedisKeys.CLASS_COURSE_HOUR_DETAIL.getName(), urpClassCode), ClassCourseHour.class);
+//        if(courseHour == null){
+//            return textBuilder.build("没有查询到你的排名", wxMpXmlMessage, wxMpService);
+//        }
+//
+//        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+//        Long rank = zSet.reverseRank(RedisKeys.CLASS_COURSE_HOUR_RANK.getName(), urpClassCode);
+//        String percent;
+//        if(rank == 1){
+//            percent = "100%";
+//        }else if(rank == 780){
+//            percent = "0%";
+//        }else {
+//            percent = percent((780 - rank),780);
+//        }
+//        String result = String.format(template, courseHour.getClassInfo().getClassName(), courseHour.getCourseHourCount(),
+//                rank, percent);
+//        StringBuffer buffer = new StringBuffer(result);
+//        ArrayList<UrpCourse> courses = new ArrayList<>(courseHour.getUrpCourseSet());
+//        courses.sort(Comparator.comparingInt(UrpCourse::getClassHour).reversed());
+//        buffer.append(String.format("\n\n本学期一共有%d节课", courses.size())).append("\n\n");
+//
+//        int count = 1;
+//        for (UrpCourse course : courses) {
+//            buffer.append(count).append("  ").append(course.getCourseName()).append("  ").append("学时:").append(course.getClassHour()).append("\n");
+//            count ++;
+//        }
+//        buffer.append("\n").append("回复【订阅】可以比78%的黑科大人" +
+//                "提前知道课表、考试成绩、考试时间。");
+//
+//
+//        return textBuilder.build(buffer.toString(), wxMpXmlMessage, wxMpService);
+        return null;
     }
 
 
