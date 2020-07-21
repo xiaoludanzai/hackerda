@@ -2,7 +2,6 @@ package com.hackerda.platform.spider.newmodel.coursetimetable;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
-import com.hackerda.platform.pojo.constant.Building;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharUtils;
@@ -95,12 +94,6 @@ public class TimeAndPlace {
     private String xf;
 
 
-    private String specialProcess(String classroomName, String teachingBuildingName) {
-        if (teachingBuildingName.startsWith(Building.MAIN.getChinese())) {
-            return Building.MAIN.getChinese() + classroomName;
-        }
-        return classroomName;
-    }
 
     private String[] parseTermYearAndTermOrder(String executiveEducationPlanNumber) {
         String[] results = executiveEducationPlanNumber.split("-");
