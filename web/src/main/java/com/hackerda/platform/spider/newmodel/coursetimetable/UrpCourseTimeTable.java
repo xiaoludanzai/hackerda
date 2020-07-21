@@ -1,11 +1,9 @@
 package com.hackerda.platform.spider.newmodel.coursetimetable;
 
-import com.hackerda.platform.pojo.CourseTimeTableBasicInfo;
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.Plan;
-import com.hackerda.platform.spider.newmodel.CourseRelativeInfo;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import com.hackerda.platform.pojo.CourseTimetable;
+import com.hackerda.platform.spider.newmodel.CourseRelativeInfo;
 import lombok.Data;
 
 import java.util.List;

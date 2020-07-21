@@ -1,11 +1,6 @@
 package com.hackerda.platform.service.wechat;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.hackerda.platform.pojo.GradeSearchResult;
-import com.hackerda.platform.pojo.Student;
-import com.hackerda.platform.pojo.Term;
-import com.hackerda.platform.pojo.UrpGradeAndUrpCourse;
-import com.hackerda.platform.service.OpenIdService;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -17,10 +12,7 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutTextMessage;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -32,8 +24,6 @@ import java.util.concurrent.*;
 @NoArgsConstructor
 public class CustomerMessageService {
 
-    @Resource
-    private OpenIdService openIdService;
 
     private static DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
 
@@ -52,69 +42,6 @@ public class CustomerMessageService {
         this.wxMpXmlMessage = wxMpXmlMessage;
     }
 
-
-    public WxMpXmlOutTextMessage sendMessage(CompletableFuture<String> future, Student student) {
-
-        try {
-            String result = future.get(4, TimeUnit.SECONDS);
-            return buildMessage(result);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
-            log.error("student {} from wechat message get grade error {}", student.getAccount(), e.getMessage());
-            future.whenCompleteAsync((result, exception) -> sentTextMessage(result));
-        }
-        return buildMessage("服务器正在努力查询中");
-    }
-
-    public WxMpXmlOutTextMessage sendGradeMessage(CompletableFuture<GradeSearchResult> future, Student student) {
-
-        try {
-            GradeSearchResult searchResult = future.get(3500, TimeUnit.MILLISECONDS);
-            if(searchResult.isUpdate()){
-                gradeUpdateNotice.submit(() -> sendGradeUpdateNotice(wxMpService, student, wxMpXmlMessage.getFromUser()));
-            }
-            List<UrpGradeAndUrpCourse> gradeAndCourses = searchResult.getData();
-            return buildMessage(gradeListToText(gradeAndCourses));
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
-            future.whenCompleteAsync((result, exception) -> {
-                sentTextMessage(gradeListToText(result.getData()));
-                if(exception != null){
-                    log.error("student {} from wechat message get grade error {}", student.getAccount(), exception);
-                }
-            });
-        }
-        return null;
-    }
-
-    private void sendGradeUpdateNotice(WxMpService wxMpService, Student student, String openid){
-        List<String> openids = openIdService.getAllOpenidsFromOneClass(student.getClasses(), openid, wxMpService.getWxMpConfigStorage().getAppId());
-        String content = "通知/n你有新的成绩，请注意查收";
-        for(String noticedOpenid : openids){
-            WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
-            wxMpKefuMessage.setContent(content);
-            wxMpKefuMessage.setMsgType("text");
-            wxMpKefuMessage.setToUser(noticedOpenid);
-            try {
-                log.info("send customer message {}", content);
-                wxMpService.getKefuService().sendKefuMessage(wxMpKefuMessage);
-            } catch (WxErrorException e) {
-                log.error("send customer message error", e);
-            }
-        }
-    }
-
-    public void sentTextMessage(String result) {
-
-        WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
-        wxMpKefuMessage.setContent(result);
-        wxMpKefuMessage.setMsgType("text");
-        wxMpKefuMessage.setToUser(wxMpXmlMessage.getFromUser());
-        try {
-            log.info("send customer message {}", result);
-            wxMpService.getKefuService().sendKefuMessage(wxMpKefuMessage);
-        } catch (WxErrorException e) {
-            log.error("send customer message error", e);
-        }
-    }
 
     void sendMessage(WxMpXmlOutMessage message) {
         WxMpKefuMessage wxMpKefuMessage = new WxMpKefuMessage();
@@ -136,34 +63,7 @@ public class CustomerMessageService {
         }
     }
 
-    private WxMpXmlOutTextMessage buildMessage(String content) {
-        return WxMpXmlOutMessage.TEXT().content(content)
-                .fromUser(wxMpXmlMessage.getToUser()).toUser(wxMpXmlMessage.getFromUser())
-                .build();
-    }
 
-    public static String gradeListToText(List<UrpGradeAndUrpCourse> studentGrades) {
-        StringBuilder buffer = new StringBuilder();
-        if (studentGrades.size() == 0) {
-            buffer.append("尚无本学期成绩");
-        } else {
-            //因为查询的都是同学期的，所以取第一个元素即可
-            Term term = studentGrades.get(0).getTerm();
-            buffer.append("- - - - - - - - - - - - - -\n");
-            buffer.append("|").append(term.getTermCode()).append("学年，").append(term.getTermName()).append("|\n");
-            for (UrpGradeAndUrpCourse urpGradeAndUrpCourse : studentGrades) {
-                Double grade = urpGradeAndUrpCourse.getNewGrade().getUrpGrade().getScore();
-                //如果分数为空，就直接跳过当前元素
-                if (Objects.isNull(grade)) {
-                    continue;
-                }
-                buffer.append("考试名称：").append(urpGradeAndUrpCourse.getUrpCourse().getCourseName()).append("\n")
-                        .append("成绩：").append(grade == -1 ? "" : decimalFormat.format(grade)).append("   学分：")
-                        .append((decimalFormat.format(urpGradeAndUrpCourse.getUrpCourse().getCredit()))).append("\n\n");
-            }
-            buffer.append("- - - - - - - - - - - - - -");
-        }
-        return buffer.toString();
-    }
+
 
 }

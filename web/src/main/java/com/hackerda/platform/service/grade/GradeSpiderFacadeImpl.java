@@ -2,7 +2,6 @@ package com.hackerda.platform.service.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Grade;
-import com.hackerda.platform.pojo.GradeDetail;
 import com.hackerda.platform.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
 import com.hackerda.spider.support.UrpGeneralGrade;
@@ -26,47 +25,37 @@ public class GradeSpiderFacadeImpl implements GradeSpiderFacade {
 
         List<UrpGeneralGrade> generalGrade = newUrpSpiderService.getCurrentGeneralGrade(student);
 
-        List<GradeDetail> gradeDetailList = generalGrade.stream().map(urpGeneralGrade -> {
+        return generalGrade.stream().map(urpGeneralGrade -> new Grade()
+                .setAccount(Integer.parseInt(urpGeneralGrade.getId().getStudentNumber()))
+                .setCourseNumber(urpGeneralGrade.getId().getCourseNumber())
+                .setCourseOrder(urpGeneralGrade.getCourseSequenceNumber())
+                .setScore(urpGeneralGrade.getCourseScore() == null ? -1 : urpGeneralGrade.getCourseScore())
+                .setGradePoint(urpGeneralGrade.getGradePoint())
+                .setLevelName(urpGeneralGrade.getLevelName())
+                .setLevelPoint(urpGeneralGrade.getLevelPoint())
+                .setRank(urpGeneralGrade.getRank())
+                .setReplaceCourseNumber(urpGeneralGrade.getReplaceCourseNumber())
+                .setRemark(urpGeneralGrade.getRemark())
+                .setRetakeCourseMark(urpGeneralGrade.getRetakeCourseMark())
+                .setRetakecourseModeCode(urpGeneralGrade.getRetakeCourseModeCode())
+                .setRetakeCourseModeExplain(urpGeneralGrade.getRetakeCourseModeExplain())
+                .setUnpassedReasonCode(urpGeneralGrade.getUnPassedReasonCode())
+                .setUnpassedReasonExplain(urpGeneralGrade.getUnPassedReasonExplain())
+                .setStandardPoint(urpGeneralGrade.getStandardPoint())
+                .setTermYear(urpGeneralGrade.getId().getTermYear())
+                .setTermOrder(urpGeneralGrade.getId().getTermOrder())
+                .setExamTime(urpGeneralGrade.getId().getExamtime())
+                .setOperateTime(urpGeneralGrade.getOperateTime())
+                .setOperator(urpGeneralGrade.getOperator())
+                .setStudyHour(StringUtils.isEmpty(urpGeneralGrade.getStudyHour()) ? 0 :
+                        Integer.parseInt(urpGeneralGrade.getStudyHour()))
+                .setCourseName(urpGeneralGrade.getCourseName())
+                .setCoursePropertyCode(urpGeneralGrade.getCoursePropertyCode())
+                .setCoursePropertyName(urpGeneralGrade.getCoursePropertyName())
+                .setExamTypeName(urpGeneralGrade.getExamTypeName())
+                .setExamTypeCode(urpGeneralGrade.getExamTypeCode())
+                .setCredit(urpGeneralGrade.getCredit())).collect(Collectors.toList());
 
-            Grade grade = new Grade()
-                    .setAccount(Integer.parseInt(urpGeneralGrade.getId().getStudentNumber()))
-                    .setCourseNumber(urpGeneralGrade.getId().getCourseNumber())
-                    .setCourseOrder(urpGeneralGrade.getCourseSequenceNumber())
-                    .setScore(urpGeneralGrade.getCourseScore() == null ? -1 : urpGeneralGrade.getCourseScore())
-                    .setGradePoint(urpGeneralGrade.getGradePoint())
-                    .setLevelName(urpGeneralGrade.getLevelName())
-                    .setLevelPoint(urpGeneralGrade.getLevelPoint())
-                    .setRank(urpGeneralGrade.getRank())
-                    .setReplaceCourseNumber(urpGeneralGrade.getReplaceCourseNumber())
-                    .setRemark(urpGeneralGrade.getRemark())
-                    .setRetakeCourseMark(urpGeneralGrade.getRetakeCourseMark())
-                    .setRetakecourseModeCode(urpGeneralGrade.getRetakeCourseModeCode())
-                    .setRetakeCourseModeExplain(urpGeneralGrade.getRetakeCourseModeExplain())
-                    .setUnpassedReasonCode(urpGeneralGrade.getUnPassedReasonCode())
-                    .setUnpassedReasonExplain(urpGeneralGrade.getUnPassedReasonExplain())
-                    .setStandardPoint(urpGeneralGrade.getStandardPoint())
-                    .setTermYear(urpGeneralGrade.getId().getTermYear())
-                    .setTermOrder(urpGeneralGrade.getId().getTermOrder())
-                    .setExamTime(urpGeneralGrade.getId().getExamtime())
-                    .setOperateTime(urpGeneralGrade.getOperateTime())
-                    .setOperator(urpGeneralGrade.getOperator())
-                    .setStudyHour(StringUtils.isEmpty(urpGeneralGrade.getStudyHour()) ? 0 :
-                            Integer.parseInt(urpGeneralGrade.getStudyHour()))
-                    .setCourseName(urpGeneralGrade.getCourseName())
-                    .setCoursePropertyCode(urpGeneralGrade.getCoursePropertyCode())
-                    .setCoursePropertyName(urpGeneralGrade.getCoursePropertyName())
-                    .setExamTypeName(urpGeneralGrade.getExamTypeName())
-                    .setExamTypeCode(urpGeneralGrade.getExamTypeCode())
-                    .setCredit(urpGeneralGrade.getCredit());
-
-            return new GradeDetail(grade, null);
-
-        }).collect(Collectors.toList());
-
-
-        return gradeDetailList.stream()
-                .map(GradeDetail::getGrade)
-                .collect(Collectors.toList());
     }
 
     @Override

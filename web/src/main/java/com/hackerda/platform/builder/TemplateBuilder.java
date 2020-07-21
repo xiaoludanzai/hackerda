@@ -5,13 +5,10 @@ import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
-import com.hackerda.platform.pojo.vo.GradeVo;
-import com.hackerda.platform.pojo.wechat.CourseGroupMsg;
 import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.platform.utils.SchoolTimeUtil;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -117,34 +114,6 @@ public class TemplateBuilder {
      * @param msg 课程推送信息
      * @return List<WxMpTemplateData>
      */
-    public List<WxMpTemplateData> assemblyTemplateContentForCourse(CourseGroupMsg msg) {
-        String content = msg.getCourseContent();
-        if(StringUtils.isEmpty(content)) { return null; }
-        List<WxMpTemplateData> templateDatas = new ArrayList<>();
-        //first关键字
-        WxMpTemplateData first = new WxMpTemplateData();
-        first.setName("first");
-        first.setValue("当日课表\n");
-        //keyword1关键字
-        WxMpTemplateData course = new WxMpTemplateData();
-        course.setName("keyword1");
-        course.setValue("\n" + content + "\n");
-        //keyword2关键字
-        WxMpTemplateData date = new WxMpTemplateData();
-        date.setName("keyword2");
-        date.setValue("第" + SchoolTimeUtil.getSchoolWeek() + "周   " + SchoolTimeUtil.getDayOfWeekChinese());
-        //remark关键字
-        WxMpTemplateData remark = new WxMpTemplateData();
-        remark.setName("remark");
-        remark.setValue("查询仅供参考，以学校下发的课表为准，如有疑问微信添加吴彦祖【hkdhd666】");
-
-        templateDatas.add(first);
-        templateDatas.add(course);
-        templateDatas.add(date);
-        templateDatas.add(remark);
-
-        return templateDatas;
-    }
 
     public List<WxMpTemplateData> assemblyTemplateContentForCourse(StudentUser studentUser, CourseTimeTableVo courseTimeTableVo, SchoolTime schoolTime) {
         List<WxMpTemplateData> templateDataList = new ArrayList<>();

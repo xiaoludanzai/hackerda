@@ -9,7 +9,6 @@ import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.constant.RedisKeys;
 import com.hackerda.platform.spider.model.VerifyCode;
 import com.hackerda.platform.spider.newmodel.SearchResult;
-import com.hackerda.platform.spider.newmodel.SearchResultDateWrapper;
 import com.hackerda.platform.spider.newmodel.course.UrpCourseForSpider;
 import com.hackerda.platform.spider.newmodel.emptyroom.EmptyRoomPojo;
 import com.hackerda.platform.spider.newmodel.emptyroom.EmptyRoomPost;
@@ -17,7 +16,6 @@ import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
 import com.hackerda.platform.spider.newmodel.examtime.UrpExamTime;
-import com.hackerda.platform.spider.newmodel.grade.detail.UrpGradeDetailForSpider;
 import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
@@ -177,9 +175,6 @@ public class NewUrpSpider {
 
     private static StringRedisTemplate stringRedisTemplate;
 
-    private static final TypeReference<UrpGradeDetailForSpider> gradeDetailTypeReference
-            = new TypeReference<UrpGradeDetailForSpider>() {
-    };
     private static final TypeReference<List<UrpCourseForSpider>> courseTypeReference
             = new TypeReference<List<UrpCourseForSpider>>() {
     };

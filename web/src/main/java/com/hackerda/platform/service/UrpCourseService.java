@@ -1,17 +1,14 @@
 package com.hackerda.platform.service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.hackerda.platform.dao.CourseDao;
-import com.hackerda.platform.dao.UrpCourseDao;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.UrpCourse;
 import com.hackerda.platform.spider.newmodel.SearchResult;
-import com.hackerda.platform.spider.newmodel.course.UrpCourseForSpider;
 import com.hackerda.platform.spider.newmodel.searchcourse.SearchCoursePost;
 import com.hackerda.platform.spider.newmodel.searchcourse.SearchCourseResult;
 import com.hackerda.platform.utils.DateUtils;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

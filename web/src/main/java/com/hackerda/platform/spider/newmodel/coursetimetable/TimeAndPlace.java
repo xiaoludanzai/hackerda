@@ -1,10 +1,8 @@
 package com.hackerda.platform.spider.newmodel.coursetimetable;
 
-import com.hackerda.platform.pojo.CourseTimeTableDetail;
-import com.hackerda.platform.pojo.constant.Building;
-import com.hackerda.platform.spider.newmodel.CourseRelativeInfo;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import com.hackerda.platform.pojo.constant.Building;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharUtils;
@@ -95,33 +93,6 @@ public class TimeAndPlace {
      * 学分
      */
     private String xf;
-
-    public List<CourseTimeTableDetail> convertToCourseTimeTableDetail(CourseRelativeInfo relativeInfo, String attendClassTeacher) {
-        List<CourseTimeTableDetail> details = Lists.newArrayList();
-        List<int[]> weekList = parseWeek(this.getWeekDescription());
-        for (int[] weeks : weekList) {
-            CourseTimeTableDetail detail = new CourseTimeTableDetail();
-            String[] termYearAndTermOrder = parseTermYearAndTermOrder(relativeInfo.getExecutiveEducationPlanNumber());
-            detail.setRoomName(specialProcess(this.getClassroomName(), this.getTeachingBuildingName()));
-            detail.setCampusName(this.getCampusName());
-            detail.setAttendClassTeacher(attendClassTeacher);
-            detail.setContinuingSession(this.getContinuingSession());
-            detail.setCourseId(relativeInfo.getCourseNumber());
-            detail.setCourseSequenceNumber(this.getCourseSequenceNumber());
-            detail.setDay(this.getClassDay());
-            detail.setSksj(this.getSksj());
-            detail.setWeek(this.getClassWeek());
-            detail.setWeekDescription(this.getWeekDescription());
-            detail.setOrder(this.getClassSessions());
-            detail.setStartWeek(weeks[0]);
-            detail.setEndWeek(weeks[1]);
-            detail.setTermYear(termYearAndTermOrder[0]);
-            detail.setTermOrder(Integer.parseInt(termYearAndTermOrder[1]));
-            detail.setDistinct((byte) parseDistinct(this.getClassWeek(), weeks[0], weeks[1]));
-            details.add(detail);
-        }
-        return details;
-    }
 
 
     private String specialProcess(String classroomName, String teachingBuildingName) {
