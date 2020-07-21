@@ -1,13 +1,12 @@
 package com.hackerda.platform.mapper;
 
-import java.util.List;
-
 import com.hackerda.platform.pojo.CourseTimeTableDetail;
-import com.hackerda.platform.pojo.StudentCourseTable;
 import com.hackerda.platform.pojo.example.CourseTimeTableDetailExample;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Mapper
 @Repository
@@ -36,11 +35,8 @@ public interface CourseTimeTableDetailMapper {
 
     List<Integer> getCourseTimeTableDetailIdsByClassId(@Param("classesId") int classesId);
 
-    void insertClassesCourseTimeTableBatch(@Param("ids") List<Integer> ids, @Param("classesId") int classesId);
-
     void insertStudentCourseTimeTableBatch(@Param("courseTimeTableIdList") List<Integer> courseTimeTableIdList,
                                            @Param("account") int account, @Param("termYear") String termYear, @Param(
             "termOrder") int termOrder);
 
-    List<StudentCourseTable> selectStudentCourseTimeTableRelative(StudentCourseTable studentCourseTimeTable);
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Service
-public class SpiderExceptionHandler {
+public class FetchExceptionHandler {
 
     private final static ExceptionMsg ACCOUNT_OR_PASSWORD_INVALID =
             new ExceptionMsg(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或密码错误");

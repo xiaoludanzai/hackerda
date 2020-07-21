@@ -8,7 +8,7 @@ import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.CourseTimetable;
 import com.hackerda.platform.repository.ExceptionMsg;
-import com.hackerda.platform.repository.SpiderExceptionHandler;
+import com.hackerda.platform.repository.FetchExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -27,7 +27,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
     @Autowired
     private CourseTimetableSpiderFacade courseTimetableSpiderFacade;
     @Autowired
-    private SpiderExceptionHandler spiderExceptionHandler;
+    private FetchExceptionHandler fetchExceptionHandler;
     @Autowired
     private CourseTimeTableDao courseTimeTableDao;
     @Autowired
@@ -64,7 +64,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
             return overview;
 
         } catch (Throwable e) {
-            ExceptionMsg handle = spiderExceptionHandler.handle(e);
+            ExceptionMsg handle = fetchExceptionHandler.handle(e);
             CourseTimeTableOverview overview = new CourseTimeTableOverview();
             overview.setErrorCode(handle.getErrorCode());
             overview.setErrorMsg(handle.getMsg());

@@ -22,13 +22,7 @@
     <result column="term_order" property="termOrder" jdbcType="INTEGER" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap id="relativeMap" type="com.hackerda.platform.pojo.StudentCourseTable" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="account" property="account" jdbcType="INTEGER" />
-    <result column="course_time_table_id" property="courseTimeTableId" jdbcType="INTEGER" />
-    <result column="term_year" property="termYear" jdbcType="CHAR" />
-    <result column="term_order" property="termOrder" jdbcType="INTEGER" />
-  </resultMap>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -446,12 +440,7 @@
   <select id="getCourseTimeTableDetailIdsByClassId" parameterType="int" resultType="int">
     select course_time_table_id from class_course_time_table where classes_id = #{classesId}
   </select>
-  <insert id="insertClassesCourseTimeTableBatch">
-    insert into class_course_time_table(classes_id, course_time_table_id) values
-    <foreach collection="ids" separator="," item="id">
-      (#{classesId}, #{id})
-    </foreach>
-  </insert>
+
 
   <insert id="insertStudentCourseTimeTableBatch">
     insert into student_course_timetable(account, course_time_table_id, term_year, term_order) values
@@ -460,25 +449,5 @@
     </foreach>
   </insert>
 
-  <select id="selectStudentCourseTimeTableRelative" resultMap="relativeMap"
-          parameterType="com.hackerda.platform.pojo.StudentCourseTable">
-    select id, course_time_table_id, account, term_year, term_order from student_course_timetable
-    <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="account != null">
-        and account = #{account}
-      </if>
-      <if test="courseTimeTableId != null">
-        and course_time_table_id = #{courseTimeTableId}
-      </if>
-      <if test="termYear != null">
-        and term_year = #{termYear}
-      </if>
-      <if test="termOrder != null">
-        and term_order = #{termOrder}
-      </if>
-    </where>
-  </select>
+
 </mapper>

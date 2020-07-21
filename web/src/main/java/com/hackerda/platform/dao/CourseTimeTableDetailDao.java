@@ -3,7 +3,6 @@ package com.hackerda.platform.dao;
 import com.hackerda.platform.mapper.CourseTimeTableDetailMapper;
 import com.hackerda.platform.pojo.CourseTimeTableDetail;
 import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentCourseTable;
 import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.pojo.example.CourseTimeTableDetailExample;
 import com.hackerda.platform.utils.DateUtils;
@@ -22,9 +21,6 @@ public class CourseTimeTableDetailDao {
     @Resource
     private CourseTimeTableDetailMapper courseTimeTableDetailMapper;
 
-    public void insertClassesCourseTimeTableBatch(List<Integer> ids, int classesId){
-        courseTimeTableDetailMapper.insertClassesCourseTimeTableBatch(ids, classesId);
-    }
 
     public void insertCourseTimeTableDetail(CourseTimeTableDetail detail){
         courseTimeTableDetailMapper.insertSelective(detail);
@@ -127,10 +123,6 @@ public class CourseTimeTableDetailDao {
 
     public void insertStudentCourseTimeTableBatch(List<Integer> courseTimeTableIdList, int account,  String termYear,  int termOrder){
         courseTimeTableDetailMapper.insertStudentCourseTimeTableBatch(courseTimeTableIdList, account ,termYear ,termOrder);
-    }
-
-    public List<StudentCourseTable> selectStudentCourseTimeTableRelative(StudentCourseTable studentCourseTimeTable){
-        return courseTimeTableDetailMapper.selectStudentCourseTimeTableRelative(studentCourseTimeTable);
     }
 
 }
