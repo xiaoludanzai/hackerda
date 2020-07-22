@@ -67,12 +67,13 @@ public class CourseTimetableRepositoryImplTest {
 
         StudentUserBO account = studentUserRepository.getByAccount(2017025838);
 
-        CourseTimeTableOverview account1 = courseTimetableRepository.getByClassId(account, "2019-2020", 2);
-        courseTimetableRepository.saveByClass(account1.getNewList(), account);
+        CourseTimeTableOverview account1 = courseTimetableRepository.getByClassId(account.getUrpClassNum().toString(), "2019" +
+                "-2020", 2);
+        courseTimetableRepository.saveByClass(account1.getNewList(), account.getUrpClassNum().toString());
 
         assertThat(account1.isFetchSuccess()).isTrue();
 
-        CourseTimeTableOverview account2 = courseTimetableRepository.getByClassId(account, "2019-2020", 2);
+        CourseTimeTableOverview account2 = courseTimetableRepository.getByClassId(account.getUrpClassNum().toString(), "2019-2020", 2);
 
         assertThat(account2.isFetchSuccess()).isFalse();
         assertThat(account2.getNewList().size() == 0).isTrue();

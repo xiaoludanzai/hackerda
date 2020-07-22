@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service("emptyRoomService")
 @CacheConfig(cacheNames = "empty_Room_data")
-public class EmptyRoomService {
+public class    EmptyRoomService {
 
     @Autowired
     private EmptyRoomDao emptyRoomDao;

@@ -31,13 +31,13 @@ public class GpaRankerTest {
     public void test(){
 
         ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+        String key = RedisKeys.GPA_RANK.genKey("2017", "会计学");
+        Set<String> set = zSet.reverseRange(key, 0, 10);
 
-        Set<String> set = zSet.reverseRange(RedisKeys.GPA_RANK.genKey("2017", "会计学"), 0, 10);
-
-        int x = 0;
+        int x = 1;
         for (String s : set) {
 
-            System.out.println(x++ + " " + studentUserDao.selectStudentByAccount(Integer.parseInt(s)).getName());
+            System.out.println(x++ + " " + studentUserDao.selectStudentByAccount(Integer.parseInt(s)).getName() +" " + zSet.score(key, s ));
         }
 
 

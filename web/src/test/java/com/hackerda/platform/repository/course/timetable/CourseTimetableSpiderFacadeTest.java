@@ -31,7 +31,7 @@ public class CourseTimetableSpiderFacadeTest {
 
         StudentUserBO byAccount = studentUserRepository.getByAccount(2017025838);
 
-        List<CourseTimetableDetailDO> id = courseTimetableSpiderFacade.getByClassID("2019-2020", 2, byAccount);
+        List<CourseTimetableDetailDO> id = courseTimetableSpiderFacade.getByClassID("2019-2020", 2, byAccount.getUrpClassNum().toString());
 
 
     }

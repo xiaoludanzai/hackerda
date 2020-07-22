@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class CourseVO {
 
-    private Integer id;
-
     private String name;
 
     private String num;
@@ -17,17 +15,9 @@ public class CourseVO {
 
     private Integer termOrder;
 
-    private String teacherAccount;
-
-    private String teacherName;
-
     private String examType;
 
     private String examTypeCode;
-
-    private String academyName;
-
-    private String academyCode;
 
     private String courseType;
 
