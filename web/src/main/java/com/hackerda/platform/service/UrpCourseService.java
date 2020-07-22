@@ -39,10 +39,7 @@ public class UrpCourseService {
             .build();
 
 
-    public Course getCurrentTermCourse(String courseId, String sequenceNumber) {
-        return getCurrentTermCourse(courseId, sequenceNumber, null);
 
-    }
 
     public Course getCurrentTermCourse(String courseId, String sequenceNumber, Course updateCourse) {
         SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
@@ -51,9 +48,6 @@ public class UrpCourseService {
         return getCourseFromCache(courseId, sequenceNumber,termYear, order, updateCourse);
     }
 
-    public Course getCourseFromCache(String courseId, String sequenceNumber, String termYear, int termOrder){
-        return getCourseFromCache(courseId, sequenceNumber, termYear, termOrder, null);
-    }
 
 
     public Course getCourseFromCache(String courseId, String sequenceNumber, String termYear, int termOrder, Course updateCourse){

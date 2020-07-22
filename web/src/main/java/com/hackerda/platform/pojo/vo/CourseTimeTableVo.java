@@ -35,5 +35,5 @@ public class CourseTimeTableVo {
 
     private Integer termOrder;
 
-    private Course course;
+    private CourseVO course;
 }

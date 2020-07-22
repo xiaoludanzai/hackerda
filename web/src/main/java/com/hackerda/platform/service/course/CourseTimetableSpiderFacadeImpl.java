@@ -81,8 +81,8 @@ public class CourseTimetableSpiderFacadeImpl implements CourseTimetableSpiderFac
     }
 
     @Override
-    public List<CourseTimetableDetailDO> getByClassID(String termYear, int termOrder, StudentUserBO studentUserBO) {
-        List<List<CourseTimetableSearchResult>> list = urpSearchSpider.searchClassTimeTable(termYear, termOrder, studentUserBO.getUrpClassNum().toString());
+    public List<CourseTimetableDetailDO> getByClassID(String termYear, int termOrder, String classId) {
+        List<List<CourseTimetableSearchResult>> list = urpSearchSpider.searchClassTimeTable(termYear, termOrder, classId);
         return list.stream().flatMap(Collection::stream)
                 .map(this::transToCourseTimetable)
                 .flatMap(Collection::stream)

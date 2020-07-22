@@ -21,15 +21,26 @@ public class CourseTimetableQueryService {
         timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
 
         if(timeTableOverview.isEmpty()){
-            timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+            timeTableOverview = courseTimetableRepository.getByClassId(studentUserBO.getUrpClassNum().toString(), termYear,
+                    termOrder);
         }
 
         if(timeTableOverview.isPersonal()){
             courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), studentUserBO);
         }else {
-            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), studentUserBO);
+            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), studentUserBO.getUrpClassNum().toString());
         }
 
+
+        return timeTableOverview;
+    }
+
+    public CourseTimeTableOverview getByClassId(String classId, String termYear, int termOrder) {
+
+        CourseTimeTableOverview timeTableOverview = courseTimetableRepository.getByClassId(classId,
+                termYear, termOrder);
+
+        courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), classId);
 
         return timeTableOverview;
     }

@@ -49,8 +49,6 @@ public class CourseSubscribeService {
     private WechatMpPlusProperties wechatMpPlusProperties;
     @Resource
     private WechatOpenIdDao wechatOpenIdDao;
-    @Resource
-    private CourseTimeTableService courseTimeTableService;
 
     /**
      * 生成一个openid和学生实体映射的map
@@ -65,18 +63,19 @@ public class CourseSubscribeService {
 
 
     public CourseTimeTableVo getTableBySection(StudentUser studentUser, int section, SchoolTime schoolTime){
-        List<CourseTimeTableVo> tableVoList = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(studentUser);
-
-        List<CourseTimeTableVo> list = tableVoList.stream()
-                .filter(x -> section == x.getClassOrder())
-                .filter(x -> schoolTime.getDay() == x.getClassDay())
-                .filter(x -> x.getClassInSchoolWeek().charAt(schoolTime.getSchoolWeek() - 1) == '1')
-                .collect(Collectors.toList());
-
-        if (list.size() > 1){
-            log.info("more than one course {}", list);
-        }
-
-        return list.stream().findFirst().orElse(null);
+//        List<CourseTimeTableVo> tableVoList = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(studentUser);
+//
+//        List<CourseTimeTableVo> list = tableVoList.stream()
+//                .filter(x -> section == x.getClassOrder())
+//                .filter(x -> schoolTime.getDay() == x.getClassDay())
+//                .filter(x -> x.getClassInSchoolWeek().charAt(schoolTime.getSchoolWeek() - 1) == '1')
+//                .collect(Collectors.toList());
+//
+//        if (list.size() > 1){
+//            log.info("more than one course {}", list);
+//        }
+//
+//        return list.stream().findFirst().orElse(null);
+        return null;
     }
 }

@@ -9,5 +9,5 @@ public interface CourseTimetableSpiderFacade {
 
     List<CourseTimetableDetailDO> getCurrentTermTableByAccount(StudentUserBO studentUserBO);
 
-    List<CourseTimetableDetailDO> getByClassID(String termYear, int termOrder, StudentUserBO studentUserBO);
+    List<CourseTimetableDetailDO> getByClassID(String termYear, int termOrder, String classId);
 }

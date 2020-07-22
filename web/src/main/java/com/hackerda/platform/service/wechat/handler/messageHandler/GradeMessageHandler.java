@@ -36,10 +36,6 @@ public class GradeMessageHandler implements WxMpMessageHandler {
     @Resource
     private TextBuilder textBuilder;
 
-    private static ExecutorService cacheThreadPool = TtlExecutors.getTtlExecutorService(
-            new MDCThreadPool(7, 7, 0L,TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(), r -> new Thread(r, "GradeMessageThread")));
-
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage,
                                     Map<String, Object> map,
@@ -49,19 +45,6 @@ public class GradeMessageHandler implements WxMpMessageHandler {
         return null;
 
 
-    }
-
-
-    public static void main(String[] args) {
-        CompletableFuture<Void> test = CompletableFuture.runAsync(() -> {
-            throw new UrpEvaluationException("test");
-        });
-
-        test.whenComplete((aVoid, throwable) -> {
-           if(throwable != null){
-               System.out.println(throwable.getClass());
-           }
-        });
     }
 
 }

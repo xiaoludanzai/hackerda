@@ -73,10 +73,10 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
 
     @Override
-    public CourseTimeTableOverview getByClassId(StudentUserBO studentUserBO, String termYear, int termOrder) {
+    public CourseTimeTableOverview getByClassId(String classId, String termYear, int termOrder) {
 
         ClassCourseTimetable relative = new ClassCourseTimetable()
-                .setClassId(studentUserBO.getUrpClassNum().toString())
+                .setClassId(classId)
                 .setTermYear(termYear)
                 .setTermOrder(termOrder);
 
@@ -90,7 +90,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         }
 
         CompletableFuture<List<CourseTimetableBO>> future =
-                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getByClassID(termYear, termOrder, studentUserBO)
+                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getByClassID(termYear, termOrder, classId)
                         .stream().map(x -> courseTimetableAdapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
 
         return getCourseTimeTableOverview(overview, future);
@@ -162,7 +162,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
     @Override
     @Transactional
-    public void saveByClass(List<CourseTimetableBO> tableList, StudentUserBO studentUserBO) {
+    public void saveByClass(List<CourseTimetableBO> tableList, String classId) {
 
         if(CollectionUtils.isEmpty(tableList)){
             return;
@@ -171,7 +171,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         List<CourseTimetable> existInDB = courseTimeTableDao.selectBatchByKey(doList);
 
         List<ClassCourseTimetable> relativeList = existInDB.stream()
-                .map(x -> x.getClassRelative(studentUserBO.getUrpClassNum().toString()))
+                .map(x -> x.getClassRelative(classId))
                 .collect(Collectors.toList());
 
         if (tableList.size() != existInDB.size()){
@@ -183,7 +183,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
             courseTimeTableDao.insertBatch(rest);
 
-            relativeList.addAll(rest.stream().map(x-> x.getClassRelative(studentUserBO.getUrpClassNum().toString())).collect(Collectors.toList()));
+            relativeList.addAll(rest.stream().map(x-> x.getClassRelative(classId)).collect(Collectors.toList()));
 
         }
 

@@ -1,12 +1,9 @@
 package com.hackerda.platform.controller;
 
 
-import com.hackerda.platform.elasticsearch.CourseTimeTableSearchService;
 import com.hackerda.platform.pojo.Exam;
 import com.hackerda.platform.pojo.WebResponse;
 import com.hackerda.platform.pojo.constant.ErrorCode;
-import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
-import com.hackerda.platform.service.CourseTimeTableService;
 import com.hackerda.platform.service.ExamTimeTableService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,22 +20,10 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/timetable")
 public class TimetableController {
-    @Resource
-    private CourseTimeTableService courseTimeTableService;
-    @Resource
-    private CourseTimeTableSearchService courseTimeTableSearchService;
+
     @Resource
     private ExamTimeTableService examTimeTableService;
 
-    @GetMapping("/student")
-    public WebResponse getTimeTableByStudent(@RequestParam(value = "account") String account) {
-        if (Objects.isNull(account)) {
-            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号无效");
-        }
-
-        List<CourseTimeTableVo> courseTimeTableVoList = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(Integer.parseInt(account));
-        return WebResponse.success(courseTimeTableVoList);
-    }
 
     @GetMapping("/teacher")
     public WebResponse getTimeTableByTeacher(@RequestParam(value = "account") String account) {
@@ -45,8 +31,7 @@ public class TimetableController {
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号无效");
         }
 
-        List<CourseTimeTableVo> courseTimeTableVoList = courseTimeTableService.getCourseTimeTableByTeacherAccount(account);
-        return WebResponse.success(courseTimeTableVoList);
+        return WebResponse.success(Collections.emptyList());
     }
 
     @GetMapping("/class")
@@ -55,8 +40,7 @@ public class TimetableController {
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号无效");
         }
 
-        List<CourseTimeTableVo> courseTimeTableVoList = courseTimeTableService.getCourseTimetableVoByClazz(classNum);
-        return WebResponse.success(courseTimeTableVoList);
+        return WebResponse.success(Collections.emptyList());
     }
 
     @GetMapping("/classroom")
@@ -65,16 +49,14 @@ public class TimetableController {
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "教室号不能为空");
         }
 
-        List<CourseTimeTableVo> courseTimeTableVoList = courseTimeTableService.getCourseTimeTableByClassroom(roomId);
-        return WebResponse.success(courseTimeTableVoList);
+        return WebResponse.success(Collections.emptyList());
     }
 
     @GetMapping("/course")
     public WebResponse getTimeTableByCourse(@RequestParam(value = "courseId") String courseId,
                                             @RequestParam(value = "courseOrder") String courseOrder) {
 
-        List<CourseTimeTableVo> courseTimeTableVoList = courseTimeTableService.getCourseTimeTableByCourse(courseId, courseOrder);
-        return WebResponse.success(courseTimeTableVoList);
+        return WebResponse.success(Collections.emptyList());
     }
 
     @GetMapping("/search")
@@ -88,7 +70,7 @@ public class TimetableController {
             size = 10;
         }
 
-        return WebResponse.success(courseTimeTableSearchService.searchCourseTimeTableV2(page, size, query));
+        return WebResponse.success(Collections.emptyList());
     }
 
     @GetMapping("/exam")
