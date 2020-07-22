@@ -2,10 +2,7 @@
 package com.hackerda.platform.config;
 
 
-import com.hackerda.spider.IExceptionHandler;
-import com.hackerda.spider.UrpBaseSpider;
-import com.hackerda.spider.UrpCommonSpider;
-import com.hackerda.spider.UrpSpider;
+import com.hackerda.spider.*;
 import com.hackerda.spider.captcha.CaptchaImage;
 import com.hackerda.spider.captcha.ICaptchaProvider;
 import com.hackerda.spider.config.SpiderConfiguration;
@@ -39,6 +36,14 @@ public class BasicsConfig {
                                    AccountCookiePersist<String> cookiePersist){
 
         return new UrpCommonSpider(client, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
+    }
+
+    @Bean
+    public UrpSearchSpider uepSearchSpider(RestTemplate client,
+                                           CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
+                                           AccountCookiePersist<String> cookiePersist){
+
+        return new UrpSearchSpiderImpl(client, captchaPredict, captchaProvider, cookiePersist);
     }
 
 }

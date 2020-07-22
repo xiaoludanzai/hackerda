@@ -4,13 +4,13 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.spider.NewUrpSpider;
 import com.hackerda.platform.spider.newmodel.SearchResult;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
 import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
-import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
 import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomPost;
 import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomResult;
@@ -20,20 +20,22 @@ import com.hackerda.platform.spider.newmodel.searchcourse.SearchCourseResult;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.hackerda.platform.utils.DESUtil;
-import com.hackerda.spider.UrpBaseSpider;
+import com.hackerda.platform.utils.DateUtils;
+import com.hackerda.platform.utils.SchoolTimeUtil;
+import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
+import com.hackerda.spider.support.coursetimetable.CourseTimetableSearchResult;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import com.hackerda.spider.support.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +59,9 @@ public class NewUrpSpiderService {
     @Value("${student.password.salt}")
     private String key;
 
+    @Autowired
+    private UrpSearchSpider urpSearchSpider;
+
 
     /**
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
@@ -78,8 +83,8 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<List<CourseTimetableSearchResult>> searchClassTimeTable(String termYear, int termOrder, String classCode) {
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.getUrpCourseTimeTableByClassCode(termYear, termOrder, classCode);
+
+        return urpSearchSpider.searchClassTimeTable(termYear, termOrder, classCode);
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -90,8 +95,8 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<List<CourseTimetableSearchResult>> searchCourseTimetableByTeacher(String teacherNumber) {
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.getUrpCourseTimeTableByTeacherAccount(teacherNumber);
+        Term term = DateUtils.getCurrentSchoolTime().getTerm();
+        return urpSearchSpider.searchCourseTimetableByTeacher(term.getTermYear(),term.getOrder(), teacherNumber);
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -108,8 +113,8 @@ public class NewUrpSpiderService {
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<List<CourseTimetableSearchResult>> searchCourseTimeTable(Course course) {
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.getUrpCourseTimeTableByCourse(course);
+        Term term = DateUtils.getCurrentSchoolTime().getTerm();
+        return urpSearchSpider.searchCourseTimeTable(term.getTermYear(),term.getOrder(), course.getNum(), course.getCourseOrder());
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)

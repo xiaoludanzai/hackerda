@@ -8,10 +8,11 @@ import com.hackerda.platform.pojo.TeacherClass;
 import com.hackerda.platform.pojo.TeacherCourse;
 import com.hackerda.platform.pojo.constant.Academy;
 import com.hackerda.platform.spider.newmodel.SearchResult;
-import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
+
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.google.common.base.Splitter;
+import com.hackerda.spider.support.coursetimetable.CourseTimetableSearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

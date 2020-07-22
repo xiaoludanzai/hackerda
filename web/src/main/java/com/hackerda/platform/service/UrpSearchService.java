@@ -4,12 +4,13 @@ import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.CourseTimetable;
 import com.hackerda.platform.pojo.Teacher;
 import com.hackerda.platform.pojo.UrpClass;
+import com.hackerda.platform.spider.newmodel.coursetimetable.TimeAndPlace;
 import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
-import com.hackerda.platform.spider.newmodel.searchclass.CourseTimetableSearchResult;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
 import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomPost;
 import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomResult;
 import com.hackerda.platform.spider.newmodel.searchclassroom.SearchResultWrapper;
+import com.hackerda.spider.support.coursetimetable.CourseTimetableSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,10 +69,36 @@ public class UrpSearchService {
     public List<CourseTimetable> searchCourse(String termYear, int termOrder, String classNum) {
         return newUrpSpiderService.searchClassTimeTable(termYear, termOrder, classNum)
                 .stream().flatMap(Collection::stream)
-                .map(CourseTimetableSearchResult::transToCourseTimetable)
+                .map(this::transToCourseTimetable)
                 .flatMap(Collection::stream)
                 .peek(x -> x.setGmtCreate(new Date()))
                 .collect(Collectors.toList());
+
+    }
+
+    public List<CourseTimetable> transToCourseTimetable(CourseTimetableSearchResult result) {
+        return TimeAndPlace.parseWeek(result.getWeekDescription()).stream().map(x ->
+                new CourseTimetable()
+                        .setCourseId(result.getId().getCourseId())
+                        .setCourseSequenceNumber(result.getId().getCourseOrderNumber())
+                        .setAttendClassTeacher(result.getTeacherName())
+                        .setCampusName(result.getCampusName())
+                        .setClassDay(result.getId().getClassWeek())
+                        .setClassOrder(result.getId().getClassOrderInWeek())
+                        .setStudentCount(result.getStudentCount())
+                        .setContinuingSession(result.getContinuingSession())
+                        .setRoomNumber(result.getClassRoomNumber())
+                        .setRoomName(result.getClassRoomName())
+                        .setClassInSchoolWeek(result.getId().getClassInSchoolWeek())
+                        .setTermYear(result.getTermYear())
+                        .setTermOrder(result.getTermOrder())
+                        .setWeekDescription(result.getWeekDescription())
+                        .setStartWeek(x[0])
+                        .setEndWeek(x[1])
+                        .setClassDistinct(TimeAndPlace.parseDistinct(result.getId().getClassInSchoolWeek(), x[0], x[1])))
+
+                .collect(Collectors.toList());
+
 
     }
 
