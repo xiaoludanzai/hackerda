@@ -78,7 +78,7 @@
     id, account, password, name, sex, ethnic, urpclass_num, is_correct, gmt_create, gmt_modified, 
     academy_name, subject_name, class_name
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.StudentUserExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.StudentUserExample" >
     select
     <if test="distinct" >
       distinct
@@ -102,7 +102,7 @@
     delete from student_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.StudentUserExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.StudentUserExample" >
     delete from student_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -205,7 +205,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.StudentUserExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.StudentUserExample" resultType="java.lang.Integer" >
     select count(*) from student_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

@@ -1,8 +1,8 @@
 package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.ExamTimetableMapper;
-import com.hackerda.platform.pojo.ExamTimetable;
-import com.hackerda.platform.pojo.ExamTimetableExample;
+import com.hackerda.platform.pojo.example.ExamTimetable;
+import com.hackerda.platform.pojo.example.ExamTimetableExample;
 import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.utils.DateUtils;
 import org.springframework.stereotype.Service;

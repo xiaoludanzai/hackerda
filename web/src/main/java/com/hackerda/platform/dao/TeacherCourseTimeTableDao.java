@@ -1,7 +1,7 @@
 package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.TeacherCourseTimetableMapper;
-import com.hackerda.platform.pojo.TeacherCourseTimetable;
+import com.hackerda.platform.pojo.example.TeacherCourseTimetable;
 import com.hackerda.platform.pojo.example.TeacherCourseTimetableExample;
 import org.springframework.stereotype.Service;
 

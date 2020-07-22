@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hackerda.platform.mapper.TeacherCourseTimetableMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.TeacherCourseTimetable" >
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.example.TeacherCourseTimetable" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="course_timetable_id" property="courseTimetableId" jdbcType="INTEGER" />
     <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
@@ -99,13 +99,13 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.TeacherCourseTimetable" >
+  <insert id="insert" parameterType="com.hackerda.platform.pojo.example.TeacherCourseTimetable" >
     insert into teacher_course_timetable (id, course_timetable_id, teacher_id, 
       term_year, term_order)
     values (#{id,jdbcType=INTEGER}, #{courseTimetableId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, 
       #{termYear,jdbcType=VARCHAR}, #{termOrder,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.TeacherCourseTimetable" >
+  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.example.TeacherCourseTimetable" >
     insert into teacher_course_timetable
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.TeacherCourseTimetable" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.example.TeacherCourseTimetable" >
     update teacher_course_timetable
     <set >
       <if test="courseTimetableId != null" >
@@ -200,7 +200,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.TeacherCourseTimetable" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.example.TeacherCourseTimetable" >
     update teacher_course_timetable
     set course_timetable_id = #{courseTimetableId,jdbcType=INTEGER},
       teacher_id = #{teacherId,jdbcType=INTEGER},

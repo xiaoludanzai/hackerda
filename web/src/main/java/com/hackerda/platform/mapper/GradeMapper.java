@@ -1,7 +1,7 @@
 package com.hackerda.platform.mapper;
 
 import com.hackerda.platform.pojo.Grade;
-import com.hackerda.platform.pojo.GradeExample;
+import com.hackerda.platform.pojo.example.GradeExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

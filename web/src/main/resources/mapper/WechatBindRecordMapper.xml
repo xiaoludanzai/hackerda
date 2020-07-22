@@ -70,7 +70,7 @@
   <sql id="Base_Column_List" >
     id, openid, appid, origin_account, update_account, gmt_create
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.WechatBindRecordExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" >
     select
     <if test="distinct" >
       distinct
@@ -94,7 +94,7 @@
     delete from wechat_bind_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.WechatBindRecordExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" >
     delete from wechat_bind_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -151,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.WechatBindRecordExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" resultType="java.lang.Integer" >
     select count(*) from wechat_bind_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

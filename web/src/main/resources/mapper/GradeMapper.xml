@@ -100,7 +100,7 @@
     unpassed_reason_explain, remark, replace_course_number, retake_course_mark, retakeCourse_mode_code, 
     retake_course_mode_explain, standard_point, term_year, term_order, gmt_create, gmt_modify
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.GradeExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.GradeExample" >
     select
     <if test="distinct" >
       distinct
@@ -124,7 +124,7 @@
     delete from grade
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.GradeExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.GradeExample" >
     delete from grade
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -355,7 +355,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.GradeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.GradeExample" resultType="java.lang.Integer" >
     select count(*) from grade
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

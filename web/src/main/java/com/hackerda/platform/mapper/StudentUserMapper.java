@@ -1,7 +1,7 @@
 package com.hackerda.platform.mapper;
 
 import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.StudentUserExample;
+import com.hackerda.platform.pojo.example.StudentUserExample;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.hackerda.platform.pojo;
+package com.hackerda.platform.pojo.example;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

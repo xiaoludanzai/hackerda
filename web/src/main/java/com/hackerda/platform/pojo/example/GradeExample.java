@@ -1,4 +1,4 @@
-package com.hackerda.platform.pojo;
+package com.hackerda.platform.pojo.example;
 
 import java.util.ArrayList;
 import java.util.Date;

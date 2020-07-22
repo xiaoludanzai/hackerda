@@ -4,7 +4,7 @@ package com.hackerda.platform.dao;
 import com.hackerda.platform.mapper.ext.WechatOpenIdExtMapper;
 import com.hackerda.platform.pojo.ScheduleTask;
 import com.hackerda.platform.pojo.WechatOpenid;
-import com.hackerda.platform.pojo.WechatOpenidExample;
+import com.hackerda.platform.pojo.example.WechatOpenidExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

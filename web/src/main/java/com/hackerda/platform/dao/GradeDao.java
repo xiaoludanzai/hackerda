@@ -2,7 +2,7 @@ package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.ext.GradeExtMapper;
 import com.hackerda.platform.pojo.Grade;
-import com.hackerda.platform.pojo.GradeExample;
+import com.hackerda.platform.pojo.example.GradeExample;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;

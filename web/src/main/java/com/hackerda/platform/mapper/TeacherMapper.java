@@ -1,7 +1,7 @@
 package com.hackerda.platform.mapper;
 
 import com.hackerda.platform.pojo.Teacher;
-import com.hackerda.platform.pojo.TeacherExample;
+import com.hackerda.platform.pojo.example.TeacherExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

@@ -1,7 +1,7 @@
 package com.hackerda.platform.mapper;
 
 import com.hackerda.platform.pojo.WechatBindRecord;
-import com.hackerda.platform.pojo.WechatBindRecordExample;
+import com.hackerda.platform.pojo.example.WechatBindRecordExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

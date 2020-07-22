@@ -2,6 +2,7 @@ package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.ext.StudentUserExtMapper;
 import com.hackerda.platform.pojo.*;
+import com.hackerda.platform.pojo.example.StudentUserExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

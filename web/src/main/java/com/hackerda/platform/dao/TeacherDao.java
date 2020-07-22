@@ -2,7 +2,7 @@ package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.TeacherMapper;
 import com.hackerda.platform.pojo.Teacher;
-import com.hackerda.platform.pojo.TeacherExample;
+import com.hackerda.platform.pojo.example.TeacherExample;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

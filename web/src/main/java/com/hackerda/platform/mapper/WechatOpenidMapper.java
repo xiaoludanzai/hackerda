@@ -1,7 +1,7 @@
 package com.hackerda.platform.mapper;
 
 import com.hackerda.platform.pojo.WechatOpenid;
-import com.hackerda.platform.pojo.WechatOpenidExample;
+import com.hackerda.platform.pojo.example.WechatOpenidExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

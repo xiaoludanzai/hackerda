@@ -1,6 +1,6 @@
 package com.hackerda.platform.mapper;
 
-import com.hackerda.platform.pojo.TeacherCourseTimetable;
+import com.hackerda.platform.pojo.example.TeacherCourseTimetable;
 import com.hackerda.platform.pojo.example.TeacherCourseTimetableExample;
 import java.util.List;
 
