@@ -41,10 +41,6 @@ public class CourseDao {
         return courseExtMapper.selectByExample(example);
     }
 
-    public Course selectByNumAndOrder(String number, String order){
-
-        return selectCourseByPojo(new Course().setNum(number).setCourseOrder(order)).stream().findFirst().orElse(null);
-    }
 
     public List<Course> selectByCourseList(List<Course> courseList){
         if(CollectionUtils.isEmpty(courseList)){
@@ -59,6 +55,11 @@ public class CourseDao {
         }catch (Exception e){
             log.error("error data {}", course, e);
         }
+    }
 
+    public void insertBatch(List<Course> courseList){
+        if(!CollectionUtils.isEmpty(courseList)) {
+            courseExtMapper.insertBatch(courseList);
+        }
     }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 @Mapper
 public interface CourseExtMapper extends CourseMapper {
     List<Course> selectByCourseList(List<Course> courseList);
+
+    void insertBatch(List<Course> courseList);
 }

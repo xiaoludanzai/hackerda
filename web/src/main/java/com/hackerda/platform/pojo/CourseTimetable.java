@@ -4,6 +4,7 @@ import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -25,10 +26,8 @@ public class CourseTimetable {
 
     private String courseId;
 
-    @EqualsAndHashCode.Exclude
     private String attendClassTeacher;
 
-    @EqualsAndHashCode.Exclude
     private Integer studentCount;
 
     private Integer classDay;
@@ -45,14 +44,12 @@ public class CourseTimetable {
 
     private String weekDescription;
 
-    @EqualsAndHashCode.Exclude
     private Integer classDistinct;
 
     private String termYear;
 
     private Integer termOrder;
 
-    @EqualsAndHashCode.Exclude
     private Date gmtCreate;
 
 
@@ -69,6 +66,43 @@ public class CourseTimetable {
                 .setTermOrder(getTermOrder())
                 .setTermYear(getTermYear());
     }
+
+    public String getCampusName() {
+        if(StringUtils.isEmpty(campusName)){
+            return StringUtils.EMPTY;
+        }
+        return campusName;
+    }
+
+    public Integer getStudentCount() {
+        if(studentCount == null){
+            return 0;
+        }
+        return studentCount;
+    }
+
+    public Integer getClassDistinct() {
+        if(classDistinct == null){
+            return 0;
+        }
+        return classDistinct;
+    }
+
+    public String getRoomNumber() {
+        if(StringUtils.isEmpty(roomNumber)){
+            return StringUtils.EMPTY;
+        }
+        return roomNumber;
+    }
+
+    public Date getGmtCreate() {
+        if(gmtCreate == null){
+            return new Date();
+        }
+        return gmtCreate;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

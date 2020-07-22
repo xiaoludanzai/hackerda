@@ -9,6 +9,7 @@ import com.hackerda.spider.config.SpiderConfiguration;
 import com.hackerda.spider.cookie.AccountCookiePersist;
 import com.hackerda.spider.predict.CaptchaPredict;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,19 +32,19 @@ public class BasicsConfig {
 
     @Bean
     @Scope("prototype")
-    public UrpSpider urpBaseSpider(RestTemplate client,
+    public UrpSpider urpBaseSpider(RestTemplate spiderTemplate,
                                    CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
                                    AccountCookiePersist<String> cookiePersist){
 
-        return new UrpCommonSpider(client, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
+        return new UrpCommonSpider(spiderTemplate, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
     }
 
     @Bean
-    public UrpSearchSpider uepSearchSpider(RestTemplate client,
+    public UrpSearchSpider uepSearchSpider(RestTemplate searchSpiderTemplate,
                                            CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
                                            AccountCookiePersist<String> cookiePersist){
 
-        return new UrpSearchSpiderImpl(client, captchaPredict, captchaProvider, cookiePersist);
+        return new UrpSearchSpiderImpl(searchSpiderTemplate, captchaPredict, captchaProvider, cookiePersist);
     }
 
 }

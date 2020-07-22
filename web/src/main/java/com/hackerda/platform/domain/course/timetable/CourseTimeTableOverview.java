@@ -12,9 +12,9 @@ public class CourseTimeTableOverview {
 
     private List<CourseTimetableBO> courseTimetableBOList;
 
-    boolean isCurrentTerm;
+    private boolean isCurrentTerm;
 
-    boolean isPersonal;
+    private boolean isPersonal;
 
     private boolean fetchSuccess;
 

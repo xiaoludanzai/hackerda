@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hackerda.platform.mapper.ext.CourseExtMapper">
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert ignore into course
+        (<include refid="com.hackerda.platform.mapper.CourseMapper.Base_Column_List"/>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR}, #{item.num,jdbcType=VARCHAR},
+            #{item.courseOrder,jdbcType=VARCHAR}, #{item.termYear,jdbcType=VARCHAR}, #{item.termOrder,jdbcType=INTEGER},
+            #{item.teacherAccount,jdbcType=VARCHAR}, #{item.teacherName,jdbcType=VARCHAR}, #{item.examType,jdbcType=VARCHAR},
+            #{item.examTypeCode,jdbcType=VARCHAR}, #{item.academyName,jdbcType=VARCHAR}, #{item.academyCode,jdbcType=VARCHAR},
+            #{item.courseType,jdbcType=VARCHAR}, #{item.courseTypeCode,jdbcType=VARCHAR}, #{item.credit,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+
+    </insert>
 
     <select id="selectByCourseList" resultMap="com.hackerda.platform.mapper.CourseMapper.BaseResultMap" parameterType="java.util.List" >
         select

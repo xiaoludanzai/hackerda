@@ -5,30 +5,32 @@ import com.hackerda.platform.repository.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CourseTimetableQueryService {
 
     @Autowired
     private StudentUserRepository studentUserRepository;
     @Autowired
-    private CourseTimetableFactory courseTimetableFactory;
-    @Autowired
     private CourseTimetableRepository courseTimetableRepository;
 
     public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
         StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
-        CourseTimeTableOverview current = courseTimetableFactory.createCurrent(studentUserBO, termYear, termOrder);
 
-        if(current.isEmpty()){
-            courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+        CourseTimeTableOverview timeTableOverview;
+        timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+
+        if(timeTableOverview.isEmpty()){
+            timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
         }
 
-        List<CourseTimetableBO> newList = current.getNewList();
-        courseTimetableRepository.saveByStudent(newList, studentUserBO);
+        if(timeTableOverview.isPersonal()){
+            courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), studentUserBO);
+        }else {
+            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), studentUserBO);
+        }
 
-        return current;
+
+        return timeTableOverview;
     }
 }

@@ -2,6 +2,7 @@ package com.hackerda.platform.repository.course.timetable;
 
 import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.dao.ClassCourseTimetableDao;
+import com.hackerda.platform.dao.CourseDao;
 import com.hackerda.platform.dao.CourseTimeTableDao;
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
@@ -10,9 +11,8 @@ import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.repository.ExceptionMsg;
 import com.hackerda.platform.repository.FetchExceptionHandler;
-import com.hackerda.platform.utils.DateUtils;
+import com.hackerda.platform.repository.course.CourseAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -36,9 +36,13 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
     @Autowired
     private CourseTimeTableDao courseTimeTableDao;
     @Autowired
-    private CourseTimetableAdapter adapter;
+    private CourseTimetableAdapter courseTimetableAdapter;
+    @Autowired
+    private CourseAdapter courseAdapter;
     @Autowired
     private ClassCourseTimetableDao classCourseTimetableDao;
+    @Autowired
+    private CourseDao courseDao;
 
     private final Executor courseSpiderExecutor = new MDCThreadPool(7, 7, 0L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSpider"));
@@ -61,7 +65,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
         CompletableFuture<List<CourseTimetableBO>> future =
                 CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getCurrentTermTableByAccount(studentUserBO)
-                        .stream().map(x -> adapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
+                        .stream().map(x -> courseTimetableAdapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
 
         return getCourseTimeTableOverview(overview, future);
 
@@ -86,15 +90,15 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         }
 
         CompletableFuture<List<CourseTimetableBO>> future =
-                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getCurrentTermTableByClassID(studentUserBO)
-                        .stream().map(x -> adapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
+                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getByClassID(termYear, termOrder, studentUserBO)
+                        .stream().map(x -> courseTimetableAdapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
 
         return getCourseTimeTableOverview(overview, future);
 
     }
 
     private void setSuccessOverview(CourseTimeTableOverview overview, List<CourseTimetableDetailDO> timetableList){
-        List<CourseTimetableBO> timetableBOList = timetableList.stream().map(x -> adapter.toBO(x)).collect(Collectors.toList());
+        List<CourseTimetableBO> timetableBOList = timetableList.stream().map(x -> courseTimetableAdapter.toBO(x)).collect(Collectors.toList());
 
         overview.setFinishFetch(true);
         overview.setCourseTimetableBOList(timetableBOList);
@@ -103,7 +107,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
     private CourseTimeTableOverview getCourseTimeTableOverview(CourseTimeTableOverview overview, CompletableFuture<List<CourseTimetableBO>> future) {
         try {
-            List<CourseTimetableBO> tableForSpider = future.get(3000L, TimeUnit.MILLISECONDS);
+            List<CourseTimetableBO> tableForSpider = future.get(6000L, TimeUnit.MILLISECONDS);
 
             overview.setCourseTimetableBOList(tableForSpider);
             overview.setFetchSuccess(true);
@@ -128,7 +132,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
             return;
         }
 
-        List<CourseTimetable> doList = tableList.stream().map(x -> adapter.toDO(x)).collect(Collectors.toList());
+        List<CourseTimetable> doList = tableList.stream().map(x -> courseTimetableAdapter.toDO(x)).collect(Collectors.toList());
 
         List<CourseTimetable> timetableList = courseTimeTableDao.selectBatchByKey(doList);
         List<Integer> idList = timetableList.stream().map(CourseTimetable::getId).collect(Collectors.toList());
@@ -145,13 +149,14 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         String termYear = tableList.get(0).getTermYear();
         Integer termOrder = tableList.get(0).getTermOrder();
 
-        List<StudentCourseTimeTable> collect = idList.stream().map(x -> new StudentCourseTimeTable()
+        List<StudentCourseTimeTable> relativeList = idList.stream().map(x -> new StudentCourseTimeTable()
                 .setCourseTimetableId(x)
                 .setStudentId(studentUserBO.getAccount())
                 .setTermYear(termYear)
                 .setTermOrder(termOrder)).collect(Collectors.toList());
 
-        courseTimeTableDao.insertBatchStudentRelative(collect);
+        courseDao.insertBatch(tableList.stream().map(x-> courseAdapter.toDO(x.getCourseBO())).collect(Collectors.toList()));
+        courseTimeTableDao.insertBatchStudentRelative(relativeList);
 
     }
 
@@ -162,26 +167,28 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         if(CollectionUtils.isEmpty(tableList)){
             return;
         }
-        List<CourseTimetable> doList = tableList.stream().map(x -> adapter.toDO(x)).collect(Collectors.toList());
-        List<CourseTimetable> selectBatch = courseTimeTableDao.selectBatchByKey(doList);
+        List<CourseTimetable> doList = tableList.stream().map(x -> courseTimetableAdapter.toDO(x)).collect(Collectors.toList());
+        List<CourseTimetable> existInDB = courseTimeTableDao.selectBatchByKey(doList);
 
-        List<ClassCourseTimetable> collect = selectBatch.stream()
+        List<ClassCourseTimetable> relativeList = existInDB.stream()
                 .map(x -> x.getClassRelative(studentUserBO.getUrpClassNum().toString()))
                 .collect(Collectors.toList());
 
-        if (tableList.size() != selectBatch.size()){
-            HashSet<CourseTimetable> batchSet = new HashSet<>(selectBatch);
+        if (tableList.size() != existInDB.size()){
+            HashSet<CourseTimetable> existInDBSet = new HashSet<>(existInDB);
 
             List<CourseTimetable> rest = doList.stream()
-                    .filter(x -> !batchSet.contains(x))
+                    .filter(x -> !existInDBSet.contains(x))
                     .collect(Collectors.toList());
 
             courseTimeTableDao.insertBatch(rest);
 
-            collect.addAll(rest.stream().map(x-> x.getClassRelative(studentUserBO.getUrpClassNum().toString())).collect(Collectors.toList()));
+            relativeList.addAll(rest.stream().map(x-> x.getClassRelative(studentUserBO.getUrpClassNum().toString())).collect(Collectors.toList()));
 
         }
-        classCourseTimetableDao.insertBatch(collect);
+
+        courseDao.insertBatch(tableList.stream().map(x-> courseAdapter.toDO(x.getCourseBO())).distinct().collect(Collectors.toList()));
+        classCourseTimetableDao.insertBatch(relativeList);
 
     }
 }

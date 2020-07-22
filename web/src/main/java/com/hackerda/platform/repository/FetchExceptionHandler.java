@@ -37,7 +37,7 @@ public class FetchExceptionHandler {
         else if(exception instanceof TimeoutException) {
             return READ_TIMEOUT;
         }else {
-            log.error("get grade error", exception);
+            log.error("spider fetch error", exception);
             return new ExceptionMsg(ErrorCode.SYSTEM_ERROR.getErrorCode(), exception.getMessage());
         }
     }

@@ -151,4 +151,17 @@ public class TimeAndPlace {
         return index;
     }
 
+    public static int parseDistinct(String seq, int start, int end) {
+        int count = 0, theoreticalValue = end - start + 1;
+        for (int i = start - 1; i < end; i++) {
+            if (seq.charAt(i) == '1') {
+                count++;
+            }
+        }
+        if (theoreticalValue > count) {
+            return start % 2 == 0 ? 2 : 1;
+        }
+        return 0;
+    }
+
 }

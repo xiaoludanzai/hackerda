@@ -38,4 +38,6 @@ public interface CourseTimetableExtMapper extends CourseTimetableMapper {
     void insertBatchStudentRelative(List<StudentCourseTimeTable> relativeList);
 
     List<CourseTimetableDetailDO> selectDetailByStudentAccount(StudentCourseTimeTable relative);
+
+    List<CourseTimetableDetailDO> selectDetailByClassId(ClassCourseTimetable relative);
 }

@@ -158,7 +158,7 @@ public class CourseTimeTableDao {
         if(relative == null){
             return Collections.emptyList();
         }
-        return null;
+        return courseTimetableExtMapper.selectDetailByClassId(relative);
     }
 
 }

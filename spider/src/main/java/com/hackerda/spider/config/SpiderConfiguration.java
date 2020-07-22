@@ -27,8 +27,6 @@ public class SpiderConfiguration {
     private int requestTimeout;
     @Value("${spider.timeout.connect :2000}")
     private int connectTimeout;
-    @Value("${spider.timeout.socket :500}")
-    private int socketTimeout;
     @Value("${spider.captcha.predict}")
     private String captchaPredict;
 
@@ -39,6 +37,21 @@ public class SpiderConfiguration {
                 .retryOnConnectionFailure(true)
                 .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
                 .readTimeout(requestTimeout, TimeUnit.MILLISECONDS)
+                .followRedirects(false)
+                .build();
+
+        OkHttp3ClientHttpRequestFactory requestFactory = new OkHttp3ClientHttpRequestFactory(client);
+
+        return new RetryRestTemplate(requestFactory);
+    }
+
+    @Bean
+    public RestTemplate searchSpiderTemplate(){
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(5000, TimeUnit.MILLISECONDS)
+                .readTimeout(5000, TimeUnit.MILLISECONDS)
                 .followRedirects(false)
                 .build();
 

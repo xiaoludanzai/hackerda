@@ -133,6 +133,7 @@ public class CourseTimetableAdapter {
 
         tableDO.setStudentCount(tableDO.getStudentCount());
 
+
         return tableDO;
     }
 }
