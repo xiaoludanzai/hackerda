@@ -17,13 +17,13 @@ public class CourseTimetableQueryService {
     @Autowired
     private CourseTimetableRepository courseTimetableRepository;
 
-    public CourseTimeTableOverview getByAccount(int account){
+    public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
         StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
-        CourseTimeTableOverview current = courseTimetableFactory.createCurrent(studentUserBO);
+        CourseTimeTableOverview current = courseTimetableFactory.createCurrent(studentUserBO, termYear, termOrder);
 
         if(current.isEmpty()){
-            courseTimetableRepository.getCurrentTermByClassId(studentUserBO);
+            courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
         }
 
         List<CourseTimetableBO> newList = current.getNewList();

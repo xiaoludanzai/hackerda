@@ -63,13 +63,6 @@ public class SpiderConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AccountCookiePersist<String> captchaPredict(){
-        return new MemoryCookiePersist<>();
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
     public ICaptchaProvider<CaptchaImage> captchaProvider(RestTemplate spiderTemplate){
         return new PreloadCaptchaProvider(spiderTemplate, "http://xsurp.usth.edu.cn/img/captcha" +
                 ".jpg");

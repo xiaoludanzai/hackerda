@@ -129,6 +129,83 @@
 
     </select>
 
+    <resultMap id="CourseTimetableDetailDOMap" type="com.hackerda.platform.pojo.CourseTimetableDetailDO">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+        <result column="room_number" property="roomNumber" jdbcType="VARCHAR" />
+        <result column="campus_name" property="campusName" jdbcType="VARCHAR" />
+        <result column="continuing_session" property="continuingSession" jdbcType="INTEGER" />
+        <result column="course_id" property="courseId" jdbcType="VARCHAR" />
+        <result column="attend_class_teacher" property="attendClassTeacher" jdbcType="VARCHAR" />
+        <result column="student_count" property="studentCount" jdbcType="INTEGER" />
+        <result column="class_day" property="classDay" jdbcType="INTEGER" />
+        <result column="class_order" property="classOrder" jdbcType="INTEGER" />
+        <result column="start_week" property="startWeek" jdbcType="INTEGER" />
+        <result column="end_week" property="endWeek" jdbcType="INTEGER" />
+        <result column="class_in_school_week" property="classInSchoolWeek" jdbcType="VARCHAR" />
+        <result column="course_sequence_number" property="courseSequenceNumber" jdbcType="VARCHAR" />
+        <result column="week_description" property="weekDescription" jdbcType="VARCHAR" />
+        <result column="class_distinct" property="classDistinct" jdbcType="INTEGER" />
+        <result column="term_year" property="termYear" jdbcType="CHAR" />
+        <result column="term_order" property="termOrder" jdbcType="INTEGER" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="name" property="courseName" jdbcType="VARCHAR" />
+        <result column="teacher_account" property="teacherAccount" jdbcType="VARCHAR" />
+        <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+        <result column="exam_type" property="examType" jdbcType="VARCHAR" />
+        <result column="exam_type_code" property="examTypeCode" jdbcType="VARCHAR" />
+        <result column="academy_name" property="academyName" jdbcType="VARCHAR" />
+        <result column="academy_code" property="academyCode" jdbcType="VARCHAR" />
+        <result column="course_type" property="courseType" jdbcType="VARCHAR" />
+        <result column="course_type_code" property="courseTypeCode" jdbcType="VARCHAR" />
+        <result column="credit" property="credit" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+
+    <select id="selectDetailByStudentAccount" resultMap="CourseTimetableDetailDOMap" parameterType="com.hackerda.platform.pojo.StudentCourseTimeTable">
+        select
+        course_timetable.id,
+        room_name,
+        room_number,
+        campus_name,
+        continuing_session,
+        course_id,
+        attend_class_teacher,
+        student_count,
+        class_day,
+        class_order,
+        start_week,
+        end_week,
+        class_in_school_week,
+        course_sequence_number,
+        week_description,
+        class_distinct,
+        course_timetable.term_year,
+        course_timetable.term_order,
+        gmt_create,
+        name, num, teacher_account, teacher_name,
+        exam_type, exam_type_code, academy_name, academy_code, course_type, course_type_code,
+        credit
+        from student_course_time_table
+
+        left join course_timetable on student_course_time_table.course_timetable_id = course_timetable.id
+        left join course c on course_timetable.course_id = c.num and course_timetable.course_sequence_number = c.course_order
+        <where>
+            <if test="studentId != null">
+                and student_id = #{studentId}
+            </if>
+            <if test="termYear != null">
+                and student_course_time_table.term_year = #{termYear}
+            </if>
+            <if test="termOrder != null">
+                and student_course_time_table.term_order = #{termOrder}
+            </if>
+        </where>
+
+
+    </select>
+
     <insert id="insertBatchStudentRelative" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into course_timetable
         (<include refid="com.hackerda.platform.mapper.StudentCourseTimeTableMapper.Base_Column_List"/>)

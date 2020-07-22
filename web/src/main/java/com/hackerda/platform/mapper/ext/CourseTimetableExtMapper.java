@@ -3,6 +3,7 @@ package com.hackerda.platform.mapper.ext;
 import com.hackerda.platform.mapper.CourseTimetableMapper;
 import com.hackerda.platform.pojo.ClassCourseTimetable;
 import com.hackerda.platform.pojo.CourseTimetable;
+import com.hackerda.platform.pojo.CourseTimetableDetailDO;
 import com.hackerda.platform.pojo.StudentCourseTimeTable;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,6 @@ public interface CourseTimetableExtMapper extends CourseTimetableMapper {
 
 
     void insertBatchStudentRelative(List<StudentCourseTimeTable> relativeList);
+
+    List<CourseTimetableDetailDO> selectDetailByStudentAccount(StudentCourseTimeTable relative);
 }

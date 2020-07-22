@@ -1,17 +1,17 @@
 package com.hackerda.platform.dao;
 
 import com.hackerda.platform.mapper.ext.CourseTimetableExtMapper;
-import com.hackerda.platform.pojo.ClassCourseTimetable;
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentCourseTimeTable;
+import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.pojo.example.CourseTimetableExample;
 import com.hackerda.platform.utils.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseTimeTableDao {
@@ -145,6 +145,20 @@ public class CourseTimeTableDao {
 
     public void insertBatchStudentRelative(List<StudentCourseTimeTable> relativeList){
         courseTimetableExtMapper.insertBatchStudentRelative(relativeList);
-    };
+    }
+
+    public List<CourseTimetableDetailDO> selectDetailByStudent(StudentCourseTimeTable relative){
+        if(relative == null){
+            return Collections.emptyList();
+        }
+        return courseTimetableExtMapper.selectDetailByStudentAccount(relative).stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public List<CourseTimetableDetailDO> selectDetailByClassId(ClassCourseTimetable relative){
+        if(relative == null){
+            return Collections.emptyList();
+        }
+        return null;
+    }
 
 }

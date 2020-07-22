@@ -7,10 +7,7 @@ import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.ClassCourseTimetable;
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.StudentCourseTimeTable;
-import com.hackerda.platform.pojo.Term;
+import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.repository.ExceptionMsg;
 import com.hackerda.platform.repository.FetchExceptionHandler;
 import com.hackerda.platform.utils.DateUtils;
@@ -47,14 +44,18 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
             new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSpider"));
 
     @Override
-    public CourseTimeTableOverview getCurrentTermTable(StudentUserBO studentUserBO) {
+    public CourseTimeTableOverview getByAccount(StudentUserBO studentUserBO, String termYear, int termOrder) {
 
-        List<CourseTimetable> timetableList = courseTimeTableDao.getCurrentTermTableByAccount(studentUserBO.getAccount());
+        StudentCourseTimeTable courseTimeTable = new StudentCourseTimeTable()
+                .setStudentId(studentUserBO.getAccount())
+                .setTermYear(termYear)
+                .setTermOrder(termOrder);
 
+        List<CourseTimetableDetailDO> detailList = courseTimeTableDao.selectDetailByStudent(courseTimeTable);
         CourseTimeTableOverview overview = new CourseTimeTableOverview();
         overview.setPersonal(true);
-        if (!CollectionUtils.isEmpty(timetableList)) {
-            setSuccessOverview(overview, timetableList);
+        if (!CollectionUtils.isEmpty(detailList)) {
+            setSuccessOverview(overview, detailList);
             return overview;
         }
 
@@ -68,13 +69,14 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
 
     @Override
-    public CourseTimeTableOverview getCurrentTermByClassId(StudentUserBO studentUserBO) {
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
+    public CourseTimeTableOverview getByClassId(StudentUserBO studentUserBO, String termYear, int termOrder) {
+
         ClassCourseTimetable relative = new ClassCourseTimetable()
                 .setClassId(studentUserBO.getUrpClassNum().toString())
-                .setTermYear(term.getTermYear())
-                .setTermOrder(term.getOrder());
-        List<CourseTimetable> timetableList = courseTimeTableDao.selectByClassRelative(relative);
+                .setTermYear(termYear)
+                .setTermOrder(termOrder);
+
+        List<CourseTimetableDetailDO> timetableList = courseTimeTableDao.selectDetailByClassId(relative);
 
         CourseTimeTableOverview overview = new CourseTimeTableOverview();
 
@@ -91,7 +93,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
     }
 
-    private void setSuccessOverview(CourseTimeTableOverview overview, List<CourseTimetable> timetableList){
+    private void setSuccessOverview(CourseTimeTableOverview overview, List<CourseTimetableDetailDO> timetableList){
         List<CourseTimetableBO> timetableBOList = timetableList.stream().map(x -> adapter.toBO(x)).collect(Collectors.toList());
 
         overview.setFinishFetch(true);

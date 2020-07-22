@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CourseTimetableRepository {
 
-    CourseTimeTableOverview getCurrentTermTable(StudentUserBO studentUserBO);
+    CourseTimeTableOverview getByAccount(StudentUserBO studentUserBO, String termYear, int termOrder);
 
-    CourseTimeTableOverview getCurrentTermByClassId(StudentUserBO studentUserBO);
+    CourseTimeTableOverview getByClassId(StudentUserBO studentUserBO, String termYear, int termOrder);
 
     void saveByStudent(List<CourseTimetableBO> tableList, StudentUserBO studentUserBO);
 

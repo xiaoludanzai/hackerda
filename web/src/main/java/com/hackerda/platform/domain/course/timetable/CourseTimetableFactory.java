@@ -11,8 +11,8 @@ public class CourseTimetableFactory {
     @Autowired
     private CourseTimetableRepository courseTimeTableRepository;
 
-    public CourseTimeTableOverview createCurrent(StudentUserBO studentUserBO){
-        return courseTimeTableRepository.getCurrentTermTable(studentUserBO);
+    public CourseTimeTableOverview createCurrent(StudentUserBO studentUserBO, String termYear, int termOrder){
+        return courseTimeTableRepository.getByAccount(studentUserBO, termYear, termOrder);
     }
 
 }
