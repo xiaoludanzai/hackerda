@@ -4,7 +4,7 @@ import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.ext.TruncateMapper;
-import com.hackerda.platform.repository.student.StudentUserRepository;
+import com.hackerda.platform.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 
 @Slf4j
@@ -25,7 +24,7 @@ public class CourseTimetableRepositoryImplTest {
     @Autowired
     private CourseTimetableRepository courseTimetableRepository;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentUserRepositoryImpl studentUserRepository;
     @Autowired
     private TruncateMapper truncateMapper;
 

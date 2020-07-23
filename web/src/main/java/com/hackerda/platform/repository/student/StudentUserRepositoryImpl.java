@@ -3,6 +3,7 @@ package com.hackerda.platform.repository.student;
 import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.dao.WechatOpenIdDao;
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.pojo.ScheduleTask;
 import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.pojo.WechatStudentUserDO;
@@ -15,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class StudentUserRepository {
+public class StudentUserRepositoryImpl implements StudentUserRepository {
 
     @Autowired
     private StudentUserDao studentUserDao;

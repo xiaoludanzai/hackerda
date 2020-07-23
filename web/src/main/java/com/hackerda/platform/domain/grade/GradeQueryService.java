@@ -1,10 +1,9 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.event.EventPublisher;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
-import com.hackerda.platform.repository.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

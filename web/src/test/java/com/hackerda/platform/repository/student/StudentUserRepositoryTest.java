@@ -12,15 +12,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @Slf4j
 @ActiveProfiles("prod")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class StudentUserRepositoryTest {
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentUserRepositoryImpl studentUserRepository;
 
     @Test
     public void getByAccount() {

@@ -3,7 +3,7 @@ package com.hackerda.platform.domain.grade;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
 import com.hackerda.platform.repository.grade.GradeSpiderFacade;
-import com.hackerda.platform.repository.student.StudentUserRepository;
+import com.hackerda.platform.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,7 @@ public class GradeQueryServiceTest {
     @Autowired
     private GradeMapper gradeMapper;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentUserRepositoryImpl studentUserRepository;
     @MockBean
     private GradeSpiderFacade gradeSpiderFacade;
 

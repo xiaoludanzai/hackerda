@@ -1,7 +1,7 @@
 package com.hackerda.platform.domain.course.timetable;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.repository.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
