@@ -6,5 +6,7 @@ public enum WechatPlatform {
 
     HKXJ_PLUS,
 
-    HKXJ_APP;
+    HKXJ_APP,
+
+    TEST;
 }

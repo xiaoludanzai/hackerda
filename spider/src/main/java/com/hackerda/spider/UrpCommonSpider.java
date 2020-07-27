@@ -167,6 +167,12 @@ public class UrpCommonSpider extends UrpBaseSpider implements UrpSpider{
         return result;
     }
 
+    @Override
+    public void checkPassword(String account, String password) {
+        setAccount(account);
+        login0(account, password);
+    }
+
 
     /**
      * 解析学生信息页面的html

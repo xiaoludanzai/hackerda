@@ -1,31 +1,17 @@
 package com.hackerda.platform.service;
 
-import com.google.common.collect.Lists;
-import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.dao.*;
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableQueryService;
-import com.hackerda.platform.pojo.*;
+import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
-
 import com.hackerda.platform.pojo.vo.CourseTimetableOverviewVO;
 import com.hackerda.platform.pojo.vo.CourseVO;
 import com.hackerda.platform.utils.DateUtils;
-import com.hackerda.spider.exception.PasswordUnCorrectException;
-import com.hackerda.spider.exception.UrpRequestException;
-import com.hackerda.spider.support.coursetimetable.TimeAndPlace;
-import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

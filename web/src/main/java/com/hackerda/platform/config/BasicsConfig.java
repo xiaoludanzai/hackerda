@@ -27,8 +27,7 @@ import org.springframework.web.client.RestTemplate;
 @Import(SpiderConfiguration.class)
 public class BasicsConfig {
 
-    @Autowired
-    private IExceptionHandler spiderExceptionHandler;
+
 
     @Bean
     @Scope("prototype")
@@ -36,7 +35,7 @@ public class BasicsConfig {
                                    CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
                                    AccountCookiePersist<String> cookiePersist){
 
-        return new UrpCommonSpider(spiderTemplate, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
+        return new UrpCommonSpider(spiderTemplate, captchaPredict, captchaProvider, cookiePersist);
     }
 
     @Bean

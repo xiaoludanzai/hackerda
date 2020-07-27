@@ -4,7 +4,10 @@ import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class StudentUserBO {
 
     private String className;
 
-    private List<WechatOpenidBO> wechatOpenidList = Collections.emptyList();
+    private List<WechatOpenidBO> wechatOpenidList = new ArrayList<>(0);
 
     private String key;
 
@@ -94,5 +97,43 @@ public class StudentUserBO {
         }
         return null;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudentUserBO that = (StudentUserBO) o;
+
+        return new EqualsBuilder()
+                .append(account, that.account)
+                .append(password, that.password)
+                .append(name, that.name)
+                .append(sex, that.sex)
+                .append(ethnic, that.ethnic)
+                .append(urpClassNum, that.urpClassNum)
+                .append(academyName, that.academyName)
+                .append(subjectName, that.subjectName)
+                .append(className, that.className)
+                .append(wechatOpenidList, that.wechatOpenidList)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(account)
+                .append(password)
+                .append(name)
+                .append(sex)
+                .append(ethnic)
+                .append(urpClassNum)
+                .append(academyName)
+                .append(subjectName)
+                .append(className)
+                .append(wechatOpenidList)
+                .toHashCode();
     }
 }

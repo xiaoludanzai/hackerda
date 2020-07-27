@@ -118,6 +118,7 @@ public class WechatMpConfiguration {
         return builder.put(wechatMpPlusProperties.getAppId(), WechatPlatform.HKXJ_PLUS)
                 .put(wechatMpProProperties.getAppId(), WechatPlatform.HKXJ_PRO)
                 .put(miniProgramProperties.getAppId(), WechatPlatform.HKXJ_APP)
+                .put("test_appId", WechatPlatform.TEST)
                 .build();
 
     }

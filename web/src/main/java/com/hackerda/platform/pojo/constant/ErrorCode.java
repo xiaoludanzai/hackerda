@@ -29,6 +29,11 @@ public enum  ErrorCode {
 	URP_EXCEPTION(407),
 
 	/**
+	 * 账号已经别绑定
+	 */
+	ACCOUNT_HAS_BIND(408),
+
+	/**
 	 *服务器端错误
 	 */
 	SYSTEM_ERROR(500),

@@ -10,6 +10,7 @@ import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.pojo.WechatStudentUserDO;
 import com.hackerda.platform.pojo.constant.SubscribeScene;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,7 +18,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Repository
 public class StudentUserRepositoryImpl implements StudentUserRepository {
 
     @Autowired

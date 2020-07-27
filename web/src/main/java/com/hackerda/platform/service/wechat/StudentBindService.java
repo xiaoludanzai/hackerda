@@ -3,7 +3,6 @@ package com.hackerda.platform.service.wechat;
 import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.dao.WechatBindRecordDao;
 import com.hackerda.platform.dao.WechatOpenIdDao;
-import com.hackerda.platform.exceptions.OpenidExistException;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.UrpClass;
 import com.hackerda.platform.pojo.WechatBindRecord;
@@ -57,9 +56,8 @@ public class StudentBindService {
      * @param account  学生教务网账号
      * @param password 学生教务网密码
      * @throws PasswordUnCorrectException 密码不正确异常
-     * @throws OpenidExistException       Openid已存在
      */
-    public StudentVo studentBind(String openid, String account, String password, String appid) throws OpenidExistException {
+    public StudentVo studentBind(String openid, String account, String password, String appid) {
 
         StudentVo studentVo = studentLogin(account, password);
 

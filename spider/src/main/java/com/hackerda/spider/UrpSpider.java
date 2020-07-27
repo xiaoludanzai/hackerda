@@ -21,4 +21,6 @@ public interface UrpSpider {
     UrpCourseTimeTable getUrpCourseTimeTable();
 
     List<UrpExamTime> getExamTime();
+
+    void checkPassword(String account, String password);
 }

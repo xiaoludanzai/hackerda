@@ -82,8 +82,8 @@ public class StudentUserAdapter {
         WechatOpenid wechatOpenid = new WechatOpenid();
 
         wechatOpenid.setAccount(wechatOpenidBO.getAccount());
-        wechatOpenid.setIsBind(wechatOpenid.getIsBind());
-        wechatOpenid.setAppid(wechatOpenid.getAppid());
+        wechatOpenid.setIsBind(wechatOpenidBO.isBind());
+        wechatOpenid.setAppid(wechatOpenidBO.getAppId());
         wechatOpenid.setOpenid(wechatOpenidBO.getOpenid());
 
         return wechatOpenid;

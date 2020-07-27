@@ -3,16 +3,11 @@ package com.hackerda.platform.controller;
 
 import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
-import com.hackerda.platform.exceptions.OpenidExistException;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.WebResponse;
 import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.vo.StudentVo;
-import com.hackerda.platform.service.OpenIdService;
-import com.hackerda.platform.service.TeachingEvaluationService;
 import com.hackerda.platform.service.wechat.StudentBindService;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
-import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpVerifyCodeException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -39,10 +34,6 @@ public class UserBindingController {
     private HttpSession httpSession;
     @Resource
     private StudentBindService studentBindService;
-    @Resource
-    private TeachingEvaluationService teachingEvaluationService;
-    @Resource
-    private OpenIdService openIdService;
 
     private static ExecutorService evaluatePool = new MDCThreadPool(4, 4,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "evaluate"));
@@ -142,9 +133,6 @@ public class UserBindingController {
         } catch (PasswordUnCorrectException e) {
             log.info("student bind fail Password not correct account:{} password:{} openid:{}", account, password, openid);
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或者密码错误");
-        } catch (OpenidExistException e) {
-            log.info("student bind fail openid is exist account:{} password:{}", account, password);
-            return WebResponse.fail(ErrorCode.OPENID_EXIST.getErrorCode(), "该账号已经绑定");
         }
 
         log.info("student bind success account:{} password:{}, appId:{} openid:{}", account, password, appid, openid);
@@ -159,81 +147,8 @@ public class UserBindingController {
                                     @RequestParam(value = "appid", required = false) String appid,
                                     @RequestParam(value = "openid", required = false) String openid
     ) {
-        if (appid == null) {
-            appid = (String) httpSession.getAttribute("appid");
-        }
-        if (openid == null) {
-            openid = (String) httpSession.getAttribute("openid");
-        }
 
-        log.info("student evaluate start account:{} password:{} appId:{} openid:{}", account, password, appid, openid);
-
-        if (!isAccountValid(account)) {
-            log.info("student getStudentInfo fail--invalid account:{}", account);
-            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号无效");
-        }
-
-        StudentVo student;
-        try {
-            student = login(account, password, appid, openid);
-            return getWebResponse(student.getAccount().toString());
-        } catch (UrpVerifyCodeException e) {
-            log.info("student bind fail verify code error account:{} password:{} openid:{}", account, password,
-                    openid);
-            return WebResponse.fail(ErrorCode.VERIFY_CODE_ERROR.getErrorCode(), "验证码错误");
-        } catch (PasswordUnCorrectException e) {
-            log.info("student bind fail Password not correct account:{} password:{} openid:{}", account, password, openid);
-            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或者密码错误");
-        } catch (OpenidExistException e) {
-            StudentUser user = openIdService.getStudentByOpenId(openid, appid);
-            return getWebResponse(user.getAccount().toString());
-        } catch (UrpEvaluationException e) {
-            // TODO 丑陋
-            String appid1 = appid;
-            String openid1 = openid;
-            evaluatePool.submit(() -> {
-                int count = 0;
-                while (count < 4){
-                    try {
-
-                    }catch (Exception e1){
-                        log.info("evaluate fail {}, {}, {}, {}", account, password,
-                                appid1, openid1, e1);
-                        count ++;
-                        continue;
-                    }
-                    break;
-                }
-            });
-            return WebResponse.successWithMessage("我们很快会为你完成评估，可以关闭此页面。评估完成会发信息通知你的");
-        }
-
-
-    }
-
-    private WebResponse getWebResponse(String account) {
-        if(teachingEvaluationService.hasEvaluate(account)){
-            return WebResponse.successWithMessage("你的账号已经评估完成啦");
-        }
-
-        if(teachingEvaluationService.isWaitingEvaluate(account)){
-            return WebResponse.successWithMessage("你的账号已经在队列中啦，可以关闭此页面。评估完成会发信息通知你的");
-        }
-
-        teachingEvaluationService.addEvaluateAccount(account);
-        return WebResponse.successWithMessage("我们很快会为你完成评估，可以关闭此页面。评估完成会发信息通知你的");
-    }
-
-    private StudentVo login( String account, String password, String appid, String openid) {
-        StudentVo student;
-        if (StringUtils.isEmpty(openid)) {
-            student = studentBindService.studentLogin(account, password);
-        } else {
-            student = studentBindService.studentBind(openid, account, password, appid);
-        }
-        httpSession.setAttribute("account", account);
-
-        return student;
+        return null;
     }
 
 

@@ -23,4 +23,11 @@ public interface TruncateMapper {
 
     @Update("truncate table student_course_time_table")
     void studentCourseTimetable();
+
+
+    @Update("truncate table student_user")
+    void studentUser();
+
+    @Update("truncate table wechat_openid")
+    void wechatOpenId();
 }

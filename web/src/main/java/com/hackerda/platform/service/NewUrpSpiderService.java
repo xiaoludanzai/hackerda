@@ -1,6 +1,5 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.StudentUser;
@@ -21,10 +20,8 @@ import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
 import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.hackerda.platform.utils.DESUtil;
 import com.hackerda.platform.utils.DateUtils;
-import com.hackerda.platform.utils.SchoolTimeUtil;
 import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.UrpSpider;
-import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.UrpGeneralGrade;
@@ -39,7 +36,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -52,10 +48,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class NewUrpSpiderService {
-    @Resource
-    private StudentUserDao studentDao;
-    @Resource
-    private OpenIdService openIdService;
+
     @Value("${student.password.salt}")
     private String key;
 
@@ -81,11 +74,6 @@ public class NewUrpSpiderService {
         return spider.getClassInfoSearchResult(searchClassInfoPost);
     }
 
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<List<CourseTimetableSearchResult>> searchClassTimeTable(String termYear, int termOrder, String classCode) {
-
-        return urpSearchSpider.searchClassTimeTable(termYear, termOrder, classCode);
-    }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<SearchResult<SearchTeacherResult>> searchTeacherInfo(SearchTeacherPost searchTeacherPost) {
@@ -120,14 +108,7 @@ public class NewUrpSpiderService {
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public void checkStudentPassword(String account, String password) {
         UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(account, password);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public UrpCourseTimeTable getUrpCourseTimeTable(StudentUser student) {
-        UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        return baseSpider.getUrpCourseTimeTable();
+        baseSpider.checkPassword(account, password);
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -210,14 +191,7 @@ public class NewUrpSpiderService {
 
 
     private NewUrpSpider getSpider(String account, String password) {
-        try {
-            return new NewUrpSpider(account, password);
-        } catch (PasswordUnCorrectException e) {
-            studentDao.updatePasswordUnCorrect(Integer.parseInt(account));
-            openIdService.openIdUnbindAllPlatform(Integer.parseInt(account));
-            throw e;
-        }
-
+        return new NewUrpSpider(account, password);
     }
 
     @Lookup
