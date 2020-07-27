@@ -5,8 +5,10 @@ import com.hackerda.platform.dao.WechatBindRecordDao;
 import com.hackerda.platform.dao.WechatOpenIdDao;
 import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.pojo.vo.StudentUserDetailVo;
+import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
 import com.hackerda.platform.service.ClassService;
 import com.hackerda.platform.service.NewUrpSpiderService;
+import com.hackerda.platform.service.wechat.MiniProgramService;
 import com.hackerda.platform.utils.DESUtil;
 import com.hackerda.platform.utils.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,8 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     private String key;
     @Autowired
     private UserDetailService userDetailService;
+    @Autowired
+    private MiniProgramService miniProgramService;
 
 
     /**
@@ -78,11 +82,12 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     void studentBind(String account, String openid, String appid) {
         WechatOpenid wechatOpenid = wechatOpenIdDao.selectByUniqueKey(appid, openid);
         if (wechatOpenid != null) {
+            Integer originAccount = wechatOpenid.getAccount();
             wechatOpenIdDao.updateByPrimaryKeySelective(
                     wechatOpenid.setAccount(Integer.parseInt(account)).setGmtModified(new Date()).setIsBind(true));
-            if (!account.equals(wechatOpenid.getAccount().toString())) {
+            if (!account.equals(originAccount.toString())) {
                 wechatBindRecordDao.insertSelective(new WechatBindRecord()
-                        .setOriginAccount(wechatOpenid.getAccount().toString())
+                        .setOriginAccount(originAccount.toString())
                         .setUpdateAccount(account)
                         .setAppid(appid).setOpenid(openid));
             }
@@ -120,5 +125,13 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         String token = JwtUtils.signForUserDetail(account, role, permission, account);
 
         return new StudentUserDetailVo(studentUser, studentUserDetail, token);
+    }
+
+    @Override
+    public StudentUserDetailVo appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String code) {
+
+        AuthResponse auth = miniProgramService.auth(code);
+
+        return studentAuthorize(account, password, appId, auth.getOpenid());
     }
 }

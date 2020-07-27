@@ -21,5 +21,7 @@ public class WechatOpenid {
 
     private String appid;
 
+    private int count;
+
 
 }

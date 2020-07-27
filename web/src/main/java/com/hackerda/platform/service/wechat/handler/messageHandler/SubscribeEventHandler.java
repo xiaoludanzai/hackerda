@@ -10,6 +10,7 @@ import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,9 +26,10 @@ public class SubscribeEventHandler implements WxMpMessageHandler {
     @Resource
     private TextBuilder textBuilder;
     @Resource
-    private StudentBindService studentBindService;
-    @Resource
     private WechatMpPlusProperties wechatMpPlusProperties;
+    @Value("${domain}")
+    private String domain;
+    private static final String PATTERN = "<a href=\"%s/bind?openid=%s&appid=%s\">%s</a>";
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) {
@@ -37,7 +39,7 @@ public class SubscribeEventHandler implements WxMpMessageHandler {
 
         buffer.append("同学，你终于找到我们黑科校际了！我们在这已经等候多时了，很高兴遇见你~");
         buffer.append("\n\n");
-        buffer.append("为了更好地为你服务，").append(studentBindService.getBindUrlByOpenid(appId, fromUser, "请点击我进行绑定！！！"));
+        buffer.append("为了更好地为你服务，").append(getBindUrlByOpenid(appId, fromUser, "请点击我进行绑定！！！"));
 
         if(wechatMpPlusProperties.getAppId().equals(appId)){
             buffer.append("\n\n").append("回复 【订阅】,即可开启课程成绩提醒黑科技");
@@ -46,5 +48,9 @@ public class SubscribeEventHandler implements WxMpMessageHandler {
         buffer.append("\n\n").append("使用过程中有问题记得在后台留言，我们会尽快解决的");
 
         return textBuilder.build(new String(buffer), wxMessage, wxMpService);
+    }
+
+    private String getBindUrlByOpenid(String fromUser, String appId, String content) {
+        return String.format(PATTERN, domain, fromUser, appId, content);
     }
 }

@@ -11,6 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -41,6 +42,19 @@ public class SchoolCommonController {
     @RequiresAuthentication
     @RequestMapping(value = "/timetable")
     public WebResponse getTimeTableV2() {
+
+        String account = SecurityUtils.getSubject().getPrincipal().toString();
+        CourseTimetableOverviewVO vo = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(Integer.parseInt(account));
+        if (vo.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode()){
+            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或密码错误");
+        }
+        return WebResponse.success(vo.getCourseTimetableVOList());
+    }
+
+    @RequiresAuthentication
+    @RequestMapping(value = "/unbind")
+    public WebResponse appUnbind(@RequestParam(value = "appId") String appId,
+                                 @RequestParam(value = "code") String code) {
 
         String account = SecurityUtils.getSubject().getPrincipal().toString();
         CourseTimetableOverviewVO vo = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(Integer.parseInt(account));

@@ -31,9 +31,7 @@ public class StudentBindService {
     private WechatOpenIdDao wechatOpenIdDao;
     @Resource
     private NewUrpSpiderService newUrpSpiderService;
-    @Value("${domain}")
-    private String domain;
-    private static final String PATTERN = "<a href=\"%s/bind?openid=%s&appid=%s\">%s</a>";
+
 
     private static final String TEXT_LINK = "<a href=\"%s\">%s</a>";
     @Resource
@@ -136,9 +134,6 @@ public class StudentBindService {
 
     }
 
-    public String getBindUrlByOpenid(String fromUser, String appId, String content) {
-        return String.format(PATTERN, domain, fromUser, appId, content);
-    }
 
     public String getTextLink(String url, String content) {
         return String.format(TEXT_LINK, url, content);

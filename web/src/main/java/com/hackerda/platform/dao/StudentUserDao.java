@@ -71,4 +71,8 @@ public class StudentUserDao {
         return studentUserExtMapper.getWechatUserByAccountList(account);
     }
 
+    public void saveOrUpdate(StudentUser studentUser){
+        studentUserExtMapper.saveOrUpdate(studentUser);
+    }
+
 }

@@ -18,4 +18,6 @@ public interface WechatOpenIdExtMapper extends WechatOpenidMapper {
     void insertBatch(List<WechatOpenid> wechatOpenidList);
 
     List<WechatOpenid> selectBySubscribe(ScheduleTask task);
+
+    int saveOrUpdate(WechatOpenid wechatOpenid);
 }

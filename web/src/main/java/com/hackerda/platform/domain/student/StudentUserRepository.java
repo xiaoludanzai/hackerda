@@ -12,4 +12,7 @@ public interface StudentUserRepository {
     List<StudentUserBO> getByAccountList(Collection<Integer> accountList);
 
     List<StudentUserBO> getSubscribe(SubscribeScene subscribeScene);
+
+    void save(StudentUserBO studentUser);
+
 }

@@ -4,6 +4,8 @@ import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.domain.student.WechatSubscribeBO;
+import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.pojo.WechatStudentUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,10 @@ public class StudentUserAdapter {
         WechatStudentUserDO studentUser = wechatStudentUserDOList.get(0);
 
         Map<WechatOpenidBO, List<WechatSubscribeBO>> listMap = wechatStudentUserDOList.stream()
-                .collect(Collectors.groupingBy(x -> new WechatOpenidBO(x.getOpenId(), x.getIsBind(), x.getAppId(),
-                                wechatPlatformMap.get(x.getAppId())),
+                .collect(Collectors.groupingBy(x -> new WechatOpenidBO(studentUser.getAccount(), x.getOpenId(),
+                                x.getIsBind(),
+                                x.getAppId(),
+                                wechatPlatformMap.get(x.getAppId()), false),
                         Collectors.mapping(x -> new WechatSubscribeBO(x.getIsSubscribe(), x.getScene()), Collectors.toList())));
 
         for (WechatOpenidBO openidBO : listMap.keySet()) {
@@ -55,6 +59,34 @@ public class StudentUserAdapter {
         bo.setWechatOpenidList(new ArrayList<>(listMap.keySet()));
 
         return bo;
+    }
+
+    public StudentUser toDO(StudentUserBO studentUserBO){
+        StudentUser user = new StudentUser();
+
+        user.setAccount(studentUserBO.getAccount());
+        user.setPassword(studentUserBO.getPassword());
+        user.setIsCorrect(studentUserBO.getIsCorrect());
+        user.setUrpclassNum(studentUserBO.getUrpClassNum());
+        user.setAcademyName(studentUserBO.getAcademyName());
+        user.setClassName(studentUserBO.getClassName());
+        user.setEthnic(studentUserBO.getEthnic());
+        user.setSubjectName(studentUserBO.getSubjectName());
+        user.setSex(studentUserBO.getSex());
+        user.setName(studentUserBO.getName());
+
+        return user;
+    }
+
+    public WechatOpenid toDO(WechatOpenidBO wechatOpenidBO){
+        WechatOpenid wechatOpenid = new WechatOpenid();
+
+        wechatOpenid.setAccount(wechatOpenidBO.getAccount());
+        wechatOpenid.setIsBind(wechatOpenid.getIsBind());
+        wechatOpenid.setAppid(wechatOpenid.getAppid());
+        wechatOpenid.setOpenid(wechatOpenidBO.getOpenid());
+
+        return wechatOpenid;
     }
 
 

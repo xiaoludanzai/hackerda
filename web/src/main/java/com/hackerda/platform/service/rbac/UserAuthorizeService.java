@@ -20,4 +20,7 @@ public interface UserAuthorizeService {
      * @return 对应学生用户的详细信息
      */
     StudentUserDetailVo studentAuthorize(@Nonnull String account, @Nonnull String password, @Nullable String appId, @Nullable String openid);
+
+    StudentUserDetailVo appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+                                          @Nonnull String code);
 }

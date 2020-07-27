@@ -37,6 +37,17 @@ public class WechatOpenIdDao {
         return selectByPojo(wechatOpenid).stream().findFirst().orElse(null);
     }
 
+    public WechatOpenid selectBindUser(Integer account) {
+        WechatOpenid wechatOpenid = new WechatOpenid().setIsBind(true).setAccount(account);
+        List<WechatOpenid> openidList = selectByPojo(wechatOpenid);
+
+        if(openidList.size() > 1) {
+            throw new RuntimeException(account + "被多个openId绑定");
+        }
+
+        return openidList.stream().findFirst().orElse(null);
+    }
+
 
     public void insertSelective(WechatOpenid wechatOpenid){
         wechatOpenIdExtMapper.insertSelective(wechatOpenid);
@@ -78,5 +89,7 @@ public class WechatOpenIdDao {
         return wechatOpenIdExtMapper.selectBySubscribe(scheduleTask);
     }
 
-
+    public void saveOrUpdate(WechatOpenid wechatOpenid){
+        wechatOpenIdExtMapper.saveOrUpdate(wechatOpenid);
+    }
 }

@@ -33,7 +33,8 @@ public class GradeMsgSenderTest {
 
         bo.setName("test");
 
-        WechatOpenidBO openidBO = new WechatOpenidBO("oCxRO1G9N755dOY5dwcT5l3IlS3Y", true, "wx541fd36e6b400648", WechatPlatform.HKXJ_PLUS);
+        WechatOpenidBO openidBO = new WechatOpenidBO(1231, "oCxRO1G9N755dOY5dwcT5l3IlS3Y", true, "wx541fd36e6b400648",
+                WechatPlatform.HKXJ_PLUS, false);
 
         List<WechatOpenidBO> list = Collections.singletonList(openidBO);
 

@@ -56,4 +56,133 @@
         </foreach>
 
     </select>
+
+    <insert id="saveOrUpdate" parameterType="com.hackerda.platform.pojo.StudentUser" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) count FROM student_user where account = #{account}
+        </selectKey>
+
+        <if test="count > 0">
+            UPDATE student_user
+            <set >
+                <if test="account != null" >
+                    account = #{account,jdbcType=INTEGER},
+                </if>
+                <if test="password != null" >
+                    password = #{password,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null" >
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="sex != null" >
+                    sex = #{sex,jdbcType=VARCHAR},
+                </if>
+                <if test="ethnic != null" >
+                    ethnic = #{ethnic,jdbcType=VARCHAR},
+                </if>
+                <if test="urpclassNum != null" >
+                    urpclass_num = #{urpclassNum,jdbcType=INTEGER},
+                </if>
+                <if test="isCorrect != null" >
+                    is_correct = #{isCorrect,jdbcType=BIT},
+                </if>
+                <if test="gmtModified != null" >
+                    gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+                </if>
+                <if test="academyName != null" >
+                    academy_name = #{academyName,jdbcType=VARCHAR},
+                </if>
+                <if test="subjectName != null" >
+                    subject_name = #{subjectName,jdbcType=VARCHAR},
+                </if>
+                <if test="className != null" >
+                    class_name = #{className,jdbcType=VARCHAR},
+                </if>
+            </set>
+            <where>
+                account = #{account}
+            </where>
+        </if>
+        <if test="count == 0">
+            insert into student_user
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="account != null" >
+                    account,
+                </if>
+                <if test="password != null" >
+                    password,
+                </if>
+                <if test="name != null" >
+                    name,
+                </if>
+                <if test="sex != null" >
+                    sex,
+                </if>
+                <if test="ethnic != null" >
+                    ethnic,
+                </if>
+                <if test="urpclassNum != null" >
+                    urpclass_num,
+                </if>
+                <if test="isCorrect != null" >
+                    is_correct,
+                </if>
+                <if test="gmtCreate != null" >
+                    gmt_create,
+                </if>
+                <if test="gmtModified != null" >
+                    gmt_modified,
+                </if>
+                <if test="academyName != null" >
+                    academy_name,
+                </if>
+                <if test="subjectName != null" >
+                    subject_name,
+                </if>
+                <if test="className != null" >
+                    class_name,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="account != null" >
+                    #{account,jdbcType=INTEGER},
+                </if>
+                <if test="password != null" >
+                    #{password,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null" >
+                    #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="sex != null" >
+                    #{sex,jdbcType=VARCHAR},
+                </if>
+                <if test="ethnic != null" >
+                    #{ethnic,jdbcType=VARCHAR},
+                </if>
+                <if test="urpclassNum != null" >
+                    #{urpclassNum,jdbcType=INTEGER},
+                </if>
+                <if test="isCorrect != null" >
+                    #{isCorrect,jdbcType=BIT},
+                </if>
+                <if test="gmtCreate != null" >
+                    #{gmtCreate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="gmtModified != null" >
+                    #{gmtModified,jdbcType=TIMESTAMP},
+                </if>
+                <if test="academyName != null" >
+                    #{academyName,jdbcType=VARCHAR},
+                </if>
+                <if test="subjectName != null" >
+                    #{subjectName,jdbcType=VARCHAR},
+                </if>
+                <if test="className != null" >
+                    #{className,jdbcType=VARCHAR},
+                </if>
+            </trim>
+        </if>
+    </insert>
 </mapper>

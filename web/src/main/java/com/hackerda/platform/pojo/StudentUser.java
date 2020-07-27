@@ -33,6 +33,8 @@ public class StudentUser {
 
     private String className;
 
+    private int count;
+
 
     public String getEnablePassword(String key) {
         return DESUtil.decrypt(this.password, key);

@@ -5,6 +5,7 @@ import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -30,7 +31,11 @@ public class StudentUserBO {
 
     private String className;
 
-    private List<WechatOpenidBO> wechatOpenidList;
+    private List<WechatOpenidBO> wechatOpenidList = Collections.emptyList();
+
+    private String key;
+
+    private boolean saveOrUpdate;
 
     /**
      * 获取年级
@@ -51,12 +56,7 @@ public class StudentUserBO {
 
 
     public WechatOpenidBO getAppOpenid(){
-        for (WechatOpenidBO wechatOpenidBO : wechatOpenidList) {
-            if(wechatOpenidBO.getWechatPlatform() == WechatPlatform.HKXJ_APP){
-                return wechatOpenidBO;
-            }
-        }
-        return null;
+        return getOpenId(WechatPlatform.HKXJ_APP);
     }
 
     public boolean hasBindPlus() {
@@ -64,12 +64,35 @@ public class StudentUserBO {
     }
 
     public WechatOpenidBO getPlusOpenid(){
+        return getOpenId(WechatPlatform.HKXJ_PLUS);
+    }
+
+
+    public void updatePassword(String enablePassword) {
+        this.password = DESUtil.encrypt(enablePassword, account + key);
+        this.saveOrUpdate = true;
+    }
+
+    public boolean checkEnablePasswordIsCorrect(String enablePassword) {
+        return DESUtil.encrypt(enablePassword, account + key).equals(password);
+    }
+
+    public void bindWechatPlatform(String openid, String appId, WechatPlatform wechatPlatform){
+        WechatOpenidBO openId = getOpenId(wechatPlatform);
+        if(openId != null) {
+            openId.bindOpenId(openid);
+        }else {
+            wechatOpenidList.add(new WechatOpenidBO(this.account, openid, true, appId, wechatPlatform, true));
+        }
+    }
+
+    private WechatOpenidBO getOpenId(WechatPlatform wechatPlatform){
         for (WechatOpenidBO wechatOpenidBO : wechatOpenidList) {
-            if(wechatOpenidBO.getWechatPlatform() == WechatPlatform.HKXJ_PLUS){
+            if(wechatOpenidBO.getWechatPlatform() == wechatPlatform){
                 return wechatOpenidBO;
             }
         }
         return null;
-    }
 
+    }
 }

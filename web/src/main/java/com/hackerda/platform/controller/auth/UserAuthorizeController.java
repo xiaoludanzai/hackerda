@@ -25,7 +25,18 @@ public class UserAuthorizeController {
 
 
         return WebResponse.success(userAuthorizeService.studentAuthorize(account, password, appid, openid));
+    }
 
+
+    @RequestMapping(value = "/app/student", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public WebResponse<StudentUserDetailVo> appStudentAuthz(@RequestParam("account") String account,
+                                                         @RequestParam("password") String password,
+                                                         @RequestParam(value = "code") String code,
+                                                         @RequestParam(value = "appId") String appId){
+
+
+        return WebResponse.success(userAuthorizeService.appStudentAuthorize(account, password, appId, code));
     }
 
 }

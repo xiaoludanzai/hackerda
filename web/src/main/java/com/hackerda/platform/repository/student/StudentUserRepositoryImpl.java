@@ -4,12 +4,14 @@ import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.dao.WechatOpenIdDao;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.pojo.ScheduleTask;
 import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.pojo.WechatStudentUserDO;
 import com.hackerda.platform.pojo.constant.SubscribeScene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -54,4 +56,20 @@ public class StudentUserRepositoryImpl implements StudentUserRepository {
 
         return getByAccountList(accountSet);
     }
+
+    @Override
+    @Transactional
+    public void save(StudentUserBO studentUser) {
+        if(studentUser.isSaveOrUpdate()) {
+            studentUserDao.saveOrUpdate(studentUserAdapter.toDO(studentUser));
+        }
+
+        List<WechatOpenidBO> openidBOList = studentUser.getWechatOpenidList().stream()
+                .filter(WechatOpenidBO::isSaveOrUpdate).collect(Collectors.toList());
+        for (WechatOpenidBO openidBO : openidBOList) {
+            wechatOpenIdDao.saveOrUpdate(studentUserAdapter.toDO(openidBO));
+        }
+
+    }
+
 }
