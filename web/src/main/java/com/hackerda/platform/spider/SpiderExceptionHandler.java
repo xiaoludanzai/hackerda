@@ -1,6 +1,6 @@
 package com.hackerda.platform.spider;
 
-import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.spider.IExceptionHandler;
 import com.hackerda.spider.exception.PasswordUnCorrectException;

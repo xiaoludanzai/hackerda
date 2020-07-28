@@ -1,7 +1,7 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.dao.StudentUserDao;
-import com.hackerda.platform.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.WechatOpenid;
 import org.springframework.stereotype.Service;

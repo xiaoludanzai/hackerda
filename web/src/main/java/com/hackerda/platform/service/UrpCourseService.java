@@ -2,7 +2,7 @@ package com.hackerda.platform.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.hackerda.platform.dao.CourseDao;
+import com.hackerda.platform.infrastructure.dao.CourseDao;
 import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.spider.newmodel.SearchResult;

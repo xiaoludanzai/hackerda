@@ -1,6 +1,6 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.dao.EmptyRoomDao;
+import com.hackerda.platform.infrastructure.dao.EmptyRoomDao;
 import com.hackerda.platform.pojo.EmptyRoom;
 import com.hackerda.platform.pojo.vo.EmptyRoomVo;
 import com.google.common.collect.Lists;

@@ -1,7 +1,7 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.dao.ExamTimetableDao;
-import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.ExamTimetableDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.pojo.*;
 import com.hackerda.platform.pojo.example.ExamTimetable;
 import com.hackerda.platform.utils.DateUtils;

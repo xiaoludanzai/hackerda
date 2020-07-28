@@ -7,6 +7,7 @@ import com.hackerda.platform.pojo.vo.CourseTimetableOverviewVO;
 import com.hackerda.platform.pojo.vo.GradeResultVo;
 import com.hackerda.platform.service.CourseTimeTableService;
 import com.hackerda.platform.service.GradeService;
+import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-
 @RestController
 @RequestMapping("/api")
 public class SchoolCommonController {
 
-    @Resource
+    @Autowired
     private CourseTimeTableService courseTimeTableService;
     @Autowired
     private GradeService gradeService;
+    @Autowired
+    private UserAuthorizeService userAuthorizeService;
 
     @RequiresAuthentication
     @RequestMapping(value = "/grade")
@@ -51,14 +52,10 @@ public class SchoolCommonController {
 
     @RequiresAuthentication
     @RequestMapping(value = "/unbind")
-    public WebResponse appUnbind(@RequestParam(value = "appId") String appId,
-                                 @RequestParam(value = "code") String code) {
+    public WebResponse appUnbind(@RequestParam(value = "account", required = false) String account,
+                                 @RequestParam(value = "appId") String appId) {
 
-        String account = SecurityUtils.getSubject().getPrincipal().toString();
-        CourseTimetableOverviewVO vo = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(Integer.parseInt(account));
-        if (vo.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode()){
-            return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或密码错误");
-        }
-        return WebResponse.success(vo.getCourseTimetableVOList());
+        userAuthorizeService.appStudentRevokeAuthorize(account, appId);
+        return WebResponse.success("success");
     }
 }

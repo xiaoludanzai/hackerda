@@ -2,7 +2,7 @@ package com.hackerda.platform.service.wechat;
 
 
 import com.hackerda.platform.config.wechat.MiniProgramProperties;
-import com.hackerda.platform.dao.ScheduleTaskDao;
+import com.hackerda.platform.infrastructure.dao.ScheduleTaskDao;
 import com.hackerda.platform.pojo.ScheduleTask;
 import com.hackerda.platform.pojo.constant.RedisKeys;
 import com.hackerda.platform.pojo.constant.SubscribeScene;

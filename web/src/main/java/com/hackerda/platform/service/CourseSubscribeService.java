@@ -1,8 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
-import com.hackerda.platform.dao.StudentUserDao;
-import com.hackerda.platform.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
 import com.hackerda.platform.pojo.ScheduleTask;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentUser;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Yuki

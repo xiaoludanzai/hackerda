@@ -2,7 +2,7 @@ package com.hackerda.platform.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.hackerda.platform.dao.UrpClassDao;
+import com.hackerda.platform.infrastructure.dao.UrpClassDao;
 import com.hackerda.platform.pojo.UrpClass;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
 import lombok.extern.slf4j.Slf4j;

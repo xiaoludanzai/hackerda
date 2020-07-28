@@ -22,4 +22,6 @@ public interface UserAuthorizeService {
 
     StudentUserDetailVO appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
                                             @Nonnull String code);
+
+    void appStudentRevokeAuthorize(@Nonnull String account, @Nonnull String appId);
 }

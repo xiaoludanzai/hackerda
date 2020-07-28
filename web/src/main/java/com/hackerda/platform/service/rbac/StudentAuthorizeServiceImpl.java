@@ -2,8 +2,13 @@ package com.hackerda.platform.service.rbac;
 
 import com.hackerda.platform.application.StudentBindApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.exception.BusinessException;
+import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.vo.StudentUserDetailVO;
 import com.hackerda.platform.utils.JwtUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +22,8 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
     @Autowired
     private StudentBindApp studentBindApp;
+    @Autowired
+    private StudentUserRepository studentUserRepository;
 
 
     @Override
@@ -31,6 +38,23 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         StudentUserBO studentUser = studentBindApp.bindByCode(account, password, appId, code);
 
         return getVO(studentUser);
+    }
+
+    @Override
+    public void appStudentRevokeAuthorize(@Nonnull String account, @Nonnull String appId) {
+        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
+
+        if(studentUserBO == null  && StringUtils.isNotEmpty(account)) {
+            studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+        }
+
+        if(studentUserBO == null) {
+            throw new BusinessException(ErrorCode.ACCOUNT_MISS, account+"信息不存在");
+        }
+
+
+        studentBindApp.unbindByPlatform(studentUserBO, appId);
+
     }
 
     private StudentUserDetailVO getVO(StudentUserBO studentUser){

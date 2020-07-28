@@ -1,6 +1,6 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.pojo.constant.RedisKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -12,8 +12,6 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)

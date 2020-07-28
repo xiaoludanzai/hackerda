@@ -1,6 +1,6 @@
 package com.hackerda.platform.infrastructure;
 
-import com.hackerda.platform.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
 import com.hackerda.platform.domain.student.StudentInfoService;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.StudentUser;
@@ -37,9 +37,9 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public boolean checkCanBind(String account, String openid) {
+    public boolean checkCanBind(String account, String appId, String openid) {
 
-        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(Integer.parseInt(account));
+        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(Integer.parseInt(account), appId);
 
         if(wechatOpenid == null) {
             return true;

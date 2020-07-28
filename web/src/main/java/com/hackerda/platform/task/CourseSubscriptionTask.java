@@ -3,7 +3,7 @@ package com.hackerda.platform.task;
 import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.builder.TemplateBuilder;
 import com.hackerda.platform.config.wechat.WechatTemplateProperties;
-import com.hackerda.platform.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.pojo.SchoolTime;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.WechatOpenid;

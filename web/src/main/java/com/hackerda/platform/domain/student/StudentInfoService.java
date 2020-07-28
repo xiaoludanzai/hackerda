@@ -4,7 +4,7 @@ public interface StudentInfoService {
 
     boolean checkPasswordValid(String account, String enablePassword);
 
-    boolean checkCanBind(String account, String openid);
+    boolean checkCanBind(String account, String appId, String openid);
 
     StudentUserBO getStudentInfo(String account, String enablePassword);
 }

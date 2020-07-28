@@ -8,6 +8,7 @@ import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
 import com.hackerda.platform.service.wechat.MiniProgramService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class StudentBindApp {
     public StudentUserBO bindByOpenId(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
                                       @Nonnull String openid) {
 
-        if(studentInfoService.checkCanBind(account, openid)) {
+        if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
 
             studentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
@@ -56,13 +57,9 @@ public class StudentBindApp {
     }
 
 
-    public void unbindByPlatform(@Nonnull String account, @Nonnull String appId) {
+    public void unbindByPlatform(@Nonnull StudentUserBO studentUserBO, @Nonnull String appId) {
 
-        StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
 
-        if(studentUserBO == null) {
-            throw new BusinessException(ErrorCode.ACCOUNT_MISS, account+"信息不存在");
-        }
 
         studentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
 

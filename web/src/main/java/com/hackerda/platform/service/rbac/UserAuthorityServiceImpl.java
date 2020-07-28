@@ -1,10 +1,10 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.dao.StudentUserDao;
-import com.hackerda.platform.dao.rbac.PermissionDao;
-import com.hackerda.platform.dao.rbac.RoleDao;
-import com.hackerda.platform.dao.rbac.RolePermissionDao;
-import com.hackerda.platform.dao.rbac.StudentRoleDao;
+import com.hackerda.platform.infrastructure.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.dao.rbac.PermissionDao;
+import com.hackerda.platform.infrastructure.dao.rbac.RoleDao;
+import com.hackerda.platform.infrastructure.dao.rbac.RolePermissionDao;
+import com.hackerda.platform.infrastructure.dao.rbac.StudentRoleDao;
 import com.hackerda.platform.pojo.Permission;
 import com.hackerda.platform.pojo.Role;
 import com.google.common.collect.Lists;

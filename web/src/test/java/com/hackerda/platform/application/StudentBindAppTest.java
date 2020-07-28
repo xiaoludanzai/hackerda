@@ -107,7 +107,7 @@ public class StudentBindAppTest {
         studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
 
-        studentBindApp.unbindByPlatform("2014025838", "test_appId");
+        studentBindApp.unbindByPlatform(studentUserRepository.getByAccount(2014025838), "test_appId");
 
         StudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
                 "test_openid_new");

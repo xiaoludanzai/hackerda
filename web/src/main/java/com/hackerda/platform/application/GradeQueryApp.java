@@ -5,7 +5,7 @@ import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.domain.grade.GradeOverviewFactory;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.event.EventPublisher;
+import com.hackerda.platform.application.event.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,8 @@ public class GradeQueryApp {
     private EventPublisher eventPublisher;
 
 
-    private GradeOverviewBO getOverview(StudentUserBO studentUser) {
+    public GradeOverviewBO getGradeOverview(StudentUserBO studentUser) {
+
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 
         List<GradeBO> updateGrade = gradeOverviewBO.getUpdateGrade();
@@ -36,11 +37,6 @@ public class GradeQueryApp {
         }
 
         return gradeOverviewBO;
-    }
-
-    public GradeOverviewBO getGradeOverview(StudentUserBO studentUser) {
-
-        return getOverview(studentUser);
 
     }
 
