@@ -1,5 +1,6 @@
-package com.hackerda.platform.shiro;
+package com.hackerda.platform.controller.auth;
 
+import com.hackerda.platform.controller.auth.JWTToken;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 

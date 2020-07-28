@@ -1,9 +1,10 @@
 package com.hackerda.platform.config;
 
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.service.rbac.UserDetailService;
-import com.hackerda.platform.shiro.JWTReleam;
-import com.hackerda.platform.shiro.JWTToken;
-import com.hackerda.platform.shiro.RestFilter;
+import com.hackerda.platform.controller.auth.JWTRealm;
+import com.hackerda.platform.controller.auth.JWTToken;
+import com.hackerda.platform.controller.auth.RestFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -25,15 +26,14 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
-    public JWTReleam JWTRealm(UserDetailService userDetailService){
-        JWTReleam jwtReleam = new JWTReleam();
-        jwtReleam.setUserDetailService(userDetailService);
-        jwtReleam.setAuthenticationTokenClass(JWTToken.class);
-        return jwtReleam;
+    public JWTRealm JWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
+        JWTRealm jwtRealm = new JWTRealm(userDetailService, studentUserRepository);
+        jwtRealm.setAuthenticationTokenClass(JWTToken.class);
+        return jwtRealm;
     }
 
     @Bean("securityManager")
-    public DefaultWebSecurityManager getManager(JWTReleam realm) {
+    public DefaultWebSecurityManager getManager(JWTRealm realm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 使用自己的realm
         manager.setRealm(realm);

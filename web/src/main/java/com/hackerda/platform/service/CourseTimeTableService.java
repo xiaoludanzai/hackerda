@@ -1,13 +1,15 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
-import com.hackerda.platform.domain.course.timetable.CourseTimetableQueryService;
+import com.hackerda.platform.application.CourseTimetableQueryApp;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.pojo.Term;
 import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
 import com.hackerda.platform.pojo.vo.CourseTimetableOverviewVO;
 import com.hackerda.platform.pojo.vo.CourseVO;
 import com.hackerda.platform.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +25,22 @@ import java.util.stream.Collectors;
 public class CourseTimeTableService {
 
     @Autowired
-    private CourseTimetableQueryService courseTimetableQueryService;
+    private CourseTimetableQueryApp courseTimetableQueryApp;
+
+
+    public CourseTimetableOverviewVO getCurrentTermCourseTimeTableByStudent() {
+
+        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
+
+        return getCurrentTermCourseTimeTableByStudent(studentUserBO.getAccount());
+    }
 
 
     public CourseTimetableOverviewVO getCurrentTermCourseTimeTableByStudent(int account) {
 
         Term term = DateUtils.getCurrentSchoolTime().getTerm();
 
-        CourseTimeTableOverview timeTableOverview = courseTimetableQueryService.getByAccount(account, term.getTermYear(), term.getOrder());
+        CourseTimeTableOverview timeTableOverview = courseTimetableQueryApp.getByAccount(account, term.getTermYear(), term.getOrder());
 
         return toVO(timeTableOverview);
     }

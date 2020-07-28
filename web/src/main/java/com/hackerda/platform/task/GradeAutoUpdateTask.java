@@ -4,7 +4,7 @@ import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeMsgSender;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
-import com.hackerda.platform.domain.grade.GradeQueryService;
+import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.pojo.constant.SubscribeScene;
@@ -35,7 +35,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "gradeUpdate"));
 
     @Autowired
-    private GradeQueryService gradeQueryService;
+    private GradeQueryApp gradeQueryApp;
     @Autowired
     private GradeMsgSender gradeMsgSender;
     @Autowired
@@ -115,7 +115,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
             return;
         }
 
-        GradeOverviewBO overview = gradeQueryService.getGradeOverview(student);
+        GradeOverviewBO overview = gradeQueryApp.getGradeOverview(student);
         List<GradeBO> sendGrade = overview.getNeedToSendGrade();
         gradeMsgSender.sendUpdateGradeToStudent(student, sendGrade);
 

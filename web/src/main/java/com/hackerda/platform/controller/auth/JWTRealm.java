@@ -1,5 +1,7 @@
-package com.hackerda.platform.shiro;
+package com.hackerda.platform.controller.auth;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.pojo.Permission;
 import com.hackerda.platform.pojo.Role;
 import com.hackerda.platform.pojo.UserDetail;
@@ -25,13 +27,15 @@ import java.util.stream.Collectors;
  * @author chenjuanrong
  */
 @Slf4j
-public class JWTReleam extends AuthorizingRealm {
+public class JWTRealm extends AuthorizingRealm {
 
-    private UserDetailService userDetailService;
+    private final UserDetailService userDetailService;
+    private final StudentUserRepository studentUserRepository;
 
-    @Autowired
-    public void setUserDetailService(UserDetailService userDetailService) {
+    public JWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
         this.userDetailService = userDetailService;
+        this.studentUserRepository = studentUserRepository;
+
     }
 
     /**
@@ -67,7 +71,7 @@ public class JWTReleam extends AuthorizingRealm {
         // 解密获得username，用于和数据库进行对比
 
         if(StringUtils.isEmpty(token)){
-            throw new AuthenticationException("token is empty");
+            return null;
         }
         String username = JwtUtils.getClaim(token, JwtUtils.USERNAME_KEY);
         if (username == null) {
@@ -75,6 +79,13 @@ public class JWTReleam extends AuthorizingRealm {
         }
         try {
             JwtUtils.verify(token, username, username);
+            StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(username));
+
+            if(!studentUserBO.getIsCorrect()) {
+                throw new AuthenticationException("password not correct");
+            }
+
+            return new SimpleAuthenticationInfo(studentUserBO, token, "JWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);
         }catch (Exception e){
@@ -82,7 +93,7 @@ public class JWTReleam extends AuthorizingRealm {
             throw new AuthenticationException(e);
         }
 
-        return new SimpleAuthenticationInfo(username, token, "JWTRealm");
+
 
     }
 }

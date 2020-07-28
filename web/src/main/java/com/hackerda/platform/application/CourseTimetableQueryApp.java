@@ -1,12 +1,14 @@
-package com.hackerda.platform.domain.course.timetable;
+package com.hackerda.platform.application;
 
+import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
+import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CourseTimetableQueryService {
+public class CourseTimetableQueryApp {
 
     @Autowired
     private StudentUserRepository studentUserRepository;

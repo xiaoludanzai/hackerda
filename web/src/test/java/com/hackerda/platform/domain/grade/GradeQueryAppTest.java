@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
+import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.mapper.GradeMapper;
 import com.hackerda.platform.repository.grade.GradeSpiderFacade;
@@ -24,9 +25,9 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("beta")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GradeQueryServiceTest {
+public class GradeQueryAppTest {
     @Autowired
-    private GradeQueryService gradeQueryService;
+    private GradeQueryApp gradeQueryApp;
 
     @Autowired
     private GradeRepository repository;
@@ -44,7 +45,7 @@ public class GradeQueryServiceTest {
 
         StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
-        GradeOverviewBO bo = gradeQueryService.getGradeOverview(user);
+        GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 
         assertThat(bo.fetchSuccess());
         assertThat(bo.getUpdateGrade()).isEmpty();
@@ -55,7 +56,7 @@ public class GradeQueryServiceTest {
         update.setScore(-2.0);
         repository.update(Collections.singletonList(update));
 
-        GradeOverviewBO bo2 = gradeQueryService.getGradeOverview(user);
+        GradeOverviewBO bo2 = gradeQueryApp.getGradeOverview(user);
 
         assertThat(bo.fetchSuccess());
         List<GradeBO> updateGrade = bo2.getUpdateGrade();
@@ -71,7 +72,7 @@ public class GradeQueryServiceTest {
 
         StudentUserBO user = studentUserRepository.getByAccount(2017025838);
 
-        GradeOverviewBO bo = gradeQueryService.getGradeOverview(user);
+        GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 
         assertThat(bo.fetchSuccess()).isFalse();
 

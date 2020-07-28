@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CourseSubscriptionTask extends BaseSubscriptionTask {
 
-    private static ExecutorService courseSubscriptionSendPool = new MDCThreadPool(5, 5,
+    private static final ExecutorService courseSubscriptionSendPool = new MDCThreadPool(5, 5,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSendThread"));
 
 

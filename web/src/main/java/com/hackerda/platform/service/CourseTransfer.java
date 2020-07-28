@@ -1,5 +1,6 @@
-package com.hackerda.platform.domain.course;
+package com.hackerda.platform.service;
 
+import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.pojo.vo.CourseVO;
 import org.springframework.stereotype.Service;
 
