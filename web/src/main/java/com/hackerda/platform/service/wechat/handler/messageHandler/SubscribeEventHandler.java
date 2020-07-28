@@ -3,7 +3,6 @@ package com.hackerda.platform.service.wechat.handler.messageHandler;
 
 import com.hackerda.platform.builder.TextBuilder;
 import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
-import com.hackerda.platform.service.wechat.StudentBindService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;

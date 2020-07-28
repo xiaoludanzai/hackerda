@@ -98,4 +98,24 @@ public class StudentBindAppTest {
         assertThat(actual).isEqualTo(except);
 
     }
+
+    @Test
+    public void testReBindWith() {
+        truncateMapper.studentUser();
+        truncateMapper.wechatOpenId();
+
+        studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
+
+
+        studentBindApp.unbindByPlatform("2014025838", "test_appId");
+
+        StudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
+                "test_openid_new");
+
+
+        StudentUserBO except = studentUserRepository.getByAccount(2014025838);
+
+        assertThat(actual).isEqualTo(except);
+
+    }
 }

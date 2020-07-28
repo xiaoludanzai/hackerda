@@ -1,12 +1,10 @@
 package com.hackerda.platform.controller;
 
 
-import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
 import com.hackerda.platform.pojo.WebResponse;
 import com.hackerda.platform.pojo.constant.ErrorCode;
-import com.hackerda.platform.pojo.vo.StudentVo;
-import com.hackerda.platform.service.wechat.StudentBindService;
+import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpVerifyCodeException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Controller
@@ -33,10 +28,7 @@ public class UserBindingController {
     @Resource
     private HttpSession httpSession;
     @Resource
-    private StudentBindService studentBindService;
-
-    private static ExecutorService evaluatePool = new MDCThreadPool(4, 4,
-            0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "evaluate"));
+    private UserAuthorizeService userAuthorizeService;
 
     private static final int ACCOUNT_LENGTH = 10;
     private static final String ACCOUNT_PREFIX = "20";
@@ -111,32 +103,31 @@ public class UserBindingController {
             openid = (String) httpSession.getAttribute("openid");
         }
 
-        log.info("student bind start account:{} password:{} appId:{} openid:{}", account, password, appid, openid);
+        log.info("student bind start account:{}  appId:{} openid:{}", account, appid, openid);
 
         if (!isAccountValid(account)) {
             log.info("student getStudentInfo fail--invalid account:{}", account);
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号无效");
         }
 
-        StudentVo student;
+
         try {
-            if (StringUtils.isEmpty(openid)) {
-                student = studentBindService.studentLogin(account, password);
+            if (!StringUtils.isEmpty(openid)) {
+                userAuthorizeService.studentAuthorize(account, password, appid, openid);
             } else {
-                student = studentBindService.studentBind(openid, account, password, appid);
+                return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或者密码错误");
             }
             httpSession.setAttribute("account", account);
         } catch (UrpVerifyCodeException e) {
-            log.info("student bind fail verify code error account:{} password:{} openid:{}", account, password,
-                    openid);
+            log.info("student bind fail verify code error account:{}  openid:{}", account, openid);
             return WebResponse.fail(ErrorCode.VERIFY_CODE_ERROR.getErrorCode(), "验证码错误");
         } catch (PasswordUnCorrectException e) {
-            log.info("student bind fail Password not correct account:{} password:{} openid:{}", account, password, openid);
+            log.info("student bind fail Password not correct account:{}  openid:{}", account,  openid);
             return WebResponse.fail(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode(), "账号或者密码错误");
         }
 
         log.info("student bind success account:{} password:{}, appId:{} openid:{}", account, password, appid, openid);
-        return WebResponse.success(student);
+        return WebResponse.success("success");
     }
 
 

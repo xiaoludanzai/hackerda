@@ -34,6 +34,11 @@ public enum  ErrorCode {
 	ACCOUNT_HAS_BIND(408),
 
 	/**
+	 * 用户信息不存在
+	 */
+	ACCOUNT_MISS(409),
+
+	/**
 	 *服务器端错误
 	 */
 	SYSTEM_ERROR(500),

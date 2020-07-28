@@ -39,7 +39,7 @@
             left join wechat_openid wo on su.account = wo.account
             left join schedule_task st on wo.openid = st.openid and wo.appid = st.appid
 
-        where su.account = #{account}
+        where su.account = #{account} and wo.is_bind = true
 
     </select>
 

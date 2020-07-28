@@ -8,7 +8,6 @@ import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
 import com.hackerda.platform.service.wechat.MiniProgramService;
-import com.hackerda.spider.exception.PasswordUnCorrectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -54,6 +53,21 @@ public class StudentBindApp {
         }else {
             throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
         }
+    }
+
+
+    public void unbindByPlatform(@Nonnull String account, @Nonnull String appId) {
+
+        StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+
+        if(studentUserBO == null) {
+            throw new BusinessException(ErrorCode.ACCOUNT_MISS, account+"信息不存在");
+        }
+
+        studentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
+
+        studentUserRepository.save(studentUserBO);
+
     }
 
 

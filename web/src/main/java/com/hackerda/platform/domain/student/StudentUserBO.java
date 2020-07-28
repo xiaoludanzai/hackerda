@@ -4,6 +4,7 @@ import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
+@Slf4j
 public class StudentUserBO {
 
     private Integer account;
@@ -86,6 +88,15 @@ public class StudentUserBO {
             openId.bindOpenId(openid);
         }else {
             wechatOpenidList.add(new WechatOpenidBO(this.account, openid, true, appId, wechatPlatform, true));
+        }
+    }
+
+    public void unbindWechatPlatform(WechatPlatform wechatPlatform){
+        WechatOpenidBO openId = getOpenId(wechatPlatform);
+        if(openId != null) {
+            openId.unbind();
+        } else {
+            log.warn("account {} can't find wechatPlatform {} ", this.account, wechatPlatform);
         }
     }
 

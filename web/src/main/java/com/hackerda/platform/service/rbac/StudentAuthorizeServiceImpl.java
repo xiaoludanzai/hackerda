@@ -1,25 +1,13 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.dao.StudentUserDao;
-import com.hackerda.platform.dao.WechatBindRecordDao;
-import com.hackerda.platform.dao.WechatOpenIdDao;
-import com.hackerda.platform.pojo.*;
-import com.hackerda.platform.pojo.vo.StudentUserDetailVo;
-import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
-import com.hackerda.platform.service.ClassService;
-import com.hackerda.platform.service.NewUrpSpiderService;
-import com.hackerda.platform.service.wechat.MiniProgramService;
-import com.hackerda.platform.utils.DESUtil;
+import com.hackerda.platform.application.StudentBindApp;
+import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.pojo.vo.StudentUserDetailVO;
 import com.hackerda.platform.utils.JwtUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * @author JR Chan
@@ -27,111 +15,39 @@ import java.util.Date;
 @Service
 public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
-    @Resource
-    private WechatOpenIdDao wechatOpenIdDao;
-    @Resource
-    private NewUrpSpiderService newUrpSpiderService;
-    @Resource
-    private WechatBindRecordDao wechatBindRecordDao;
-    @Resource
-    private StudentUserDao studentUserDao;
-    @Resource
-    private ClassService classService;
-    @Value("${student.password.salt}")
-    private String key;
     @Autowired
-    private UserDetailService userDetailService;
-    @Autowired
-    private MiniProgramService miniProgramService;
-
-
-    /**
-     * 用于学生从非微信渠道登录
-     *
-     * @param account        账号
-     * @param enablePassword 密码
-     * @return 学生信息
-     */
-    public StudentUser studentLogin(String account, String enablePassword) {
-
-        StudentUser student = studentUserDao.selectStudentByAccount(Integer.parseInt(account));
-        if (student != null) {
-            String encrypt = DESUtil.encrypt(enablePassword, account + key);
-            if (!student.getIsCorrect() || !student.getPassword().equals(encrypt)) {
-                newUrpSpiderService.checkStudentPassword(account, enablePassword);
-                studentUserDao.updatePassword(account, encrypt);
-            }
-        } else {
-            student = getStudentUserInfo(account, enablePassword);
-            studentUserDao.insertStudentSelective(student);
-        }
-
-        return student;
-    }
-
-    /**
-     * 如果已经存在openid则更新关联的学号
-     * 并且插入一条更新的记录
-     * <p>
-     * 否则插入一条新数据再绑定
-     *
-     * @param account 学号
-     * @param openid  微信用户唯一标识
-     * @param appid   微信平台对应的id
-     */
-    void studentBind(String account, String openid, String appid) {
-        WechatOpenid wechatOpenid = wechatOpenIdDao.selectByUniqueKey(appid, openid);
-        if (wechatOpenid != null) {
-            Integer originAccount = wechatOpenid.getAccount();
-            wechatOpenIdDao.updateByPrimaryKeySelective(
-                    wechatOpenid.setAccount(Integer.parseInt(account)).setGmtModified(new Date()).setIsBind(true));
-            if (!account.equals(originAccount.toString())) {
-                wechatBindRecordDao.insertSelective(new WechatBindRecord()
-                        .setOriginAccount(originAccount.toString())
-                        .setUpdateAccount(account)
-                        .setAppid(appid).setOpenid(openid));
-            }
-        } else {
-            wechatOpenIdDao.insertSelective(new WechatOpenid()
-                    .setAccount(Integer.parseInt(account))
-                    .setOpenid(openid)
-                    .setAppid(appid));
-        }
-
-    }
-
-    public StudentUser getStudentUserInfo(String account, String password) {
-        StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account, password);
-        UrpClass urpClass = classService.getClassByName(userInfo.getClassName(), userInfo.getAccount().toString());
-        userInfo.setUrpclassNum(Integer.parseInt(urpClass.getClassNum()));
-
-        return userInfo;
-
-    }
+    private StudentBindApp studentBindApp;
 
 
     @Override
-    public StudentUserDetailVo studentAuthorize(@Nonnull String account, @Nonnull String password, @Nullable String appId, @Nullable String openid) {
-        StudentUser studentUser = studentLogin(account, password);
-        if(StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(openid)){
-            studentBind(account, openid, appId);
-        }
+    public StudentUserDetailVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String openid) {
+        StudentUserBO studentUser = studentBindApp.bindByOpenId(account, password, appId, openid);
 
-        StudentUserDetail studentUserDetail = userDetailService.getStudentUserDetail(studentUser.getAccount().toString());
-
-        String[] permission = studentUserDetail.getPermissionSet().toArray(new String[0]);
-        String[] role = studentUserDetail.getRoleSet().toArray(new String[0]);
-
-        String token = JwtUtils.signForUserDetail(account, role, permission, account);
-
-        return new StudentUserDetailVo(studentUser, studentUserDetail, token);
+        return getVO(studentUser);
     }
 
     @Override
-    public StudentUserDetailVo appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String code) {
+    public StudentUserDetailVO appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String code) {
+        StudentUserBO studentUser = studentBindApp.bindByCode(account, password, appId, code);
 
-        AuthResponse auth = miniProgramService.auth(code);
+        return getVO(studentUser);
+    }
 
-        return studentAuthorize(account, password, appId, auth.getOpenid());
+    private StudentUserDetailVO getVO(StudentUserBO studentUser){
+        String account = studentUser.getAccount().toString();
+        String token = JwtUtils.signForUserDetail(account, new String[0], new String[0], account);
+
+        StudentUserDetailVO vo = new StudentUserDetailVO();
+
+        vo.setAccount(studentUser.getAccount());
+        vo.setName(studentUser.getName());
+        vo.setSex(studentUser.getSex());
+        vo.setEthnic(studentUser.getEthnic());
+        vo.setAcademyName(studentUser.getAcademyName());
+        vo.setSubjectName(studentUser.getSubjectName());
+        vo.setClassName(studentUser.getClassName());
+        vo.setToken(token);
+
+        return vo;
     }
 }

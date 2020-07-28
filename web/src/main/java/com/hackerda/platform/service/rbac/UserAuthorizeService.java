@@ -1,9 +1,8 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.pojo.vo.StudentUserDetailVo;
+import com.hackerda.platform.pojo.vo.StudentUserDetailVO;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * 用户授权
@@ -19,8 +18,8 @@ public interface UserAuthorizeService {
      * @param openid appID 下对应的用户openid
      * @return 对应学生用户的详细信息
      */
-    StudentUserDetailVo studentAuthorize(@Nonnull String account, @Nonnull String password, @Nullable String appId, @Nullable String openid);
+    StudentUserDetailVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String openid);
 
-    StudentUserDetailVo appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
-                                          @Nonnull String code);
+    StudentUserDetailVO appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+                                            @Nonnull String code);
 }

@@ -66,4 +66,9 @@ public class WechatOpenidBO {
         this.isBind = true;
         this.saveOrUpdate = true;
     }
+
+    public void unbind(){
+        this.isBind = false;
+        this.saveOrUpdate = true;
+    }
 }

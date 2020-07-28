@@ -5,7 +5,6 @@ import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
 import com.hackerda.platform.dao.StudentUserDao;
 import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.pojo.constant.RedisKeys;
-import com.hackerda.platform.service.wechat.StudentBindService;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
 import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
 import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
@@ -29,11 +28,11 @@ public class TeachingEvaluationService {
     @Resource
     private WechatMpPlusProperties wechatMpPlusProperties;
     @Resource
-    private StudentBindService studentBindService;
-    @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private StudentUserDao studentUserDao;
+
+    private static final String TEXT_LINK = "<a href=\"%s\">%s</a>";
 
 
     public int evaluate(String account) {
@@ -97,7 +96,7 @@ public class TeachingEvaluationService {
     }
 
     public String getEvaluationLink(){
-        return studentBindService.getTextLink("https://open.weixin.qq.com/connect/oauth2/authorize?appid" +
+        return getTextLink("https://open.weixin.qq.com/connect/oauth2/authorize?appid" +
                         "=wx541fd36e6b400648" +
                 "&redirect_uri=https://platform.hackerda.com/platform/bind/evaluate&response_type=code&scope=snsapi_base&state=wx541fd36e6b400648",
                 "使用一键订阅之前请先点击蓝字进行绑定"
@@ -123,5 +122,10 @@ public class TeachingEvaluationService {
 
 
     }
+
+    public String getTextLink(String url, String content) {
+        return String.format(TEXT_LINK, url, content);
+    }
+
 
 }

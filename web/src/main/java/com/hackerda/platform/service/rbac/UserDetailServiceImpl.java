@@ -41,20 +41,4 @@ public class UserDetailServiceImpl implements UserDetailService {
         return detail;
     }
 
-
-    public StudentUserDetail authzStudent(String account) {
-
-        StudentUserDetail detail = new StudentUserDetail();
-        List<Role> roleList = studentUserDao.selectRoleByAccount(account);
-
-        List<Permission> permissionList = roleList.stream()
-                .map(x -> roleDao.selectPermissionById(x.getId()))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        detail.setRoleSet(new HashSet<>(roleList));
-        detail.setPermissionSet(new HashSet<>(permissionList));
-
-        return detail;
-    }
 }
