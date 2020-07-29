@@ -1,36 +1,16 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.Term;
-import com.hackerda.platform.spider.NewUrpSpider;
-import com.hackerda.platform.spider.newmodel.SearchResult;
-import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPagePost;
-import com.hackerda.platform.spider.newmodel.evaluation.EvaluationPost;
-import com.hackerda.platform.spider.newmodel.evaluation.searchresult.TeachingEvaluation;
-import com.hackerda.platform.spider.newmodel.searchclass.ClassInfoSearchResult;
-import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
-import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomPost;
-import com.hackerda.platform.spider.newmodel.searchclassroom.SearchClassroomResult;
-import com.hackerda.platform.spider.newmodel.searchclassroom.SearchResultWrapper;
-import com.hackerda.platform.spider.newmodel.searchcourse.SearchCoursePost;
-import com.hackerda.platform.spider.newmodel.searchcourse.SearchCourseResult;
-import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherPost;
-import com.hackerda.platform.spider.newmodel.searchteacher.SearchTeacherResult;
 import com.hackerda.platform.utils.DESUtil;
-import com.hackerda.platform.utils.DateUtils;
-import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.support.UrpExamTime;
 import com.hackerda.spider.support.grade.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
-import com.hackerda.spider.support.coursetimetable.CourseTimetableSearchResult;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
 import com.hackerda.spider.support.grade.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
@@ -63,13 +43,6 @@ public class NewUrpSpiderService {
         return baseSpider.getCurrentGeneralGrade();
     }
 
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<SearchResult<ClassInfoSearchResult>> getClassInfoSearchResult(SearchClassInfoPost searchClassInfoPost) {
-
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.getClassInfoSearchResult(searchClassInfoPost);
-    }
 
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
@@ -127,10 +100,6 @@ public class NewUrpSpiderService {
         return baseSpider.getSchemeGrade();
     }
 
-
-    private NewUrpSpider getSpider(String account, String password) {
-        return new NewUrpSpider(account, password);
-    }
 
     @Lookup
     public UrpSpider getBaseSpider(){

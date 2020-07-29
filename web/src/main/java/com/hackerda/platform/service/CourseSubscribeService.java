@@ -43,37 +43,5 @@ public class CourseSubscribeService {
      */
     public final static int FIFTH_SECTION = 9;
 
-    @Resource
-    private WechatMpPlusProperties wechatMpPlusProperties;
-    @Resource
-    private WechatOpenIdDao wechatOpenIdDao;
 
-    /**
-     * 生成一个openid和学生实体映射的map
-     */
-    public List<WechatOpenid> getSubscribeOpenid() {
-        ScheduleTask task = new ScheduleTask();
-        ScheduleTask scene = task.setAppid(wechatMpPlusProperties.getAppId())
-                .setScene(Integer.valueOf(SubscribeScene.COURSE_PUSH.getScene()));
-
-        return wechatOpenIdDao.selectBySubscribe(scene);
-    }
-
-
-    public CourseTimeTableVo getTableBySection(StudentUser studentUser, int section, SchoolTime schoolTime){
-//        List<CourseTimeTableVo> tableVoList = courseTimeTableService.getCurrentTermCourseTimeTableByStudent(studentUser);
-//
-//        List<CourseTimeTableVo> list = tableVoList.stream()
-//                .filter(x -> section == x.getClassOrder())
-//                .filter(x -> schoolTime.getDay() == x.getClassDay())
-//                .filter(x -> x.getClassInSchoolWeek().charAt(schoolTime.getSchoolWeek() - 1) == '1')
-//                .collect(Collectors.toList());
-//
-//        if (list.size() > 1){
-//            log.info("more than one course {}", list);
-//        }
-//
-//        return list.stream().findFirst().orElse(null);
-        return null;
-    }
 }

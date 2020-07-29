@@ -54,12 +54,9 @@ public class StudentBindAppTest {
 
 
         assertThatThrownBy(() -> studentBindApp.bindByOpenId("2014025838", "2", "test_appId", "test_openid"))
-                .isInstanceOf(PasswordUnCorrectException.class);
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("账号或密码错误");
 
-
-        StudentUserBO account = studentUserRepository.getByAccount(2014025838);
-
-        assertThat(studentUserBO).isEqualTo(account);
 
     }
 

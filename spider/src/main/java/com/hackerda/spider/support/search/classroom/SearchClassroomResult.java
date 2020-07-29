@@ -1,6 +1,6 @@
 package com.hackerda.spider.support.search.classroom;
 
-import com.hackerda.platform.pojo.UrpClassroom;
+
 import lombok.Data;
 
 @Data
@@ -36,16 +36,4 @@ public class SearchClassroomResult {
 
     }
 
-    public UrpClassroom transToUrpClassRoom(){
-        return new UrpClassroom()
-                .setName(classroomName)
-                .setNumber(id.classroomNumber)
-                .setTeachingBuildingNumber(id.teachingBuildingNumber)
-                .setTeachingBuildingName(teachingBuildingName)
-                .setCampusNumber(id.campusNumber)
-                .setCampusName(campusName)
-                .setSeats(classNumberOfSeats)
-                .setType(classroomTypeDirections)
-                .setDepartment(departmentName);
-    }
 }

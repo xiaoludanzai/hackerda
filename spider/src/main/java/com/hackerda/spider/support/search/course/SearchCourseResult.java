@@ -1,9 +1,6 @@
 package com.hackerda.spider.support.search.course;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.hackerda.platform.pojo.Course;
-import com.hackerda.platform.pojo.constant.Academy;
-import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -103,50 +100,8 @@ public class SearchCourseResult {
     }
 
     public String getTermYear() {
-        // 这里是个补偿做法 由于有些课程没有该数据  所以存储当前的学期
-        if (StringUtils.isEmpty(termName)) {
-            return DateUtils.getCurrentSchoolTime().getTerm().getTermYear();
-        }
+
         return termName.substring(0, 9);
-    }
-
-    public String getAcademyName(){
-        if (StringUtils.isEmpty(academyName) && !StringUtils.isEmpty(academyCode)){
-            return Academy.getAcademyByUrpCode(Integer.parseInt(academyCode)).getAcademyName();
-        }else{
-            return "";
-        }
-    }
-
-    public Course transToCourse() {
-        return new Course()
-                .setName(this.getCourseName())
-                .setNum(this.getCourseId())
-                .setCourseOrder(StringUtils.isEmpty(this.getCourseOrder()) ? "01" : this.getCourseOrder())
-                .setCredit(this.getCredit())
-                .setAcademyCode(this.getAcademyCode())
-                .setAcademyName(this.getAcademyName())
-                .setTeacherName(this.getTeacherNameList())
-                .setTeacherAccount(this.getTermNumber())
-                .setCourseType(this.getCourseTypeName())
-                .setCourseTypeCode(this.getCourseTypeCode())
-                .setExamType(this.getExamTypeName())
-                .setExamTypeCode(this.getExamTypeCode())
-                .setTermYear(this.getTermYear())
-                .setTermOrder(this.getTermOrder(termName));
-    }
-
-    private int getTermOrder(String termName) {
-        if (StringUtils.isEmpty(termName)) {
-            return DateUtils.getCurrentSchoolTime().getTerm().getOrder();
-        }
-
-        if (termName.contains("一")) {
-            return 1;
-        } else {
-            return 2;
-        }
-
     }
 
 }

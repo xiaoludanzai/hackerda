@@ -1,9 +1,7 @@
 package com.hackerda.platform.utils;
 
-import com.hackerda.platform.pojo.constant.LessonOrder;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalTime;
 
 /**
  * @author junrong.chen
@@ -54,21 +52,6 @@ public class SchoolTimeUtil {
         }
     }
 
-	/**
-	 * 查询现在为第几节课
-	 */
-	public static int getOrderOfLesson(){
-		return LessonOrder.getLessonOrder(new LocalTime()).getOrder();
-	}
-
-	public static int getWeekDistinct() {
-		 if(getSchoolWeek() % 2 == 0){
-		 	return 2;
-		 }
-		 else {
-		 	return 1;
-		 }
-	}
 
 
     /**

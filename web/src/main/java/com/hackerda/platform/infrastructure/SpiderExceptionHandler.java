@@ -1,4 +1,4 @@
-package com.hackerda.platform.spider;
+package com.hackerda.platform.infrastructure;
 
 import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.service.OpenIdService;

@@ -32,10 +32,7 @@ import java.util.stream.Stream;
 public class ExamTimeTableService {
     @Resource
     private NewUrpSpiderService newUrpSpiderService;
-    @Resource
-    private UrpCourseService urpCourseService;
-    @Resource
-    private ExamTimetableDao examTimetableDao;
+
     @Resource
     private RoomService roomService;
 
@@ -98,63 +95,7 @@ public class ExamTimeTableService {
      */
     public List<Exam> getExamTimeList(int account) {
 
-        List<ExamTimetable> currentTermExam = examTimetableDao.selectCurrentExamByAccount(Integer.toString(account));
-
-
-        if (currentTermExam.isEmpty()) {
-            List<Exam> examList = getExamTimeListFromSpider(account);
-            SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
-
-            List<ExamTimetable> list = examList.stream()
-                    .map(x -> new ExamTimetable()
-                            .setName(x.getExamName())
-                            .setCourseNum(x.getCourse().getNum())
-                            .setCourseOrder(x.getCourse().getCourseOrder())
-                            .setRoomName(x.getClassRoom().getName())
-                            .setStartTime(x.getStartTime())
-                            .setEndTime(x.getEndTime())
-                            .setExamDate(x.getDate())
-                            .setDay(x.getExamDay())
-                            .setTermYear(schoolTime.getTerm().getTermYear())
-                            .setTermOrder(schoolTime.getTerm().getOrder())
-                            .setSchoolWek(x.getExamWeekOfTerm()))
-                    .collect(Collectors.toList());
-            try {
-//                saveExamTimeTable(account, list);
-            } catch (Exception e) {
-                log.error("save exam timetable error", e);
-            }
-            return examList;
-
-        } else {
-            Stream<ExamTimetable> stream = currentTermExam.stream();
-
-
-            return stream
-                    .map(x -> {
-                        Exam exam = new Exam()
-                                .setDate(x.getExamDate())
-                                .setExamName(x.getName())
-                                .setStartTime(x.getStartTime())
-                                .setEndTime(x.getEndTime())
-                                .setClassRoom(roomService.getClassRoomByName(x.getRoomName()))
-                                .setExamDay(x.getDay())
-                                .setExamWeekOfTerm(x.getSchoolWek());
-
-                        Course course;
-                        if (exam.getExamName().contains("开学补考")){
-                            course = urpCourseService.getCourse(x.getCourseNum(), x.getCourseNum(), "2019-2020", 1, null);
-                        }else {
-
-                            course = urpCourseService.getCurrentTermCourse(x.getCourseNum(), x.getCourseOrder(),
-                                    new Course().setCourseOrder(x.getCourseOrder()));
-                        }
-                        exam.setCourse(course);
-
-                        return exam;
-                    })
-                    .collect(Collectors.toList());
-        }
+        return Collections.emptyList();
     }
 
     private Course getCourseFromExamText(String examText) {

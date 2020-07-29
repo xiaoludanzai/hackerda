@@ -62,19 +62,19 @@ public enum Academy {
     Other("其它", "其它", 99, 99)
     ;
 
-    private String academyName;
+    private final String academyName;
 
-    private String  academySimpleName;
+    private final String  academySimpleName;
 
-    private int academyCode;
+    private final int academyCode;
 
     /**
      * 教务网对应的学院编号
      */
-    private int urpCode;
+    private final int urpCode;
 
 
-    private Academy(String academyName, String academySimpleName, int academyCode, int urpCode){
+    Academy(String academyName, String academySimpleName, int academyCode, int urpCode){
         this.academyName = academyName;
         this.academyCode = academyCode;
         this.academySimpleName = academySimpleName;
