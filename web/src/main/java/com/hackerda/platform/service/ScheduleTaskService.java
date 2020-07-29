@@ -99,17 +99,7 @@ public class ScheduleTaskService {
         return resultMap;
     }
 
-    /**
-     * 更新发送状态。默认调用后任务计数会加一
-     * @param scheduleTask 对应的定时任务的实体
-     * @param sendStatus 发送状态
-     * @return 受影响行数
-     */
-    public int updateSendStatus(ScheduleTask scheduleTask, byte sendStatus) {
-        scheduleTask.setSendStatus(sendStatus);
-        scheduleTask.setTaskCount(scheduleTask.getTaskCount() + 1);
-        return scheduleTaskMapper.updateByPrimaryKey(scheduleTask);
-    }
+
 
     /**
      * 更新订阅状态，需要实体id有具体的值

@@ -29,22 +29,18 @@ import java.util.Map;
 @Component
 public class ExamMessageHandler implements WxMpMessageHandler {
 
-    @Resource
-    private TextBuilder textBuilder;
-    @Resource
-    private OpenIdService openIdService;
-    @Resource
-    private NewUrpSpiderService newUrpSpiderService;
 
     private static final String DATA_NOT_FOUND = "还没有你的考试时间，可以过段时间再来查询";
 
     @Override
-    public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map, WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
-        String appId = wxMpService.getWxMpConfigStorage().getAppId();
-        StudentUser student = openIdService.getStudentByOpenId(wxMpXmlMessage.getFromUser(), appId);
-        List<UrpExamTime> examTime = newUrpSpiderService.getExamTime(student);
+    public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map, WxMpService wxMpService, WxSessionManager wxSessionManager) {
+//        String appId = wxMpService.getWxMpConfigStorage().getAppId();
+//        StudentUser student = openIdService.getStudentByOpenId(wxMpXmlMessage.getFromUser(), appId);
+//        List<UrpExamTime> examTime = newUrpSpiderService.getExamTime(student);
+//
+//        return textBuilder.build(examListToText(examTime), wxMpXmlMessage, wxMpService);
 
-        return textBuilder.build(examListToText(examTime), wxMpXmlMessage, wxMpService);
+        return null;
     }
 
 

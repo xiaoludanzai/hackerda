@@ -5,7 +5,9 @@ import com.google.common.cache.CacheBuilder;
 import com.hackerda.platform.infrastructure.dao.UrpClassDao;
 import com.hackerda.platform.pojo.UrpClass;
 import com.hackerda.platform.spider.newmodel.searchclass.SearchClassInfoPost;
+import com.hackerda.spider.UrpSearchSpider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +28,8 @@ public class ClassService {
     private UrpClassDao urpClassDao;
     @Resource
     private UrpSearchService urpSearchService;
+    @Autowired
+    private UrpSearchSpider urpSearchSpider;
 
 
     private static final Cache<String, UrpClass> classCache = CacheBuilder.newBuilder()
@@ -48,6 +52,7 @@ public class ClassService {
                 int end = Integer.parseInt(start) + 1;
                 post.setYearNum(start);
                 post.setExecutiveEducationPlanNum(start + "-"+ end + "-1-1");
+
                 List<UrpClass> results = urpSearchService.searchUrpClass(post);
                 Map<String, UrpClass> collect = results.stream()
                         .collect(Collectors.toMap(UrpClass::getClassName, x -> x));

@@ -25,34 +25,12 @@ public class UrpSearchService {
         this.newUrpSpiderService = newUrpSpiderService;
     }
 
-    public List<CourseTimetableSearchResult> searchTimetableByCourse(Course course) {
-        for (List<CourseTimetableSearchResult> resultList : newUrpSpiderService.searchCourseTimeTable(course)) {
-            return resultList;
-        }
-        return Collections.emptyList();
-    }
-
-    public List<CourseTimetableSearchResult> searchTeacherCourseTimetable(Teacher teacher) {
-        for (List<CourseTimetableSearchResult> resultList :
-                newUrpSpiderService.searchCourseTimetableByTeacher(teacher.getAccount())) {
-            return resultList;
-        }
-        return Collections.emptyList();
-    }
 
 
-    public List<SearchClassroomResult> searchUrpClassroom(SearchClassroomPost searchClassroomPost) {
-        for (SearchResultWrapper<SearchClassroomResult> resultWrapper : newUrpSpiderService.searchClassroomInfo(searchClassroomPost)) {
-            return resultWrapper.getPageData().getRecords();
-        }
-        return Collections.emptyList();
-    }
 
-    public List<SearchClassroomResult> searchAllUrpClassroom() {
-        SearchClassroomPost post = new SearchClassroomPost();
-        post.setExecutiveEducationPlanNum("2019-2020-1-1");
-        return searchUrpClassroom(post);
-    }
+
+
+
 
 
     public List<UrpClass> searchUrpClass(SearchClassInfoPost searchClassInfoPost) {

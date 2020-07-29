@@ -1,7 +1,7 @@
 /**
  * Copyright 2020 bejson.com
  */
-package com.hackerda.spider.support.scheme;
+package com.hackerda.spider.support.grade.scheme;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

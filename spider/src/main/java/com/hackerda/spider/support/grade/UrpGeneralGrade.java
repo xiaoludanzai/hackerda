@@ -1,6 +1,7 @@
-package com.hackerda.spider.support;
+package com.hackerda.spider.support.grade;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.hackerda.spider.support.CourseRelativeInfo;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 

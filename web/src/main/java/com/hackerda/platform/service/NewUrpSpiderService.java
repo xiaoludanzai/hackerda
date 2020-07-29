@@ -24,11 +24,11 @@ import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.support.UrpExamTime;
-import com.hackerda.spider.support.UrpGeneralGrade;
+import com.hackerda.spider.support.grade.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
 import com.hackerda.spider.support.coursetimetable.CourseTimetableSearchResult;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
-import com.hackerda.spider.support.scheme.Scheme;
+import com.hackerda.spider.support.grade.scheme.Scheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
@@ -52,9 +52,6 @@ public class NewUrpSpiderService {
     @Value("${student.password.salt}")
     private String key;
 
-    @Autowired
-    private UrpSearchSpider urpSearchSpider;
-
 
     /**
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
@@ -76,36 +73,6 @@ public class NewUrpSpiderService {
 
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<SearchResult<SearchTeacherResult>> searchTeacherInfo(SearchTeacherPost searchTeacherPost) {
-        NewUrpSpider spider = getSpider("2014025838", "1");;
-        return spider.searchTeacherInfo(searchTeacherPost);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<List<CourseTimetableSearchResult>> searchCourseTimetableByTeacher(String teacherNumber) {
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        return urpSearchSpider.searchCourseTimetableByTeacher(term.getTermYear(),term.getOrder(), teacherNumber);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<SearchResultWrapper<SearchClassroomResult>> searchClassroomInfo(SearchClassroomPost searchClassroomPost) {
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.searchClassroomInfo(searchClassroomPost);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public SearchResult<SearchCourseResult> searchCourseInfo(SearchCoursePost searchCoursePost) {
-        NewUrpSpider spider = getSpider("2014025838", "1");
-        return spider.searchCourseInfo(searchCoursePost);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<List<CourseTimetableSearchResult>> searchCourseTimeTable(Course course) {
-        Term term = DateUtils.getCurrentSchoolTime().getTerm();
-        return urpSearchSpider.searchCourseTimeTable(term.getTermYear(),term.getOrder(), course.getNum(), course.getCourseOrder());
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
     public void checkStudentPassword(String account, String password) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.checkPassword(account, password);
@@ -116,26 +83,6 @@ public class NewUrpSpiderService {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getUrpCourseTimeTable();
-    }
-
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public TeachingEvaluation searchTeachingEvaluationInfo(StudentUser student) {
-        NewUrpSpider spider = getSpider(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        return spider.searchTeachingEvaluationInfo();
-    }
-
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public void evaluate(StudentUser student, EvaluationPost evaluationPost) {
-        NewUrpSpider spider = getSpider(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        spider.evaluation(evaluationPost);
-    }
-
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public String getEvaluationToken(StudentUser student, EvaluationPagePost evaluationPagePost) {
-        NewUrpSpider spider = getSpider(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
-        return spider.getEvaluationToken(evaluationPagePost);
     }
 
 
@@ -164,21 +111,12 @@ public class NewUrpSpiderService {
     }
 
 
-    /**
-     * 考试安排
-     *
-     * @return
-     */
-    @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<UrpExamTime> getExamTime(String account, String password) {
-        UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(account, password);
-        return baseSpider.getExamTime();
-    }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<UrpExamTime> getExamTime(StudentUser student) {
-        return getExamTime(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+    public List<UrpExamTime> getExamTime(StudentUserBO student) {
+        UrpSpider baseSpider = getBaseSpider();
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
+        return baseSpider.getExamTime();
     }
 
 

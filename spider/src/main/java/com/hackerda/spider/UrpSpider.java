@@ -1,10 +1,10 @@
 package com.hackerda.spider;
 
 import com.hackerda.spider.support.UrpExamTime;
-import com.hackerda.spider.support.UrpGeneralGrade;
+import com.hackerda.spider.support.grade.UrpGeneralGrade;
 import com.hackerda.spider.support.UrpStudentInfo;
 import com.hackerda.spider.support.coursetimetable.UrpCourseTimeTable;
-import com.hackerda.spider.support.scheme.Scheme;
+import com.hackerda.spider.support.grade.scheme.Scheme;
 
 import java.util.List;
 

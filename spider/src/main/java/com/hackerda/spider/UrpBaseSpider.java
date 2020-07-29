@@ -128,10 +128,23 @@ public class UrpBaseSpider {
 
     protected <T> ResponseEntity<T> postFormData(HttpEntity<MultiValueMap<String, String>> request, String url,
                                        Class<T> resultType) {
-
         return client.postForEntity(url, request, resultType);
 
     }
+
+    protected <T> ResponseEntity<T> postFormData(MultiValueMap<String, String> map, String url,
+                                                 Class<T> resultType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set(HttpHeaders.COOKIE, cookieToString(cookiePersist.getByAccount(account)));
+
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        return postFormData(request, url,  resultType);
+
+    }
+
 
 
     protected void checkResult(String content) {

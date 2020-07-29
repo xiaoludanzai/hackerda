@@ -22,17 +22,6 @@ import java.util.List;
 @Service
 public class TemplateBuilder {
 
-    /**
-     * 生成不带小程序跳转的模板消息
-     * @param openid 用户的openid
-     * @param list 模板消息的内容
-     * @param templateId 模板id
-     * @param url 跳转地址
-     * @return 模板消息
-     */
-    public WxMpTemplateMessage buildWithNoMiniProgram(String openid, List<WxMpTemplateData> list, String templateId, String url) {
-        return build(openid, list, templateId, null, url);
-    }
 
     /**
      * 生成不带url跳转的模板消息
@@ -46,16 +35,7 @@ public class TemplateBuilder {
         return build(openid, list, templateId, miniProgram, null);
     }
 
-    /**
-     * 生成不带小程序跳转和url跳转的模板消息
-     * @param openid 用户的openid
-     * @param list 模板消息的内容
-     * @param templateId 模板id
-     * @return 模板消息
-     */
-    public WxMpTemplateMessage buildWithNoUrlAndMiniProgram(String openid, List<WxMpTemplateData> list, String templateId){
-        return build(openid, list, templateId, null, null);
-    }
+
 
     /**
      *
@@ -77,37 +57,7 @@ public class TemplateBuilder {
 				.build();
 	}
 
-    /**
-     * 组装提示模板消息需要的WxMpTemplateData的列表
-     * @param errorContent 错误消息
-     * @return List<WxMpTemplateData>
-     */
-    public List<WxMpTemplateData> assemblyTemplateContentForTips(String errorContent) {
-        List<WxMpTemplateData> templateDatas = new ArrayList<>();
-        //first关键字
-        WxMpTemplateData first = new WxMpTemplateData();
-        first.setName("first");
-        first.setValue("温馨提示\n");
-        //keyword1关键字
-        WxMpTemplateData sendDate = new WxMpTemplateData();
-        sendDate.setName("keyword1");
-        sendDate.setValue(DateUtils.getTimeOfPattern(LocalDateTime.now(), DateUtils.YYYY_MM_DD_PATTERN) + "\n");
-        //keyword2关键字
-        WxMpTemplateData sendTime = new WxMpTemplateData();
-        sendTime.setName("keyword2");
-        sendTime.setValue(DateUtils.getTimeOfPattern(LocalDateTime.now(), DateUtils.HH_MM_SS_PATTERN) + "\n");
-        //remark关键字
-        WxMpTemplateData remark = new WxMpTemplateData();
-        remark.setName("remark");
-        remark.setValue(errorContent + "\n" + "如有疑问微信添加吴彦祖【hkdhd666】");
 
-        templateDatas.add(first);
-        templateDatas.add(sendDate);
-        templateDatas.add(sendTime);
-        templateDatas.add(remark);
-
-        return templateDatas;
-    }
 
     /**
      * 组装课程推送模板消息需要的WxMpTemplateData的列表

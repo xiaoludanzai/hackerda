@@ -33,22 +33,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CourseSubscriptionTask extends BaseSubscriptionTask {
 
-    private static final ExecutorService courseSubscriptionSendPool = new MDCThreadPool(5, 5,
-            0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSendThread"));
-
-
-    @Value("${domain}")
-    private String domain;
-    @Resource
-    private CourseSubscribeService courseSubscribeService;
-    @Resource
-    private TemplateBuilder templateBuilder;
-    @Resource
-    private WechatTemplateProperties wechatTemplateProperties;
     @Value("${scheduled.sendCourse}")
     private String updateSwitch;
-    @Resource
-    private StudentUserDao studentUserDao;
+
 
     @Scheduled(cron = "0 0 8 * * ?")
 //这个cron表达式的意思是星期一到星期五的早上8点执行一次
@@ -87,39 +74,17 @@ public class CourseSubscriptionTask extends BaseSubscriptionTask {
             return;
         }
 
-        List<WechatOpenid> openidList = courseSubscribeService.getSubscribeOpenid();
-        SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
-        for (WechatOpenid openid : openidList) {
-            courseSubscriptionSendPool.submit(() ->{
-                processOpenid(openid, section, schoolTime);
-            });
-
-        }
+//        List<WechatOpenid> openidList = courseSubscribeService.getSubscribeOpenid();
+//        SchoolTime schoolTime = DateUtils.getCurrentSchoolTime();
+//        for (WechatOpenid openid : openidList) {
+//            courseSubscriptionSendPool.submit(() ->{
+//                processOpenid(openid, section, schoolTime);
+//            });
+//
+//        }
 
     }
 
-    private void sendMessage(WechatOpenid openid, List<WxMpTemplateData> templateData) {
-        WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
-        miniProgram.setAppid(MiniProgram.APP_ID);
-        miniProgram.setPagePath(MiniProgram.COURSE_PATH.getValue());
-        String url = domain + "/platform/show/timetable";
-        //构建一个课程推送的模板消息
-        WxMpTemplateMessage templateMessage =
-                templateBuilder.build(openid.getOpenid(), templateData, wechatTemplateProperties.getPlusCourseTemplateId(), miniProgram, url);
-        sendTemplateMessage(templateMessage, openid, "course");
-    }
-
-    void processOpenid(WechatOpenid openid, int section, SchoolTime schoolTime){
-        StudentUser studentUser = studentUserDao.selectStudentByAccount(openid.getAccount());
-        if (studentUser == null){
-            return;
-        }
-        CourseTimeTableVo table = courseSubscribeService.getTableBySection(studentUser, section, schoolTime);
-        if (table != null) {
-            List<WxMpTemplateData> templateData = templateBuilder.assemblyTemplateContentForCourse(studentUser, table, schoolTime);
-            sendMessage(openid, templateData);
-        }
-    }
 
 
 }

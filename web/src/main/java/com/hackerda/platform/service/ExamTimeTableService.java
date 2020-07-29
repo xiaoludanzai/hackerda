@@ -1,5 +1,7 @@
 package com.hackerda.platform.service;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.infrastructure.dao.ExamTimetableDao;
 import com.hackerda.platform.infrastructure.dao.StudentUserDao;
 import com.hackerda.platform.pojo.*;
@@ -36,12 +38,14 @@ public class ExamTimeTableService {
     private ExamTimetableDao examTimetableDao;
     @Resource
     private RoomService roomService;
+
     @Resource
-    private StudentUserDao studentUserDao;
+    private StudentUserRepository studentUserRepository;
 
 
     public List<Exam> getExamTimeListFromSpider(int account) {
-        StudentUser student = studentUserDao.selectStudentByAccount(account);
+
+        StudentUserBO student = studentUserRepository.getByAccount(account);
         if (student == null) {
             throw new PasswordUnCorrectException();
         }
