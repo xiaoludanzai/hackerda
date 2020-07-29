@@ -9,6 +9,7 @@ import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.exception.UrpRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,9 @@ public class ExceptionHandlerController {
 	}
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ExceptionHandler(AuthorizationException.class)
+	@ExceptionHandler(UnauthenticatedException.class)
 	public WebResponse handle403() {
-		return WebResponse.failWithForbidden("没有访问权限");
+		return WebResponse.failWithForbidden("身份认证失败");
 	}
 
 	@ExceptionHandler(BusinessException.class)

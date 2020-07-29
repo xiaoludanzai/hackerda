@@ -51,7 +51,7 @@ public class StudentUserBO {
     }
 
 
-    public String getEnablePassword(String key) {
+    public String getEnablePassword() {
         return DESUtil.decrypt(this.password, key);
     }
 
@@ -75,11 +75,12 @@ public class StudentUserBO {
 
     public void updatePassword(String enablePassword) {
         this.password = DESUtil.encrypt(enablePassword, account + key);
+        this.isCorrect = true;
         this.saveOrUpdate = true;
     }
 
     public boolean checkEnablePasswordIsCorrect(String enablePassword) {
-        return DESUtil.encrypt(enablePassword, account + key).equals(password);
+        return isCorrect && DESUtil.encrypt(enablePassword, account + key).equals(password);
     }
 
     public void bindWechatPlatform(String openid, String appId, WechatPlatform wechatPlatform){

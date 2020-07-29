@@ -8,7 +8,6 @@ import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.pojo.constant.ErrorCode;
 import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
 import com.hackerda.platform.service.wechat.MiniProgramService;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -59,8 +58,6 @@ public class StudentBindApp {
 
     public void unbindByPlatform(@Nonnull StudentUserBO studentUserBO, @Nonnull String appId) {
 
-
-
         studentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
 
         studentUserRepository.save(studentUserBO);
@@ -83,7 +80,7 @@ public class StudentBindApp {
         }
 
         if(studentUserBO == null){
-            throw new RuntimeException(account + " 无法获取信息");
+            throw new BusinessException(ErrorCode.ACCOUNT_MISS, account + " 无法获取学号信息");
         }
 
         return studentUserBO;

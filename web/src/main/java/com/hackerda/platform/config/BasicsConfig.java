@@ -27,15 +27,13 @@ import org.springframework.web.client.RestTemplate;
 @Import(SpiderConfiguration.class)
 public class BasicsConfig {
 
-
-
     @Bean
     @Scope("prototype")
     public UrpSpider urpBaseSpider(RestTemplate spiderTemplate,
                                    CaptchaPredict captchaPredict, ICaptchaProvider<CaptchaImage> captchaProvider,
-                                   AccountCookiePersist<String> cookiePersist){
+                                   AccountCookiePersist<String> cookiePersist, IExceptionHandler spiderExceptionHandler){
 
-        return new UrpCommonSpider(spiderTemplate, captchaPredict, captchaProvider, cookiePersist);
+        return new UrpCommonSpider(spiderTemplate, captchaPredict, captchaProvider, cookiePersist, spiderExceptionHandler);
     }
 
     @Bean

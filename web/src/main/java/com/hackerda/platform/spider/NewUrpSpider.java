@@ -86,23 +86,7 @@ public class NewUrpSpider {
      * 仅做header refer使用
      */
     private static final String LOGIN = ROOT + "/getStudentInfo";
-    /**
-     * 学生基本信息
-     */
-    private static final String STUDENT_INFO = ROOT + "/student/rollManagement/rollInfo/index";
-    /**
-     * 当前学期成绩
-     */
-    private static final String CURRENT_TERM_GRADE = ROOT + "/student/integratedQuery/scoreQuery/thisTermScores/data";
-    /**
-     * 成绩详细信息  平时分，排行 etc
-     */
-    private static final String CURRENT_TERM_GRADE_DETAIL = ROOT + "/student/integratedQuery/scoreQuery/coursePropertyScores/serchScoreDetail";
-    private static final String COURSE_DETAIL = ROOT + "/student/integratedQuery/course.json/courseSchdule/detail";
-    private static final String EXAM_TIME = ROOT + "/student/examinationManagement/examPlan/index";
-    private static final String COURSE_TIME_TABLE = ROOT + "/student/courseSelect/thisSemesterCurriculum/ajaxStudentSchedule/callback";
-    private static final String TEACHER_COURSE_TIME_TABLE = ROOT + "/student/teachingResources/teacherCurriculum" +
-            "/searchCurriculumInfo/callback";
+
     private static final String MAKE_UP_GRADE = ROOT + "/student/examinationManagement/examGrade/search";
     /**
      * 空教室查询
@@ -112,11 +96,7 @@ public class NewUrpSpider {
      * 班级信息查询
      */
     private static final String CLASS_INFO = ROOT + "/student/teachingResources/classCurriculum/search";
-    /**
-     * 根据班级号和学期号查询班级课程信息地址
-     */
-    private static final String SEARCH_COURSE_INFO = ROOT + "/student/teachingResources/classCurriculum" +
-            "/searchCurriculumInfo/callback";
+
 
     /**
      * 教室信息查询
@@ -127,27 +107,12 @@ public class NewUrpSpider {
      */
     private static final String TEACHER_INFO = ROOT + "/student/teachingResources/teacherCurriculum/search";
 
-    /**
-     * 教室课表查询
-     */
-    private static final String CLASSROOM_TIME_TABLE = ROOT + "/student/teachingResources/classroomCurriculum" +
-            "/searchCurriculum/callback?planNumber=%s&campusNumber=%s&teachingBuildingNumber=%s" +
-            "&classroomNumber=%s";
+
     /**
      * 查询课程信息
      */
     private static final String COURSE_SEARCH = ROOT + "/student/teachingResources/courseCurriculum/search";
 
-    /**
-     * 查询课程对应的时间安排
-     */
-    private static final String COURSE_TIMETABLE = ROOT + "/student/teachingResources/courseCurriculum" +
-            "/searchCurriculum/callback?planCode=%s&courseCode=%s&courseSequenceCode=%s";
-
-    /**
-     * 课程基本信息 这个url抓取的主要目的是，有些课程的详细信息无法查询到，只能用这个来查询基本信息
-     */
-    private static final String COURSE_BASIC_INFO = ROOT + "/student/integratedQuery/course/courseBasicInformation/show";
 
 
     /**
@@ -167,21 +132,9 @@ public class NewUrpSpider {
             "/evaluationPage";
 
 
-    /**
-     * 方案成绩页面  包含所有的成绩
-     * 选用这个地址的原因是因为，他在所有这些不规范的接口中算是比较规范的一个了
-     */
-    private static final String SCHEME_GRADE = ROOT + "/student/integratedQuery/scoreQuery/schemeScores/callback";
 
     private static StringRedisTemplate stringRedisTemplate;
 
-    private static final TypeReference<List<UrpCourseForSpider>> courseTypeReference
-            = new TypeReference<List<UrpCourseForSpider>>() {
-    };
-    private static final TypeReference<List<List<CourseTimetableSearchResult>>> classCourseSearchResultReference
-            = new TypeReference<List<List<CourseTimetableSearchResult>>>() {
-    };
-    private static final Splitter SPACE_SPLITTER = Splitter.on(" ").omitEmptyStrings().trimResults();
 
     private static final UrpCookieJar COOKIE_JAR = new UrpCookieJar();
 
@@ -277,21 +230,7 @@ public class NewUrpSpider {
         });
     }
 
-    @Deprecated
-    public UrpCourseForSpider getUrpCourse(String uid) {
-        FormBody.Builder params = new FormBody.Builder();
-        FormBody body = params.add("kch", uid).build();
-        Request request = new Request.Builder()
-                .url(COURSE_DETAIL)
-                .post(body)
-                .build();
-        String result = getContent(request);
-        flashCache();
-        //因为爬虫爬取的结果是个集合，所以先转成list
-        List<UrpCourseForSpider> courses = parseObject(result, courseTypeReference);
-        //因为用uid查询，所以取第一个元素即可
-        return courses.get(0);
-    }
+
 
     private static VerifyCode getCaptcha() {
         Request request = new Request.Builder()
@@ -379,43 +318,6 @@ public class NewUrpSpider {
         }
     }
 
-    public List<UrpExamTime> getExamTime() {
-        Request request = new Request.Builder()
-                .url(EXAM_TIME)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String s = getContent(request);
-        if (s.contains("invalidSession") || s.contains("login")) {
-            COOKIE_JAR.clearSession();
-            throw new UrpSessionExpiredException("account: " + account + " session expired");
-        }
-        Document document = Jsoup.parse(s);
-        Elements elements = document.getElementsByClass("clearfix");
-        List<UrpExamTime> result = Lists.newArrayListWithExpectedSize(elements.size());
-        for (Element element : elements) {
-            List<String> list = SPACE_SPLITTER.splitToList(element.text());
-            if (list.size() == 7) {
-                result.add(new UrpExamTime()
-                        .setCourseName(list.get(0))
-                        .setDate("")
-                        .setExamName(list.get(1)));
-            }
-            if (list.size() == 11) {
-                result.add(new UrpExamTime()
-                        .setCourseName(list.get(1))
-                        .setExamName(list.get(2))
-                        .setWeekOfTerm(list.get(4))
-                        .setDate(list.get(5))
-                        .setWeek(list.get(6))
-                        .setExamTime(list.get(7))
-                        .setLocation(list.get(8)));
-            }
-
-        }
-        result.sort(Comparator.comparing(UrpExamTime::getDate));
-        return result;
-    }
 
     public List<SearchResult<ClassInfoSearchResult>> getClassInfoSearchResult(SearchClassInfoPost searchClassInfoPost) {
         FormBody.Builder params = new FormBody.Builder();
@@ -440,63 +342,6 @@ public class NewUrpSpider {
         return parseObject(result, reference);
     }
 
-    /**
-     * 通过教务网的班级号查询班级课表
-     *
-     * @param classCode 教务网的班级号
-     */
-    public List<List<CourseTimetableSearchResult>> getUrpCourseTimeTableByClassCode(String termYear, int termOrder, String classCode) {
-        String url = SEARCH_COURSE_INFO + "?planCode=%s-%s-1&classCode=%s";
-        String format = String.format(url, termYear, termOrder, classCode);
-        Request request = new Request.Builder()
-                .url(format)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String result = getContent(request);
-
-        return parseObject(result, classCourseSearchResultReference);
-
-    }
-
-
-    /**
-     * 通过教务网的课程号查询班级课表
-     *
-     * @param course
-     */
-    public List<List<CourseTimetableSearchResult>> getUrpCourseTimeTableByCourse(Course course) {
-        String url = String.format(COURSE_TIMETABLE, "2019-2020-1-1", course.getNum(),
-                course.getCourseOrder());
-
-        Request request = new Request.Builder()
-                .url(url)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String result = getContent(request);
-
-        return parseObject(result, classCourseSearchResultReference);
-
-    }
-
-    /**
-     * 通过教务网的教师号查询教师课表
-     *
-     * @param teacherNumber
-     */
-    public List<List<CourseTimetableSearchResult>> getUrpCourseTimeTableByTeacherAccount(String teacherNumber) {
-
-        Request request = new Request.Builder()
-                .url(TEACHER_COURSE_TIME_TABLE + "?planCode=2019-2020-1-1&teacherNum=" + teacherNumber)
-                .headers(HEADERS)
-                .get()
-                .build();
-        String result = getContent(request);
-
-        return parseObject(result, classCourseSearchResultReference);
-
-    }
 
     /**
      * 教师信息列表
@@ -718,9 +563,6 @@ public class NewUrpSpider {
                 (!response.isSuccessful() && !response.isRedirect());
     }
 
-    private void flashCache() {
-        stringRedisTemplate.expire(RedisKeys.URP_LOGIN_COOKIE.genKey(account), 20L, TimeUnit.MINUTES);
-    }
 
 
     private static class CaptchaProducer implements Runnable {

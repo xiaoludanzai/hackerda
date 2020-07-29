@@ -62,7 +62,7 @@ public class NewUrpSpiderService {
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getCurrentGeneralGrade();
     }
 
@@ -114,7 +114,7 @@ public class NewUrpSpiderService {
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public UrpCourseTimeTable getUrpCourseTimeTable(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getUrpCourseTimeTable();
     }
 
@@ -185,7 +185,7 @@ public class NewUrpSpiderService {
     @Retryable(value = UrpException.class, maxAttempts = 3)
     public List<Scheme> getSchemeGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
-        baseSpider.login(student.getAccount().toString(), student.getEnablePassword(student.getAccount().toString()+key));
+        baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getSchemeGrade();
     }
 
