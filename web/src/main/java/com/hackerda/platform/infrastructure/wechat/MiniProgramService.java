@@ -1,15 +1,17 @@
-package com.hackerda.platform.service.wechat;
+package com.hackerda.platform.infrastructure.wechat;
 
 
 import com.hackerda.platform.config.wechat.MiniProgramProperties;
+import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.infrastructure.database.dao.ScheduleTaskDao;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
 import com.hackerda.platform.domain.constant.RedisKeys;
 import com.hackerda.platform.domain.constant.SubscribeScene;
-import com.hackerda.platform.service.wechat.miniprogram.AccessTokenResponse;
-import com.hackerda.platform.service.wechat.miniprogram.AuthResponse;
-import com.hackerda.platform.service.wechat.miniprogram.Response;
-import com.hackerda.platform.service.wechat.miniprogram.SubscribeMessage;
+import com.hackerda.platform.infrastructure.wechat.model.AccessTokenResponse;
+import com.hackerda.platform.infrastructure.wechat.model.AuthResponse;
+import com.hackerda.platform.infrastructure.wechat.model.Response;
+import com.hackerda.platform.infrastructure.wechat.model.SubscribeMessage;
+
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class MiniProgramService {
+public class MiniProgramService implements WechatAuthService {
     @Resource
     private MiniProgramProperties miniProgramProperties;
     @Resource
@@ -146,4 +148,8 @@ public class MiniProgramService {
         return t;
     }
 
+    @Override
+    public String appCodeToOpenId(String code) {
+        return auth(code).getOpenid();
+    }
 }

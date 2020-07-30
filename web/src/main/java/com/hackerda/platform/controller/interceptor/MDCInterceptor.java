@@ -1,6 +1,7 @@
 package com.hackerda.platform.controller.interceptor;
 
 import org.slf4j.MDC;
+import org.springframework.lang.NonNullApi;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MDCInterceptor implements HandlerInterceptor {
     @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) {
         MDC.clear();
     }
 }

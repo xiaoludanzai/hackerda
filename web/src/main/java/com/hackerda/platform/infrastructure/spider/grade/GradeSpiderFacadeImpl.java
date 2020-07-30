@@ -1,4 +1,4 @@
-package com.hackerda.platform.infrastructure.grade;
+package com.hackerda.platform.infrastructure.spider.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.Grade;

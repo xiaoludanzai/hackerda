@@ -1,4 +1,4 @@
-package com.hackerda.platform.infrastructure.course;
+package com.hackerda.platform.infrastructure.spider.course;
 
 import com.google.common.collect.Lists;
 import com.hackerda.platform.domain.student.StudentUserBO;

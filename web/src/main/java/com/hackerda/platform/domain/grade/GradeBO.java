@@ -13,13 +13,10 @@ import java.util.Date;
 @Data
 public class GradeBO {
 
-    @EqualsAndHashCode.Exclude
     private CourseBO course;
 
-    @EqualsAndHashCode.Exclude
     private Integer id;
 
-    @EqualsAndHashCode.Exclude
     private Integer examId = 0;
 
     private Integer account;
@@ -28,14 +25,12 @@ public class GradeBO {
 
     private Double credit;
 
-    @EqualsAndHashCode.Exclude
     private Double gradePoint;
 
     private String levelName;
 
     private String levelPoint;
 
-    @EqualsAndHashCode.Exclude
     private Integer rank;
 
     private String courseName;
@@ -80,14 +75,11 @@ public class GradeBO {
 
     private Integer termOrder;
 
-    @EqualsAndHashCode.Exclude
     private boolean update = false;
-    @EqualsAndHashCode.Exclude
     private boolean newGrade = false;
 
-    @EqualsAndHashCode.Exclude
     private Date gmtCreate;
-    @EqualsAndHashCode.Exclude
+
     private Date gmtModify;
 
 

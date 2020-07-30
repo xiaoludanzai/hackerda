@@ -1,4 +1,4 @@
-package com.hackerda.platform.infrastructure;
+package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.student.StudentInfoService;
 import com.hackerda.platform.domain.student.StudentUserBO;

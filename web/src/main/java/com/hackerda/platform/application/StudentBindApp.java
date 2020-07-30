@@ -1,13 +1,12 @@
 package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.WechatPlatform;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.StudentInfoService;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.exception.BusinessException;
-import com.hackerda.platform.domain.constant.ErrorCode;
-import com.hackerda.platform.service.wechat.miniprogram.AuthResponse;
-import com.hackerda.platform.service.wechat.MiniProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,7 @@ import java.util.Map;
 public class StudentBindApp {
 
     @Autowired
-    private MiniProgramService miniProgramService;
-    @Lazy
+    private WechatAuthService wechatAuthService;
     @Autowired
     private StudentUserRepository studentUserRepository;
     @Autowired
@@ -33,9 +31,9 @@ public class StudentBindApp {
     public StudentUserBO bindByCode(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
                                @Nonnull String code){
         // 查询对应的openid
-        AuthResponse auth = miniProgramService.auth(code);
+        String openId = wechatAuthService.appCodeToOpenId(code);
 
-        return bindByOpenId(account, password, appId, auth.getOpenid());
+        return bindByOpenId(account, password, appId, openId);
     }
 
     public StudentUserBO bindByOpenId(@Nonnull String account, @Nonnull String password, @Nonnull String appId,

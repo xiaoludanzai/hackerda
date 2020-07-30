@@ -58,36 +58,6 @@ public class TemplateBuilder {
 
 
 
-    /**
-     * 组装课程推送模板消息需要的WxMpTemplateData的列表
-     * @param msg 课程推送信息
-     * @return List<WxMpTemplateData>
-     */
-
-    public List<WxMpTemplateData> assemblyTemplateContentForCourse(StudentUser studentUser, CourseTimeTableVo courseTimeTableVo, SchoolTime schoolTime) {
-        List<WxMpTemplateData> templateDataList = new ArrayList<>();
-        //keyword1关键字
-        WxMpTemplateData title = new WxMpTemplateData();
-        title.setName("first");
-        title.setValue(studentUser.getName()+"同学，你待会有课哟");
-        String content = courseTimeTableVo.getCourse().getName() +
-                " 第" + courseTimeTableVo.getClassOrder() + "节";
-        WxMpTemplateData course = new WxMpTemplateData();
-        course.setName("keyword1");
-        course.setValue(content);
-        //keyword2关键字
-        WxMpTemplateData date = new WxMpTemplateData();
-        date.setName("keyword2");
-        date.setValue("第" + schoolTime.getSchoolWeek() + "周   " + schoolTime.getDayOfWeekChinese());
-        //remark关键字
-        WxMpTemplateData remark = getCourseRemark();
-        templateDataList.add(title);
-        templateDataList.add(course);
-        templateDataList.add(date);
-        templateDataList.add(remark);
-
-        return templateDataList;
-    }
 
     /**
      * 组装课程推送模板消息需要的WxMpTemplateData的列表

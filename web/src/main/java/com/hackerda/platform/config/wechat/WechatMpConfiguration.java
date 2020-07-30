@@ -89,8 +89,8 @@ public class WechatMpConfiguration {
     @Resource
     private EvaluationHandler evaluationHandler;
 
-    private static Map<String, WxMpMessageRouter> routers = Maps.newHashMap();
-    private static Map<String, WxMpService> mpServices = Maps.newHashMap();
+    private static final Map<String, WxMpMessageRouter> routers = Maps.newHashMap();
+    private static final Map<String, WxMpService> mpServices = Maps.newHashMap();
 
     @Bean
     public Object services() {

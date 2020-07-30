@@ -1,4 +1,4 @@
-package com.hackerda.platform.infrastructure.course;
+package com.hackerda.platform.infrastructure.spider.course;
 
 import com.hackerda.platform.infrastructure.database.model.Course;
 import com.hackerda.platform.infrastructure.repository.course.CourseSpiderFacade;

@@ -1,9 +1,6 @@
 package com.hackerda.platform.service.wechat;
 
 import com.hackerda.platform.service.wechat.interceptor.WxMessageInterceptor;
-import com.hackerda.platform.service.OpenIdService;
-import com.hackerda.platform.utils.ApplicationUtil;
-import com.hackerda.spider.exception.PasswordUnCorrectException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxErrorExceptionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -23,10 +20,9 @@ import java.util.*;
  */
 @Slf4j
 public class WxMessageRouterRule extends WxMpMessageRouterRule {
-	private List<WxMessageInterceptor> interceptors = new ArrayList<>();
+	private final List<WxMessageInterceptor> interceptors = new ArrayList<>();
     private final WxMessageRouter routerBuilder;
-	private OpenIdService openIdService = ApplicationUtil.getBean("openIdService");
-	private static final String PATTERN = "<a href=\"%s/bind?openid=%s&appid=%s\">点击我绑定</a>";
+
 
     public WxMessageRouterRule(WxMessageRouter routerBuilder) {
         super(routerBuilder);
@@ -183,19 +179,8 @@ public class WxMessageRouterRule extends WxMpMessageRouterRule {
 				if (handler == null) {
 					continue;
 				}
-				try {
-					res = handler.handle(wxMessage, context, wxMpService, sessionManager);
-				}catch (PasswordUnCorrectException e) {
-					String fromUser = wxMessage.getFromUser();
-					String appId = wxMpService.getWxMpConfigStorage().getAppId();
-					openIdService.openIdUnbind(fromUser, appId);
 
-					for (WxMessageInterceptor interceptor : this.interceptors) {
-						if (!interceptor.intercept(wxMessage, context, wxMpService, sessionManager)) {
-							return interceptor.handle(wxMessage, context, wxMpService, sessionManager);
-						}
-					}
-				}
+				res = handler.handle(wxMessage, context, wxMpService, sessionManager);
 
 			}
 			return res;

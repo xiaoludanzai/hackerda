@@ -1,4 +1,4 @@
-package com.hackerda.platform.service.wechat.miniprogram;
+package com.hackerda.platform.infrastructure.wechat.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

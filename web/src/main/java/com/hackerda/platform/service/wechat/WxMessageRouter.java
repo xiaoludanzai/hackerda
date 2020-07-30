@@ -29,20 +29,18 @@ import java.util.concurrent.TimeUnit;
 public class WxMessageRouter extends WxMpMessageRouter {
     private final WxMpService wxMpService;
     private final List<WxMessageRouterRule> rules = new ArrayList<>();
-    private ExecutorService executorService;
+    private final ExecutorService executorService;
 
-    private WxMessageDuplicateChecker messageDuplicateChecker;
+    private final WxSessionManager sessionManager;
 
-    private WxSessionManager sessionManager;
-
-    private WxErrorExceptionHandler exceptionHandler;
+    private final WxErrorExceptionHandler exceptionHandler;
 	public WxMessageRouter(WxMpService wxMpService) {
 		super(wxMpService);
         this.wxMpService = wxMpService;
         this.executorService = TtlExecutors.getTtlExecutorService(
                 new MDCThreadPool(7, 7, 0L, TimeUnit.SECONDS,
                         new LinkedBlockingQueue<>(), r -> new Thread(r, "WechatMessage")));
-        this.messageDuplicateChecker = new WxMessageInMemoryDuplicateChecker();
+        WxMessageDuplicateChecker messageDuplicateChecker = new WxMessageInMemoryDuplicateChecker();
         this.sessionManager = new StandardSessionManager();
         this.exceptionHandler = new LogExceptionHandler();
 	}

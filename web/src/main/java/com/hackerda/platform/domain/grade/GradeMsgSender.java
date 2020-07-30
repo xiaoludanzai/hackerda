@@ -9,7 +9,7 @@ import com.hackerda.platform.domain.constant.MiniProgram;
 import com.hackerda.platform.service.wechat.miniprogram.SubscribeGradeData;
 import com.hackerda.platform.service.wechat.miniprogram.SubscribeMessage;
 import com.hackerda.platform.service.wechat.miniprogram.SubscribeValue;
-import com.hackerda.platform.service.wechat.MiniProgramService;
+import com.hackerda.platform.infrastructure.wechat.MiniProgramService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
