@@ -34,6 +34,8 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     private UrpClassDao urpClassDao;
     @Autowired
     private UrpSearchSpider urpSearchSpider;
+    @Autowired
+    private SpiderExceptionTransfer exceptionTransfer;
 
 
     @Override
@@ -44,8 +46,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }catch (PasswordUnCorrectException e){
             return false;
         }catch (Throwable throwable){
-            log.error("check account {} password error", account, throwable);
-            return false;
+            throw exceptionTransfer.transfer(throwable);
         }
     }
 

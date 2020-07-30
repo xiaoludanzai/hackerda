@@ -80,7 +80,7 @@ public class JWTRealm extends AuthorizingRealm {
             JwtUtils.verify(token, username, username);
             StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(username));
 
-            if(!studentUserBO.getIsCorrect()) {
+            if(studentUserBO == null || !studentUserBO.getIsCorrect()) {
                 throw new AuthenticationException("password not correct");
             }
 

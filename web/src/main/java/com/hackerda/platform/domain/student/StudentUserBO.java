@@ -50,7 +50,7 @@ public class StudentUserBO {
 
 
     public String getEnablePassword() {
-        return DESUtil.decrypt(this.password, key);
+        return DESUtil.decrypt(this.password, this.account + key);
     }
 
     public boolean hasBindApp() {

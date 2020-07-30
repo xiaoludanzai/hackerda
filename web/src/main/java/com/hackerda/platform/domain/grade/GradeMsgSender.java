@@ -3,13 +3,14 @@ package com.hackerda.platform.domain.grade;
 import com.hackerda.platform.builder.TemplateBuilder;
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
 import com.hackerda.platform.config.wechat.WechatTemplateProperties;
+import com.hackerda.platform.domain.constant.MiniProgram;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
-import com.hackerda.platform.domain.constant.MiniProgram;
-import com.hackerda.platform.service.wechat.miniprogram.SubscribeGradeData;
-import com.hackerda.platform.service.wechat.miniprogram.SubscribeMessage;
-import com.hackerda.platform.service.wechat.miniprogram.SubscribeValue;
 import com.hackerda.platform.infrastructure.wechat.MiniProgramService;
+
+import com.hackerda.platform.infrastructure.wechat.model.SubscribeGradeData;
+import com.hackerda.platform.infrastructure.wechat.model.SubscribeMessage;
+import com.hackerda.platform.infrastructure.wechat.model.SubscribeValue;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;

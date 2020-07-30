@@ -10,6 +10,7 @@ import com.hackerda.platform.service.GradeService;
 import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,6 @@ public class SchoolCommonController {
     @RequiresAuthentication
     @RequestMapping(value = "/grade")
     public WebResponse getNowGradeV2() {
-
         GradeResultVo grade = gradeService.getGrade();
 
         if (grade.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID.getErrorCode()){

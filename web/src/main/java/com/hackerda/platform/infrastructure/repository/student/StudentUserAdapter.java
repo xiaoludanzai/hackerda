@@ -8,6 +8,7 @@ import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.infrastructure.database.model.WechatStudentUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -22,6 +23,8 @@ public class StudentUserAdapter {
 
     @Autowired
     private Map<String , WechatPlatform> wechatPlatformMap;
+    @Value("${student.password.salt}")
+    private String key;
 
     public StudentUserBO toBO(List<WechatStudentUserDO> wechatStudentUserDOList){
 
@@ -57,6 +60,8 @@ public class StudentUserAdapter {
         bo.setPassword(studentUser.getPassword());
         bo.setName(studentUser.getName());
         bo.setWechatOpenidList(new ArrayList<>(listMap.keySet()));
+
+        bo.setKey(key);
 
         return bo;
     }
