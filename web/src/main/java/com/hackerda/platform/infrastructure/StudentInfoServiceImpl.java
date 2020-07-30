@@ -2,11 +2,11 @@ package com.hackerda.platform.infrastructure;
 
 import com.hackerda.platform.domain.student.StudentInfoService;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.infrastructure.dao.UrpClassDao;
-import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.UrpClass;
-import com.hackerda.platform.pojo.WechatOpenid;
+import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
+import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
+import com.hackerda.platform.infrastructure.database.model.UrpClass;
+import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.service.NewUrpSpiderService;
 
 

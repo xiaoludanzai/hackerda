@@ -3,7 +3,7 @@ package com.hackerda.platform.service;
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.vo.GradeResultVo;
+import com.hackerda.platform.controller.vo.GradeResultVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

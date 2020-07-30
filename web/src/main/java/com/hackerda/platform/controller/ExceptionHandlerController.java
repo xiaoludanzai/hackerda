@@ -1,18 +1,15 @@
 package com.hackerda.platform.controller;
 
 import com.hackerda.platform.exception.BusinessException;
-import com.hackerda.platform.pojo.WebResponse;
-import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
 import com.hackerda.spider.exception.UrpRequestException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

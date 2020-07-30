@@ -1,7 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.course.CourseBO;
-import com.hackerda.platform.pojo.Course;
 import com.hackerda.platform.utils.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

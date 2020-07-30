@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.domain.constant.SubscribeScene;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

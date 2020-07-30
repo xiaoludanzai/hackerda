@@ -1,6 +1,6 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.pojo.StudentUserDetail;
+import com.hackerda.platform.infrastructure.database.model.StudentUserDetail;
 
 /**
  * @author JR Chan

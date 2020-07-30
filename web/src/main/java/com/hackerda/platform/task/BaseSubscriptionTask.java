@@ -1,7 +1,7 @@
 package com.hackerda.platform.task;
 
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
-import com.hackerda.platform.pojo.WechatOpenid;
+import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.service.ScheduleTaskService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;

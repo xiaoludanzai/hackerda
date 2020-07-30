@@ -1,6 +1,6 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.pojo.vo.StudentUserDetailVO;
+import com.hackerda.platform.controller.vo.StudentUserDetailVO;
 
 import javax.annotation.Nonnull;
 

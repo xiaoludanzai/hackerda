@@ -1,12 +1,12 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.infrastructure.dao.StudentUserDao;
-import com.hackerda.platform.infrastructure.dao.rbac.PermissionDao;
-import com.hackerda.platform.infrastructure.dao.rbac.RoleDao;
-import com.hackerda.platform.infrastructure.dao.rbac.RolePermissionDao;
-import com.hackerda.platform.infrastructure.dao.rbac.StudentRoleDao;
-import com.hackerda.platform.pojo.Permission;
-import com.hackerda.platform.pojo.Role;
+import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.database.dao.rbac.PermissionDao;
+import com.hackerda.platform.infrastructure.database.dao.rbac.RoleDao;
+import com.hackerda.platform.infrastructure.database.dao.rbac.RolePermissionDao;
+import com.hackerda.platform.infrastructure.database.dao.rbac.StudentRoleDao;
+import com.hackerda.platform.infrastructure.database.model.Permission;
+import com.hackerda.platform.infrastructure.database.model.Role;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

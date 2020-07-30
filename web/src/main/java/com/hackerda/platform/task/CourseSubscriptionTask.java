@@ -1,29 +1,11 @@
 package com.hackerda.platform.task;
 
-import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.builder.TemplateBuilder;
-import com.hackerda.platform.config.wechat.WechatTemplateProperties;
-import com.hackerda.platform.infrastructure.dao.StudentUserDao;
-import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.WechatOpenid;
-import com.hackerda.platform.pojo.constant.MiniProgram;
-import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
 import com.hackerda.platform.service.CourseSubscribeService;
-import com.hackerda.platform.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yuki

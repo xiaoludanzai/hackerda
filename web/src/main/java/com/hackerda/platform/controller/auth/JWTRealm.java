@@ -2,9 +2,9 @@ package com.hackerda.platform.controller.auth;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
-import com.hackerda.platform.pojo.Permission;
-import com.hackerda.platform.pojo.Role;
-import com.hackerda.platform.pojo.UserDetail;
+import com.hackerda.platform.infrastructure.database.model.Permission;
+import com.hackerda.platform.infrastructure.database.model.Role;
+import com.hackerda.platform.infrastructure.database.model.UserDetail;
 import com.hackerda.platform.service.rbac.UserDetailService;
 import com.hackerda.platform.utils.JwtUtils;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -19,7 +19,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 

@@ -3,7 +3,7 @@ package com.hackerda.platform.infrastructure.repository.course.timetable;
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.mapper.ext.TruncateMapper;
+import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

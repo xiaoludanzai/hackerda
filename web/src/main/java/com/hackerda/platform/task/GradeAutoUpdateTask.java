@@ -7,7 +7,7 @@ import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.domain.constant.SubscribeScene;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
 import lombok.Data;

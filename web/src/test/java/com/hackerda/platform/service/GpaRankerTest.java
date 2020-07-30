@@ -1,7 +1,7 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.infrastructure.dao.StudentUserDao;
-import com.hackerda.platform.pojo.constant.RedisKeys;
+import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
+import com.hackerda.platform.domain.constant.RedisKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

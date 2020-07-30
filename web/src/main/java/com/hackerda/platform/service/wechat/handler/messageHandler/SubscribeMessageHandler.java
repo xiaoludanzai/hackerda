@@ -2,8 +2,8 @@ package com.hackerda.platform.service.wechat.handler.messageHandler;
 
 import com.hackerda.platform.builder.TextBuilder;
 import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
-import com.hackerda.platform.pojo.ScheduleTask;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
+import com.hackerda.platform.domain.constant.SubscribeScene;
 import com.hackerda.platform.service.ScheduleTaskService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSessionManager;

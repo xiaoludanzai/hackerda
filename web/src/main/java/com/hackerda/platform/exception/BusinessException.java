@@ -1,6 +1,6 @@
 package com.hackerda.platform.exception;
 
-import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.domain.constant.ErrorCode;
 
 public class BusinessException extends RuntimeException{
 

@@ -1,14 +1,14 @@
 package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.MDCThreadPool;
-import com.hackerda.platform.infrastructure.dao.ClassCourseTimetableDao;
-import com.hackerda.platform.infrastructure.dao.CourseDao;
-import com.hackerda.platform.infrastructure.dao.CourseTimeTableDao;
+import com.hackerda.platform.infrastructure.database.dao.ClassCourseTimetableDao;
+import com.hackerda.platform.infrastructure.database.dao.CourseDao;
+import com.hackerda.platform.infrastructure.database.dao.CourseTimeTableDao;
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.*;
+import com.hackerda.platform.infrastructure.database.model.*;
 import com.hackerda.platform.infrastructure.repository.ExceptionMsg;
 import com.hackerda.platform.infrastructure.repository.FetchExceptionHandler;
 import com.hackerda.platform.infrastructure.repository.course.CourseAdapter;

@@ -1,6 +1,6 @@
 package com.hackerda.platform.infrastructure.repository.course;
 
-import com.hackerda.platform.pojo.Course;
+import com.hackerda.platform.infrastructure.database.model.Course;
 
 public interface CourseSpiderFacade {
 

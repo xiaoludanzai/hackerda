@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.ClassCourseTimetableMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.ClassCourseTimetable" >
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ClassCourseTimetableMapper" >
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="class_id" property="classId" jdbcType="VARCHAR" />
     <result column="course_timetable_id" property="courseTimetableId" jdbcType="INTEGER" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List" >
     id, class_id, course_timetable_id, term_year, term_order
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.ClassCourseTimetableExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.infrastructure.database.model.example.ClassCourseTimetableExample" >
     select
     <if test="distinct" >
       distinct
@@ -93,19 +93,19 @@
     delete from class_course_timetable
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.ClassCourseTimetableExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.ClassCourseTimetableExample" >
     delete from class_course_timetable
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.ClassCourseTimetable" >
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable" >
     insert into class_course_timetable (id, class_id, course_timetable_id, 
       term_year, term_order)
     values (#{id,jdbcType=INTEGER}, #{classId,jdbcType=VARCHAR}, #{courseTimetableId,jdbcType=INTEGER}, 
       #{termYear,jdbcType=VARCHAR}, #{termOrder,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.ClassCourseTimetable" >
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable" >
     insert into class_course_timetable
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -142,7 +142,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.ClassCourseTimetableExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.ClassCourseTimetableExample" resultType="java.lang.Integer" >
     select count(*) from class_course_timetable
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.ClassCourseTimetable" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable" >
     update class_course_timetable
     <set >
       <if test="classId != null" >
@@ -200,7 +200,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.ClassCourseTimetable" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable" >
     update class_course_timetable
     set class_id = #{classId,jdbcType=VARCHAR},
       course_timetable_id = #{courseTimetableId,jdbcType=INTEGER},

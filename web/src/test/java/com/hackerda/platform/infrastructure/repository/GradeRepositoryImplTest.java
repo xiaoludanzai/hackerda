@@ -4,7 +4,7 @@ import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.mapper.GradeMapper;
+import com.hackerda.platform.infrastructure.database.mapper.GradeMapper;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;

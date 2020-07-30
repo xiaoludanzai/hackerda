@@ -1,18 +1,7 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
-import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
-import com.hackerda.platform.pojo.ScheduleTask;
-import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.WechatOpenid;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
-import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author Yuki

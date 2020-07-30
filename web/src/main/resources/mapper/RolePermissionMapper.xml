@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hackerda.platform.mapper.RolePermissionMapper">
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.RolePermission">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.RolePermissionMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.RolePermission">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="permission_id" jdbcType="INTEGER" property="permissionId" />
@@ -67,7 +67,7 @@
   <sql id="Base_Column_List">
     id, role_id, permission_id
   </sql>
-  <select id="selectByExample" parameterType="com.hackerda.platform.pojo.example.RolePermissionExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.RolePermissionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -91,19 +91,19 @@
     delete from role_permission
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.RolePermissionExample">
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.RolePermissionExample">
     delete from role_permission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.RolePermission">
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.RolePermission">
     insert into role_permission (id, role_id, permission_id
       )
     values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{permissionId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.RolePermission">
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.RolePermission">
     insert into role_permission
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -128,7 +128,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.RolePermissionExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.RolePermissionExample" resultType="java.lang.Long">
     select count(*) from role_permission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -160,7 +160,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.RolePermission">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.RolePermission">
     update role_permission
     <set>
       <if test="roleId != null">
@@ -172,7 +172,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.RolePermission">
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.RolePermission">
     update role_permission
     set role_id = #{roleId,jdbcType=INTEGER},
       permission_id = #{permissionId,jdbcType=INTEGER}

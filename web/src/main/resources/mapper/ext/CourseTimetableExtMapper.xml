@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.ext.CourseTimetableExtMapper">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.CourseTimetableExtMapper">
 
-    <select id="selectByStudentRelative" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap"
-            parameterType="com.hackerda.platform.pojo.StudentCourseTimeTable">
+    <select id="selectByStudentRelative" resultMap="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.BaseResultMap"
+            parameterType="com.hackerda.platform.infrastructure.database.model.StudentCourseTimeTable">
         select
         course_timetable.id,
         room_name,
@@ -40,8 +40,8 @@
         </where>
 
     </select>
-    <select id="selectByClassRelative" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap"
-            parameterType="com.hackerda.platform.pojo.ClassCourseTimetable">
+    <select id="selectByClassRelative" resultMap="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.BaseResultMap"
+            parameterType="com.hackerda.platform.infrastructure.database.model.ClassCourseTimetable">
         select
         course_timetable.id,
         room_name,
@@ -81,7 +81,7 @@
 
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into course_timetable
-        (<include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/>)
+        (<include refid="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.Base_Column_List"/>)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -109,13 +109,13 @@
 
     </insert>
 
-    <select id="selectBatch" parameterType="java.util.List" resultMap="com.hackerda.platform.mapper.CourseTimetableMapper.BaseResultMap">
+    <select id="selectBatch" parameterType="java.util.List" resultMap="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.BaseResultMap">
         select
-        <include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/>
+        <include refid="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.Base_Column_List"/>
         from
         (
         <foreach collection="list" item="item" index="index" separator="union all">
-            SELECT <include refid="com.hackerda.platform.mapper.CourseTimetableMapper.Base_Column_List"/> FROM course_timetable
+            SELECT <include refid="com.hackerda.platform.infrastructure.database.mapper.CourseTimetableMapper.Base_Column_List"/> FROM course_timetable
             WHERE course_id = #{item.courseId,jdbcType=VARCHAR} and
             class_day = #{item.classDay,jdbcType=INTEGER} and
             class_order = #{item.classOrder,jdbcType=INTEGER} and
@@ -129,7 +129,7 @@
 
     </select>
 
-    <resultMap id="CourseTimetableDetailDOMap" type="com.hackerda.platform.pojo.CourseTimetableDetailDO">
+    <resultMap id="CourseTimetableDetailDOMap" type="com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO">
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="room_name" property="roomName" jdbcType="VARCHAR" />
         <result column="room_number" property="roomNumber" jdbcType="VARCHAR" />
@@ -163,7 +163,7 @@
 
 
 
-    <select id="selectDetailByStudentAccount" resultMap="CourseTimetableDetailDOMap" parameterType="com.hackerda.platform.pojo.StudentCourseTimeTable">
+    <select id="selectDetailByStudentAccount" resultMap="CourseTimetableDetailDOMap" parameterType="com.hackerda.platform.infrastructure.database.model.StudentCourseTimeTable">
         select
         course_timetable.id,
         room_name,
@@ -206,7 +206,7 @@
 
     </select>
 
-    <select id="selectDetailByClassId" resultType="com.hackerda.platform.pojo.CourseTimetableDetailDO" parameterType="com.hackerda.platform.pojo.StudentCourseTimeTable">
+    <select id="selectDetailByClassId" resultType="com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO" parameterType="com.hackerda.platform.infrastructure.database.model.StudentCourseTimeTable">
         select
         course_timetable.id,
         room_name,
@@ -251,7 +251,7 @@
 
     <insert id="insertBatchStudentRelative" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into student_course_time_table
-        (<include refid="com.hackerda.platform.mapper.StudentCourseTimeTableMapper.Base_Column_List"/>)
+        (<include refid="com.hackerda.platform.infrastructure.database.mapper.StudentCourseTimeTableMapper.Base_Column_List"/>)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.ext.WechatOpenIdExtMapper">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.WechatOpenIdExtMapper">
 
     <insert id="insertBatch" parameterType="java.util.List">
         insert  into wechat_openid
-        (<include refid="com.hackerda.platform.mapper.WechatOpenidMapper.Base_Column_List"/>)
+        (<include refid="com.hackerda.platform.infrastructure.database.mapper.WechatOpenidMapper.Base_Column_List"/>)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (
@@ -18,7 +18,7 @@
         </foreach>
 
     </insert>
-    <insert id="saveOrUpdate" parameterType="com.hackerda.platform.pojo.WechatOpenid" useGeneratedKeys="true"
+    <insert id="saveOrUpdate" parameterType="com.hackerda.platform.infrastructure.database.model.WechatOpenid" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
 
         <selectKey keyProperty="count" resultType="int" order="BEFORE">
@@ -101,7 +101,7 @@
     </insert>
 
 
-    <select id="selectBySubscribe" parameterType="com.hackerda.platform.pojo.ScheduleTask" resultMap="com.hackerda.platform.mapper.WechatOpenidMapper.BaseResultMap">
+    <select id="selectBySubscribe" parameterType="com.hackerda.platform.infrastructure.database.model.ScheduleTask" resultMap="com.hackerda.platform.infrastructure.database.mapper.WechatOpenidMapper.BaseResultMap">
         select
             wechat_openid.id, wechat_openid.openid, account,
             wechat_openid.gmt_create, gmt_modified, is_bind,

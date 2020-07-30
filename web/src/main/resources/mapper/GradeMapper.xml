@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.GradeMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.Grade" >
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.GradeMapper" >
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.Grade" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="exam_id" property="examId" jdbcType="INTEGER" />
     <result column="account" property="account" jdbcType="INTEGER" />
@@ -100,7 +100,7 @@
     unpassed_reason_explain, remark, replace_course_number, retake_course_mark, retakeCourse_mode_code, 
     retake_course_mode_explain, standard_point, term_year, term_order, gmt_create, gmt_modify
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.GradeExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.infrastructure.database.model.example.GradeExample" >
     select
     <if test="distinct" >
       distinct
@@ -124,13 +124,13 @@
     delete from grade
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.GradeExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.GradeExample" >
     delete from grade
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.Grade" >
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.Grade" >
     insert into grade (id, exam_id, account, 
       score, credit, grade_point, 
       level_name, level_point, rank, 
@@ -156,7 +156,7 @@
       #{standardPoint,jdbcType=VARCHAR}, #{termYear,jdbcType=VARCHAR}, #{termOrder,jdbcType=INTEGER}, 
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.Grade" >
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.Grade" >
     insert ignore grade
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -355,7 +355,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.GradeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.GradeExample" resultType="java.lang.Integer" >
     select count(*) from grade
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -503,7 +503,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.Grade" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.Grade" >
     update grade
     <set >
       <if test="examId != null" >
@@ -602,7 +602,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.Grade" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.Grade" >
     update grade
     set exam_id = #{examId,jdbcType=INTEGER},
       account = #{account,jdbcType=INTEGER},

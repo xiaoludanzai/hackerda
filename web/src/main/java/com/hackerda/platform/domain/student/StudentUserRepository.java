@@ -1,6 +1,6 @@
 package com.hackerda.platform.domain.student;
 
-import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.domain.constant.SubscribeScene;
 
 import java.util.Collection;
 import java.util.List;

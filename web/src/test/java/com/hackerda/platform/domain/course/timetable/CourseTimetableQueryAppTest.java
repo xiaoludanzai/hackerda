@@ -1,7 +1,7 @@
 package com.hackerda.platform.domain.course.timetable;
 
 import com.hackerda.platform.application.CourseTimetableQueryApp;
-import com.hackerda.platform.mapper.ext.TruncateMapper;
+import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

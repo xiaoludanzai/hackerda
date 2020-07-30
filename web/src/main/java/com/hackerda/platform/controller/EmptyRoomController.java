@@ -1,7 +1,6 @@
 package com.hackerda.platform.controller;
 
-import com.hackerda.platform.pojo.WebResponse;
-import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.service.EmptyRoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

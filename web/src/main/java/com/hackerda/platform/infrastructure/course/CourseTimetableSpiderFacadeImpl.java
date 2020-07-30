@@ -2,7 +2,7 @@ package com.hackerda.platform.infrastructure.course;
 
 import com.google.common.collect.Lists;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.CourseTimetableDetailDO;
+import com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO;
 import com.hackerda.platform.infrastructure.repository.course.timetable.CourseTimetableSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
 import com.hackerda.spider.UrpSearchSpider;

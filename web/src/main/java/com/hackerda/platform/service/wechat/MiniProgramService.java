@@ -2,14 +2,14 @@ package com.hackerda.platform.service.wechat;
 
 
 import com.hackerda.platform.config.wechat.MiniProgramProperties;
-import com.hackerda.platform.infrastructure.dao.ScheduleTaskDao;
-import com.hackerda.platform.pojo.ScheduleTask;
-import com.hackerda.platform.pojo.constant.RedisKeys;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
-import com.hackerda.platform.pojo.wechat.miniprogram.AccessTokenResponse;
-import com.hackerda.platform.pojo.wechat.miniprogram.AuthResponse;
-import com.hackerda.platform.pojo.wechat.miniprogram.Response;
-import com.hackerda.platform.pojo.wechat.miniprogram.SubscribeMessage;
+import com.hackerda.platform.infrastructure.database.dao.ScheduleTaskDao;
+import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
+import com.hackerda.platform.domain.constant.RedisKeys;
+import com.hackerda.platform.domain.constant.SubscribeScene;
+import com.hackerda.platform.service.wechat.miniprogram.AccessTokenResponse;
+import com.hackerda.platform.service.wechat.miniprogram.AuthResponse;
+import com.hackerda.platform.service.wechat.miniprogram.Response;
+import com.hackerda.platform.service.wechat.miniprogram.SubscribeMessage;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;

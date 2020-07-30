@@ -1,10 +1,10 @@
 package com.hackerda.platform.infrastructure.repository.course;
 
-import com.hackerda.platform.infrastructure.dao.CourseDao;
+import com.hackerda.platform.infrastructure.database.dao.CourseDao;
 import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.domain.course.CourseRepository;
 import com.hackerda.platform.domain.course.CourseUniqueKey;
-import com.hackerda.platform.pojo.Course;
+import com.hackerda.platform.infrastructure.database.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

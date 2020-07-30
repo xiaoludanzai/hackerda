@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hackerda.platform.mapper.StudentRoleMapper">
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.StudentRole">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.StudentRoleMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.StudentRole">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="account" jdbcType="INTEGER" property="account" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
@@ -67,7 +67,7 @@
   <sql id="Base_Column_List">
     id, account, role_id
   </sql>
-  <select id="selectByExample" parameterType="com.hackerda.platform.pojo.example.StudentRoleExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentRoleExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -91,19 +91,19 @@
     delete from student_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.StudentRoleExample">
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentRoleExample">
     delete from student_role
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.StudentRole">
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.StudentRole">
     insert into student_role (id, account, role_id
       )
     values (#{id,jdbcType=INTEGER}, #{account,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.StudentRole">
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentRole">
     insert into student_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -128,7 +128,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.StudentRoleExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentRoleExample" resultType="java.lang.Long">
     select count(*) from student_role
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -160,7 +160,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.StudentRole">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentRole">
     update student_role
     <set>
       <if test="account != null">
@@ -172,7 +172,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.StudentRole">
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.StudentRole">
     update student_role
     set account = #{account,jdbcType=INTEGER},
       role_id = #{roleId,jdbcType=INTEGER}

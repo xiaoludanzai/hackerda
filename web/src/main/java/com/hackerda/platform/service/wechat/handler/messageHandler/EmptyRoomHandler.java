@@ -1,6 +1,6 @@
 package com.hackerda.platform.service.wechat.handler.messageHandler;
 
-import com.hackerda.platform.pojo.constant.MiniProgram;
+import com.hackerda.platform.domain.constant.MiniProgram;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;

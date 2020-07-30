@@ -1,8 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.constant.RedisKeys;
+import com.hackerda.platform.domain.constant.RedisKeys;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;

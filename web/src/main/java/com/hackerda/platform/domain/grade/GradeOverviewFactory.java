@@ -1,7 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.StudentUser;
 import com.hackerda.platform.service.GpaRanker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

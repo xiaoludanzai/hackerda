@@ -1,23 +1,16 @@
 package com.hackerda.platform.service.wechat.handler.messageHandler;
 
-import com.hackerda.platform.builder.TextBuilder;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.service.NewUrpSpiderService;
-import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.spider.support.UrpExamTime;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

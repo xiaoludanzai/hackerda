@@ -1,6 +1,6 @@
 package com.hackerda.platform.controller.wechat;
 
-import com.hackerda.platform.pojo.WebResponse;
+import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.service.wechat.MiniProgramService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

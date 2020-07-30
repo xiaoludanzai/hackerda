@@ -1,8 +1,8 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.infrastructure.dao.EmptyRoomDao;
-import com.hackerda.platform.pojo.EmptyRoom;
-import com.hackerda.platform.pojo.vo.EmptyRoomVo;
+import com.hackerda.platform.infrastructure.database.dao.EmptyRoomDao;
+import com.hackerda.platform.infrastructure.database.model.EmptyRoom;
+import com.hackerda.platform.controller.vo.EmptyRoomVo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;

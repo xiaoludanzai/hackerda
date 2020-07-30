@@ -2,16 +2,15 @@ package com.hackerda.platform.builder;
 
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.SchoolTime;
-import com.hackerda.platform.pojo.StudentUser;
-import com.hackerda.platform.pojo.vo.CourseTimeTableVo;
+import com.hackerda.platform.utils.SchoolTime;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
+import com.hackerda.platform.controller.vo.CourseTimeTableVo;
 import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.platform.utils.SchoolTimeUtil;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

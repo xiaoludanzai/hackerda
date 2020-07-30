@@ -4,7 +4,7 @@ import com.hackerda.platform.builder.TemplateBuilder;
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
 import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
 import com.hackerda.platform.config.wechat.WechatTemplateProperties;
-import com.hackerda.platform.pojo.ScheduleTask;
+import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
 import com.hackerda.platform.service.ExamTimeTableService;
 import com.hackerda.platform.service.ScheduleTaskService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.hackerda.platform.controller.auth;
 
-import com.hackerda.platform.pojo.WebResponse;
-import com.hackerda.platform.pojo.vo.StudentUserDetailVO;
+import com.hackerda.platform.controller.WebResponse;
+import com.hackerda.platform.controller.vo.StudentUserDetailVO;
 import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

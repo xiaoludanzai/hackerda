@@ -1,7 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.utils.DESUtil;
 import com.hackerda.spider.UrpSpider;
 import com.hackerda.spider.exception.UrpException;

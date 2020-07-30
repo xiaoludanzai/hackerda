@@ -1,6 +1,6 @@
 package com.hackerda.platform.infrastructure.repository;
 
-import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import lombok.extern.slf4j.Slf4j;

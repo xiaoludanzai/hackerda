@@ -1,7 +1,7 @@
 package com.hackerda.platform.service.rbac;
 
-import com.hackerda.platform.pojo.Permission;
-import com.hackerda.platform.pojo.Role;
+import com.hackerda.platform.infrastructure.database.model.Permission;
+import com.hackerda.platform.infrastructure.database.model.Role;
 
 import java.util.List;
 

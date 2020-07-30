@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.Grade;
+import com.hackerda.platform.infrastructure.database.model.Grade;
 
 import java.util.List;
 

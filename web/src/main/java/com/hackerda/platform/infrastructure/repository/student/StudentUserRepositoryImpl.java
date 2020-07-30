@@ -1,14 +1,14 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
-import com.hackerda.platform.infrastructure.dao.StudentUserDao;
-import com.hackerda.platform.infrastructure.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
-import com.hackerda.platform.pojo.ScheduleTask;
-import com.hackerda.platform.pojo.WechatOpenid;
-import com.hackerda.platform.pojo.WechatStudentUserDO;
-import com.hackerda.platform.pojo.constant.SubscribeScene;
+import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
+import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
+import com.hackerda.platform.infrastructure.database.model.WechatStudentUserDO;
+import com.hackerda.platform.domain.constant.SubscribeScene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

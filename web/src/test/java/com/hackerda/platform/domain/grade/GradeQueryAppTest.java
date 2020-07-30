@@ -2,7 +2,7 @@ package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.mapper.GradeMapper;
+import com.hackerda.platform.infrastructure.database.mapper.GradeMapper;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;

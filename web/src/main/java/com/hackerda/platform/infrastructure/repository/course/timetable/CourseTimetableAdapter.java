@@ -2,8 +2,8 @@ package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
-import com.hackerda.platform.pojo.CourseTimetable;
-import com.hackerda.platform.pojo.CourseTimetableDetailDO;
+import com.hackerda.platform.infrastructure.database.model.CourseTimetable;
+import com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -2,7 +2,7 @@ package com.hackerda.platform.infrastructure.repository.grade;
 
 import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.domain.grade.GradeBO;
-import com.hackerda.platform.pojo.Grade;
+import com.hackerda.platform.infrastructure.database.model.Grade;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.CourseMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.Course" >
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.Course" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="num" property="num" jdbcType="VARCHAR" />
@@ -81,7 +81,7 @@
     exam_type, exam_type_code, academy_name, academy_code, course_type, course_type_code, 
     credit
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.CourseExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.infrastructure.database.model.example.CourseExample" >
     select
     <if test="distinct" >
       distinct
@@ -105,13 +105,13 @@
     delete from course
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.CourseExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.CourseExample" >
     delete from course
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.Course" >
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.Course" >
     insert into course (id, name, num, 
       course_order, term_year, term_order, 
       teacher_account, teacher_name, exam_type, 
@@ -125,7 +125,7 @@
       #{courseType,jdbcType=VARCHAR}, #{courseTypeCode,jdbcType=VARCHAR}, #{credit,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.Course" >
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.Course" >
     insert into course
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -222,7 +222,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.CourseExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.CourseExample" resultType="java.lang.Integer" >
     select count(*) from course
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -302,7 +302,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.Course" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.Course" >
     update course
     <set >
       <if test="name != null" >
@@ -350,7 +350,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.Course" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.Course" >
     update course
     set name = #{name,jdbcType=VARCHAR},
       num = #{num,jdbcType=VARCHAR},

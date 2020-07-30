@@ -2,9 +2,9 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.config.wechat.WechatMpPlusProperties;
 import com.hackerda.platform.config.wechat.WechatMpProProperties;
-import com.hackerda.platform.mapper.ScheduleTaskMapper;
-import com.hackerda.platform.pojo.ScheduleTask;
-import com.hackerda.platform.pojo.example.ScheduleTaskExample;
+import com.hackerda.platform.infrastructure.database.mapper.ScheduleTaskMapper;
+import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
+import com.hackerda.platform.infrastructure.database.model.example.ScheduleTaskExample;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

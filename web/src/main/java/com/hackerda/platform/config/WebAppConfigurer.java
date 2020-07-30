@@ -1,6 +1,6 @@
 package com.hackerda.platform.config;
 
-import com.hackerda.platform.interceptor.TraceIDInterceptor;
+import com.hackerda.platform.controller.interceptor.TraceIDInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

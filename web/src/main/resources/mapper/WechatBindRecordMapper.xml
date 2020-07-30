@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.WechatBindRecordMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.pojo.WechatBindRecord" >
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.WechatBindRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.WechatBindRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="openid" property="openid" jdbcType="VARCHAR" />
     <result column="appid" property="appid" jdbcType="VARCHAR" />
@@ -70,7 +70,7 @@
   <sql id="Base_Column_List" >
     id, openid, appid, origin_account, update_account, gmt_create
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.infrastructure.database.model.example.WechatBindRecordExample" >
     select
     <if test="distinct" >
       distinct
@@ -94,13 +94,13 @@
     delete from wechat_bind_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.WechatBindRecordExample" >
     delete from wechat_bind_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.pojo.WechatBindRecord" >
+  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.WechatBindRecord" >
     insert into wechat_bind_record (id, openid, appid, 
       origin_account, update_account, gmt_create
       )
@@ -108,7 +108,7 @@
       #{originAccount,jdbcType=VARCHAR}, #{updateAccount,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.pojo.WechatBindRecord" >
+  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.WechatBindRecord" >
     insert into wechat_bind_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -151,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.pojo.example.WechatBindRecordExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.WechatBindRecordExample" resultType="java.lang.Integer" >
     select count(*) from wechat_bind_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -195,7 +195,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.pojo.WechatBindRecord" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.WechatBindRecord" >
     update wechat_bind_record
     <set >
       <if test="openid != null" >
@@ -216,7 +216,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.pojo.WechatBindRecord" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.WechatBindRecord" >
     update wechat_bind_record
     set openid = #{openid,jdbcType=VARCHAR},
       appid = #{appid,jdbcType=VARCHAR},

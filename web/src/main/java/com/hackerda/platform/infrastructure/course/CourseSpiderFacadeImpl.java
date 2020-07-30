@@ -1,10 +1,10 @@
 package com.hackerda.platform.infrastructure.course;
 
-import com.hackerda.platform.pojo.Course;
+import com.hackerda.platform.infrastructure.database.model.Course;
 import com.hackerda.platform.infrastructure.repository.course.CourseSpiderFacade;
 
 
-import com.hackerda.platform.pojo.constant.Academy;
+import com.hackerda.platform.domain.constant.Academy;
 import com.hackerda.platform.utils.DateUtils;
 import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.support.search.SearchResult;

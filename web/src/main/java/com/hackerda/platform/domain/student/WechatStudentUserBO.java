@@ -1,8 +1,7 @@
 package com.hackerda.platform.domain.student;
 
-import com.hackerda.platform.pojo.StudentUser;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 

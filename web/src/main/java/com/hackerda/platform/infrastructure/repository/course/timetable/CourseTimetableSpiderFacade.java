@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.CourseTimetableDetailDO;
+import com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO;
 
 import java.util.List;
 

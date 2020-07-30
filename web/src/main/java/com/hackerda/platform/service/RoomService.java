@@ -2,8 +2,8 @@ package com.hackerda.platform.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.hackerda.platform.infrastructure.dao.UrpClassRoomDao;
-import com.hackerda.platform.pojo.UrpClassroom;
+import com.hackerda.platform.infrastructure.database.dao.UrpClassRoomDao;
+import com.hackerda.platform.infrastructure.database.model.UrpClassroom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

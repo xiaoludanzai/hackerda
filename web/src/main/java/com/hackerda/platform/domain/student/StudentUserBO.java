@@ -1,7 +1,6 @@
 package com.hackerda.platform.domain.student;
 
 import com.hackerda.platform.domain.WechatPlatform;
-import com.hackerda.platform.pojo.WechatOpenid;
 import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Data

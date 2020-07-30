@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.course;
 
 import com.hackerda.platform.domain.course.CourseBO;
-import com.hackerda.platform.pojo.Course;
+import com.hackerda.platform.infrastructure.database.model.Course;
 import org.springframework.stereotype.Service;
 
 @Service

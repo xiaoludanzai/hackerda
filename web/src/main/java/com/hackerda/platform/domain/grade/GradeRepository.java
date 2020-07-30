@@ -1,7 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.pojo.StudentUser;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package com.hackerda.platform.controller;
 
-import com.hackerda.platform.pojo.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;

@@ -1,14 +1,13 @@
 package com.hackerda.platform.controller.api;
 
 
-import com.hackerda.platform.pojo.WebResponse;
-import com.hackerda.platform.pojo.constant.ErrorCode;
-import com.hackerda.platform.pojo.vo.CourseTimetableOverviewVO;
-import com.hackerda.platform.pojo.vo.GradeResultVo;
+import com.hackerda.platform.controller.WebResponse;
+import com.hackerda.platform.domain.constant.ErrorCode;
+import com.hackerda.platform.controller.vo.CourseTimetableOverviewVO;
+import com.hackerda.platform.controller.vo.GradeResultVo;
 import com.hackerda.platform.service.CourseTimeTableService;
 import com.hackerda.platform.service.GradeService;
 import com.hackerda.platform.service.rbac.UserAuthorizeService;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

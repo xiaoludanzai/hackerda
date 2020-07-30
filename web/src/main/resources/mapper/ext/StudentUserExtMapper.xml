@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.mapper.ext.StudentUserExtMapper">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.StudentUserExtMapper">
 
-    <resultMap id="WechatStudentUserMap" type="com.hackerda.platform.pojo.WechatStudentUserDO">
+    <resultMap id="WechatStudentUserMap" type="com.hackerda.platform.infrastructure.database.model.WechatStudentUserDO">
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="account" property="account" jdbcType="INTEGER" />
         <result column="password" property="password" jdbcType="VARCHAR" />
@@ -24,7 +24,7 @@
     </resultMap>
 
 
-    <select id="selectRoleByAccount"  resultMap="com.hackerda.platform.mapper.RoleMapper.BaseResultMap">
+    <select id="selectRoleByAccount"  resultMap="com.hackerda.platform.infrastructure.database.mapper.RoleMapper.BaseResultMap">
         select r.id, r.name, r.code
         from student_role sr
                  join role r on sr.role_id = r.id
@@ -57,7 +57,7 @@
 
     </select>
 
-    <insert id="saveOrUpdate" parameterType="com.hackerda.platform.pojo.StudentUser" useGeneratedKeys="true"
+    <insert id="saveOrUpdate" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
 
         <selectKey keyProperty="count" resultType="int" order="BEFORE">

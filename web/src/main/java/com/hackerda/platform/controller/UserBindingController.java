@@ -2,8 +2,7 @@ package com.hackerda.platform.controller;
 
 
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
-import com.hackerda.platform.pojo.WebResponse;
-import com.hackerda.platform.pojo.constant.ErrorCode;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
 import com.hackerda.spider.exception.UrpVerifyCodeException;
