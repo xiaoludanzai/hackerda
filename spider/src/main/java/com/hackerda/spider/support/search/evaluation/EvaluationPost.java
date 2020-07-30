@@ -25,8 +25,5 @@ public class EvaluationPost {
     @JSONField(name = "zgpj")
     private String comment = "关爱学生、认真负责、讲课投入,内容充实、条理清晰、重点突出";
 
-    public static void main(String[] args) {
-        EvaluationPost post = new EvaluationPost();
-        System.out.println(JSON.toJSON(post));
-    }
+
 }
