@@ -30,9 +30,9 @@ public class CourseTimeTableService {
 
     public CourseTimetableOverviewVO getCurrentTermCourseTimeTableByStudent() {
 
-        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
+        String account =  SecurityUtils.getSubject().getPrincipal().toString();
 
-        return getCurrentTermCourseTimeTableByStudent(studentUserBO.getAccount());
+        return getCurrentTermCourseTimeTableByStudent(Integer.parseInt(account));
     }
 
 
