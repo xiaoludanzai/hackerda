@@ -84,7 +84,7 @@ public class JWTRealm extends AuthorizingRealm {
                 log.error("student account {} verify error {}", username, studentUserBO);
                 return null;
             }
-            return new SimpleAuthenticationInfo(username, token, "JWTRealm");
+            return new SimpleAuthenticationInfo(studentUserBO, token, "JWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);
         }catch (Exception e){
