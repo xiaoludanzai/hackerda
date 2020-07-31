@@ -22,7 +22,7 @@ public class StudentUserRepositoryTest {
 
     @Test
     public void getByAccount() {
-        StudentUserBO account = studentUserRepository.getByAccount(2019024714);
+        StudentUserBO account = studentUserRepository.getByAccount(2019022404);
         System.out.println(account);
 
     }
