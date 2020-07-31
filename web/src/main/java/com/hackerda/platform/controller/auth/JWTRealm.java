@@ -81,9 +81,9 @@ public class JWTRealm extends AuthorizingRealm {
             StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(username));
 
             if(studentUserBO == null || !studentUserBO.getIsCorrect()) {
-                throw new AuthenticationException("password not correct");
+                log.error("student user verify error {}", studentUserBO);
+                return null;
             }
-
             return new SimpleAuthenticationInfo(studentUserBO, token, "JWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);

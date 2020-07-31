@@ -29,12 +29,6 @@ public class StudentUserDao {
         studentUserExtMapper.insertSelective(studentUser);
     }
 
-    public boolean isStudentAccountExists(int account){
-        StudentUserExample studentUserExample = new StudentUserExample();
-        studentUserExample.createCriteria().andAccountEqualTo(account);
-        List<StudentUser> studentUsers = studentUserExtMapper.selectByExample(studentUserExample);
-        return studentUsers.size() > 0;
-    }
 
     public void updatePassword(String account, String password){
         StudentUser student = new StudentUser();
