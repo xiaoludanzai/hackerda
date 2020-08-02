@@ -1,6 +1,6 @@
 package com.hackerda.platform.domain.grade;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public interface GradeRepository {
 
     void delete(GradeBO grade);
 
-    List<TermGradeBO> getAllByStudent(StudentUserBO studentUser);
+    List<TermGradeBO> getAllByStudent(WechatStudentUserBO studentUser);
 }

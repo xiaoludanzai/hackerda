@@ -2,7 +2,7 @@ package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class CourseTimetableRepositoryImplTest {
         truncateMapper.courseTimetable();
         truncateMapper.studentCourseTimetable();
 
-        StudentUserBO account = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         CourseTimeTableOverview account1 = courseTimetableRepository.getByAccount(account, "2019-2020", 2);
         courseTimetableRepository.saveByStudent(account1.getNewList(), account);
@@ -64,7 +64,7 @@ public class CourseTimetableRepositoryImplTest {
         truncateMapper.courseTimetable();
         truncateMapper.studentCourseTimetable();
 
-        StudentUserBO account = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         CourseTimeTableOverview account1 = courseTimetableRepository.getByClassId(account.getUrpClassNum().toString(), "2019" +
                 "-2020", 2);

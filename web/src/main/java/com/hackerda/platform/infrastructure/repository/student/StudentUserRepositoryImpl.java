@@ -1,8 +1,8 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
-import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
@@ -28,14 +28,14 @@ public class StudentUserRepositoryImpl implements StudentUserRepository {
     private WechatOpenIdDao wechatOpenIdDao;
 
 
-    public StudentUserBO getByAccount(int account){
+    public WechatStudentUserBO getWetChatUserByAccount(int account){
 
         List<WechatStudentUserDO> wechatUserByAccount = studentUserDao.getWechatUserByAccount(account);
 
         return studentUserAdapter.toBO(wechatUserByAccount);
     }
 
-    public List<StudentUserBO> getByAccountList(Collection<Integer> accountList){
+    public List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList){
 
         if(CollectionUtils.isEmpty(accountList)){
             return Collections.emptyList();
@@ -48,7 +48,7 @@ public class StudentUserRepositoryImpl implements StudentUserRepository {
         return listMap.values().stream().map(x-> studentUserAdapter.toBO(x)).collect(Collectors.toList());
     }
 
-    public List<StudentUserBO> getSubscribe(SubscribeScene subscribeScene) {
+    public List<WechatStudentUserBO> getSubscribe(SubscribeScene subscribeScene) {
         ScheduleTask task = new ScheduleTask();
         task.setScene(Integer.valueOf(subscribeScene.getScene())).setIsSubscribe((byte) 1);
         Set<Integer> accountSet = wechatOpenIdDao.selectBySubscribe(task).stream()
@@ -59,7 +59,7 @@ public class StudentUserRepositoryImpl implements StudentUserRepository {
 
     @Override
     @Transactional
-    public void save(StudentUserBO studentUser) {
+    public void save(WechatStudentUserBO studentUser) {
         if(studentUser.isSaveOrUpdate()) {
             studentUserDao.saveOrUpdate(studentUserAdapter.toDO(studentUser));
         }

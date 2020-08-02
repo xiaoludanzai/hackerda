@@ -1,13 +1,13 @@
 package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.MDCThreadPool;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.ClassCourseTimetableDao;
 import com.hackerda.platform.infrastructure.database.dao.CourseDao;
 import com.hackerda.platform.infrastructure.database.dao.CourseTimeTableDao;
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableBO;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
-import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.*;
 import com.hackerda.platform.infrastructure.repository.ExceptionMsg;
 import com.hackerda.platform.infrastructure.repository.FetchExceptionHandler;
@@ -48,10 +48,10 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
             new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSpider"));
 
     @Override
-    public CourseTimeTableOverview getByAccount(StudentUserBO studentUserBO, String termYear, int termOrder) {
+    public CourseTimeTableOverview getByAccount(WechatStudentUserBO wechatStudentUserBO, String termYear, int termOrder) {
 
         StudentCourseTimeTable courseTimeTable = new StudentCourseTimeTable()
-                .setStudentId(studentUserBO.getAccount())
+                .setStudentId(wechatStudentUserBO.getAccount())
                 .setTermYear(termYear)
                 .setTermOrder(termOrder);
 
@@ -64,7 +64,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
         }
 
         CompletableFuture<List<CourseTimetableBO>> future =
-                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getCurrentTermTableByAccount(studentUserBO)
+                CompletableFuture.supplyAsync(() -> courseTimetableSpiderFacade.getCurrentTermTableByAccount(wechatStudentUserBO)
                         .stream().map(x -> courseTimetableAdapter.toBO(x)).collect(Collectors.toList()), courseSpiderExecutor);
 
         return getCourseTimeTableOverview(overview, future);
@@ -126,7 +126,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
     @Override
     @Transactional
-    public void saveByStudent(List<CourseTimetableBO> tableList, StudentUserBO studentUserBO) {
+    public void saveByStudent(List<CourseTimetableBO> tableList, WechatStudentUserBO wechatStudentUserBO) {
 
         if(CollectionUtils.isEmpty(tableList)){
             return;
@@ -151,7 +151,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
         List<StudentCourseTimeTable> relativeList = idList.stream().map(x -> new StudentCourseTimeTable()
                 .setCourseTimetableId(x)
-                .setStudentId(studentUserBO.getAccount())
+                .setStudentId(wechatStudentUserBO.getAccount())
                 .setTermYear(termYear)
                 .setTermOrder(termOrder)).collect(Collectors.toList());
 

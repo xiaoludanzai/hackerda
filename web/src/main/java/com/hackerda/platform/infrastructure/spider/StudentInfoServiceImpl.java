@@ -1,7 +1,8 @@
 package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.student.StudentInfoService;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
+import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
@@ -12,6 +13,7 @@ import com.hackerda.platform.service.NewUrpSpiderService;
 
 import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
+import com.hackerda.spider.exception.UrpTimeoutException;
 import com.hackerda.spider.support.search.classInfo.ClassInfoSearchResult;
 import com.hackerda.spider.support.search.classInfo.SearchClassInfoPost;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     @Autowired
     private UrpClassDao urpClassDao;
     @Autowired
+    private StudentUserDao studentUserDao;
+    @Autowired
     private UrpSearchSpider urpSearchSpider;
     @Autowired
     private SpiderExceptionTransfer exceptionTransfer;
@@ -43,9 +47,15 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         try {
             newUrpSpiderService.checkStudentPassword(account, enablePassword);
             return true;
-        }catch (PasswordUnCorrectException e){
+        }catch (PasswordUnCorrectException e) {
             return false;
-        }catch (Throwable throwable){
+        } catch (UrpTimeoutException e) {
+
+
+
+        }
+
+        catch (Throwable throwable){
             throw exceptionTransfer.transfer(throwable);
         }
     }
@@ -61,12 +71,12 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public StudentUserBO getStudentInfo(String account, String enablePassword) {
+    public WechatStudentUserBO getStudentInfo(String account, String enablePassword) {
 
         StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account, enablePassword);
         UrpClass urpClass = getClassByName(userInfo.getClassName(), userInfo.getAccount().toString());
 
-        StudentUserBO user = new StudentUserBO();
+        WechatStudentUserBO user = new WechatStudentUserBO();
 
         user.setAccount(userInfo.getAccount());
         user.setPassword(userInfo.getPassword());

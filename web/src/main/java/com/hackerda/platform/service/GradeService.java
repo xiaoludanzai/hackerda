@@ -2,7 +2,7 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.controller.vo.GradeResultVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ public class GradeService {
 
 
     public GradeResultVo getGrade() {
-        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
-        GradeOverviewBO gradeOverview = gradeQueryApp.getGradeOverview(studentUserBO);
+        WechatStudentUserBO wechatStudentUserBO = (WechatStudentUserBO) SecurityUtils.getSubject().getPrincipal();
+        GradeOverviewBO gradeOverview = gradeQueryApp.getGradeOverview(wechatStudentUserBO);
         return gradeTransfer.adapter2VO(gradeOverview);
 
     }

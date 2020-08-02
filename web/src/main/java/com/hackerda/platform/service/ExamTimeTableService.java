@@ -1,6 +1,6 @@
 package com.hackerda.platform.service;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.infrastructure.database.model.*;
 import com.hackerda.platform.utils.DateUtils;
@@ -38,7 +38,7 @@ public class ExamTimeTableService {
 
     public List<Exam> getExamTimeListFromSpider(int account) {
 
-        StudentUserBO student = studentUserRepository.getByAccount(account);
+        WechatStudentUserBO student = studentUserRepository.getWetChatUserByAccount(account);
         if (student == null) {
             throw new PasswordUnCorrectException();
         }

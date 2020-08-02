@@ -1,6 +1,6 @@
 package com.hackerda.platform.application;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
@@ -35,11 +35,11 @@ public class StudentBindAppTest {
         truncateMapper.studentUser();
         truncateMapper.wechatOpenId();
 
-        StudentUserBO studentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
+        WechatStudentUserBO wechatStudentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
-        StudentUserBO account = studentUserRepository.getByAccount(2014025838);
+        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2014025838);
 
-        assertThat(studentUserBO).isEqualTo(account);
+        assertThat(wechatStudentUserBO).isEqualTo(account);
 
     }
 
@@ -49,7 +49,7 @@ public class StudentBindAppTest {
         truncateMapper.studentUser();
         truncateMapper.wechatOpenId();
 
-        StudentUserBO studentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
+        WechatStudentUserBO wechatStudentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
 
         assertThatThrownBy(() -> studentBindApp.bindByOpenId("2014025838", "2", "test_appId", "test_openid"))
@@ -64,7 +64,7 @@ public class StudentBindAppTest {
         truncateMapper.studentUser();
         truncateMapper.wechatOpenId();
 
-        StudentUserBO studentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
+        WechatStudentUserBO wechatStudentUserBO = studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
 
         assertThatThrownBy(() -> studentBindApp.bindByOpenId("2014025838", "2", "test_appId", "test_openid_duplicate"))
@@ -72,9 +72,9 @@ public class StudentBindAppTest {
                 .hasMessageEndingWith("该学号已经被绑定");
 
 
-        StudentUserBO account = studentUserRepository.getByAccount(2014025838);
+        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2014025838);
 
-        assertThat(studentUserBO).isEqualTo(account);
+        assertThat(wechatStudentUserBO).isEqualTo(account);
 
     }
 
@@ -85,11 +85,11 @@ public class StudentBindAppTest {
 
         studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
-        StudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
+        WechatStudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
                 "test_openid");
 
 
-        StudentUserBO except = studentUserRepository.getByAccount(2014025838);
+        WechatStudentUserBO except = studentUserRepository.getWetChatUserByAccount(2014025838);
 
         assertThat(actual).isEqualTo(except);
 
@@ -103,13 +103,13 @@ public class StudentBindAppTest {
         studentBindApp.bindByOpenId("2014025838", "1", "test_appId", "test_openid");
 
 
-        studentBindApp.unbindByPlatform(studentUserRepository.getByAccount(2014025838), "test_appId");
+        studentBindApp.unbindByPlatform(studentUserRepository.getWetChatUserByAccount(2014025838), "test_appId");
 
-        StudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
+        WechatStudentUserBO actual = studentBindApp.bindByOpenId("2014025838", "1", "test_appId",
                 "test_openid_new");
 
 
-        StudentUserBO except = studentUserRepository.getByAccount(2014025838);
+        WechatStudentUserBO except = studentUserRepository.getWetChatUserByAccount(2014025838);
 
         assertThat(actual).isEqualTo(except);
 

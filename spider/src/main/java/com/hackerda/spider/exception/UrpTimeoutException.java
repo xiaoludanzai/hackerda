@@ -10,4 +10,8 @@ public class UrpTimeoutException extends UrpException {
     public UrpTimeoutException(String description, IOException e) {
         super(description, e);
     }
+
+    public UrpTimeoutException(String description) {
+        super(description);
+    }
 }

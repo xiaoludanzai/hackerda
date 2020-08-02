@@ -3,7 +3,7 @@ package com.hackerda.platform.infrastructure.repository;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.mapper.GradeMapper;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
@@ -42,7 +42,7 @@ public class GradeRepositoryImplTest {
     public void testUpdate(){
         gradeMapper.truncate();
 
-        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 
@@ -63,7 +63,7 @@ public class GradeRepositoryImplTest {
     @Test
     public void testNewGrade(){
 
-        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 
@@ -79,7 +79,7 @@ public class GradeRepositoryImplTest {
     @Test
     public void testGetGrade(){
 
-        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         fetchStatusRecorder.removeRecord(FetchScene.EVER_GRADE, "2017025838");
 

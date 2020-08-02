@@ -3,7 +3,7 @@ package com.hackerda.platform.application;
 import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.StudentInfoService;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.exception.BusinessException;
@@ -28,25 +28,25 @@ public class StudentBindApp {
     private Map<String , WechatPlatform> wechatPlatformMap;
 
 
-    public StudentUserBO bindByCode(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
-                               @Nonnull String code){
+    public WechatStudentUserBO bindByCode(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+                                          @Nonnull String code){
         // 查询对应的openid
         String openId = wechatAuthService.appCodeToOpenId(code);
 
         return bindByOpenId(account, password, appId, openId);
     }
 
-    public StudentUserBO bindByOpenId(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
-                                      @Nonnull String openid) {
+    public WechatStudentUserBO bindByOpenId(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+                                            @Nonnull String openid) {
 
         if(studentInfoService.checkCanBind(account, appId, openid)) {
-            StudentUserBO studentUserBO = getStudentUserBO(account, password);
+            WechatStudentUserBO wechatStudentUserBO = getStudentUserBO(account, password);
 
-            studentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
+            wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
-            studentUserRepository.save(studentUserBO);
+            studentUserRepository.save(wechatStudentUserBO);
 
-            return studentUserBO;
+            return wechatStudentUserBO;
 
         }else {
             throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
@@ -54,33 +54,33 @@ public class StudentBindApp {
     }
 
 
-    public void unbindByPlatform(@Nonnull StudentUserBO studentUserBO, @Nonnull String appId) {
+    public void unbindByPlatform(@Nonnull WechatStudentUserBO wechatStudentUserBO, @Nonnull String appId) {
 
-        studentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
+        wechatStudentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
 
-        studentUserRepository.save(studentUserBO);
+        studentUserRepository.save(wechatStudentUserBO);
 
     }
 
 
 
-    private StudentUserBO getStudentUserBO(@Nonnull String account, @Nonnull String password) {
+    private WechatStudentUserBO getStudentUserBO(@Nonnull String account, @Nonnull String password) {
         if(!studentInfoService.checkPasswordValid(account, password)){
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
-        StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+        WechatStudentUserBO wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(Integer.parseInt(account));
 
-        if(studentUserBO != null && !studentUserBO.checkEnablePasswordIsCorrect(password)) {
-            studentUserBO.updatePassword(password);
-        }if(studentUserBO == null ) {
-            studentUserBO = studentInfoService.getStudentInfo(account, password);
+        if(wechatStudentUserBO != null && !wechatStudentUserBO.checkEnablePasswordIsCorrect(password)) {
+            wechatStudentUserBO.updatePassword(password);
+        }if(wechatStudentUserBO == null ) {
+            wechatStudentUserBO = studentInfoService.getStudentInfo(account, password);
         }
 
-        if(studentUserBO == null){
+        if(wechatStudentUserBO == null){
             throw new BusinessException(ErrorCode.ACCOUNT_MISS, account + " 无法获取学号信息");
         }
 
-        return studentUserBO;
+        return wechatStudentUserBO;
     }
 }

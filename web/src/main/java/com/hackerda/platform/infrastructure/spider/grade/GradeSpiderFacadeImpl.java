@@ -1,6 +1,6 @@
 package com.hackerda.platform.infrastructure.spider.grade;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.Grade;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
@@ -21,7 +21,7 @@ public class GradeSpiderFacadeImpl implements GradeSpiderFacade {
     private NewUrpSpiderService newUrpSpiderService;
 
     @Override
-    public List<Grade> getCurrentTermGrade(StudentUserBO student) {
+    public List<Grade> getCurrentTermGrade(WechatStudentUserBO student) {
 
         List<UrpGeneralGrade> generalGrade = newUrpSpiderService.getCurrentGeneralGrade(student);
 
@@ -59,7 +59,7 @@ public class GradeSpiderFacadeImpl implements GradeSpiderFacade {
     }
 
     @Override
-    public List<Grade> getSchemeGrade(StudentUserBO student) {
+    public List<Grade> getSchemeGrade(WechatStudentUserBO student) {
         return newUrpSpiderService.getSchemeGrade(student)
                 .stream()
                 .map(Scheme::getCjList)

@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.spider.course;
 
 import com.google.common.collect.Lists;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO;
 import com.hackerda.platform.infrastructure.repository.course.timetable.CourseTimetableSpiderFacade;
 import com.hackerda.platform.service.NewUrpSpiderService;
@@ -26,9 +26,9 @@ public class CourseTimetableSpiderFacadeImpl implements CourseTimetableSpiderFac
     private UrpSearchSpider urpSearchSpider;
 
     @Override
-    public List<CourseTimetableDetailDO> getCurrentTermTableByAccount(StudentUserBO studentUserBO) {
+    public List<CourseTimetableDetailDO> getCurrentTermTableByAccount(WechatStudentUserBO wechatStudentUserBO) {
 
-        UrpCourseTimeTable timeTable = newUrpSpiderService.getUrpCourseTimeTable(studentUserBO);
+        UrpCourseTimeTable timeTable = newUrpSpiderService.getUrpCourseTimeTable(wechatStudentUserBO);
 
 
         return timeTable.getDetails()

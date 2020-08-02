@@ -2,7 +2,7 @@ package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,20 +17,20 @@ public class CourseTimetableQueryApp {
 
     public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
-        StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
+        WechatStudentUserBO wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(account);
 
         CourseTimeTableOverview timeTableOverview;
-        timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+        timeTableOverview = courseTimetableRepository.getByAccount(wechatStudentUserBO, termYear, termOrder);
 
         if(timeTableOverview.isEmpty()){
-            timeTableOverview = courseTimetableRepository.getByClassId(studentUserBO.getUrpClassNum().toString(), termYear,
+            timeTableOverview = courseTimetableRepository.getByClassId(wechatStudentUserBO.getUrpClassNum().toString(), termYear,
                     termOrder);
         }
 
         if(timeTableOverview.isPersonal()){
-            courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), studentUserBO);
+            courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), wechatStudentUserBO);
         }else {
-            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), studentUserBO.getUrpClassNum().toString());
+            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), wechatStudentUserBO.getUrpClassNum().toString());
         }
 
 

@@ -5,7 +5,7 @@ import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeMsgSender;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.application.GradeQueryApp;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.constant.SubscribeScene;
 import com.hackerda.spider.exception.UrpEvaluationException;
@@ -110,7 +110,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
      */
     private void processScheduleTask(UrpFetchTask urpFetchTask) {
 
-        StudentUserBO student = urpFetchTask.student;
+        WechatStudentUserBO student = urpFetchTask.student;
         if (student == null) {
             return;
         }
@@ -137,9 +137,9 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
     @Data
     private static class UrpFetchTask {
         private int timeoutCount;
-        private StudentUserBO student;
+        private WechatStudentUserBO student;
 
-        UrpFetchTask(StudentUserBO student) {
+        UrpFetchTask(WechatStudentUserBO student) {
             this.student = student;
         }
     }

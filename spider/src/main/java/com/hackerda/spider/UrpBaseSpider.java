@@ -17,6 +17,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.net.HttpCookie;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class UrpBaseSpider {
@@ -62,8 +63,12 @@ public class UrpBaseSpider {
 
     protected void login0(String account, String password){
 
+        CaptchaImage preLoad = captchaProvider.get(3, TimeUnit.SECONDS);
 
-        CaptchaImage preLoad = captchaProvider.get();
+        if (preLoad == null) {
+            throw  new UrpTimeoutException("加载验证码失败");
+        }
+
         String predict = captchaPredict.predict(preLoad);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();

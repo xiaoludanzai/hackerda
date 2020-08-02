@@ -1,7 +1,7 @@
 package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.application.GradeQueryApp;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.mapper.GradeMapper;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
 import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
@@ -43,7 +43,7 @@ public class GradeQueryAppTest {
 
         gradeMapper.truncate();
 
-        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 
@@ -70,7 +70,7 @@ public class GradeQueryAppTest {
         when(gradeSpiderFacade.getCurrentTermGrade(any())).thenReturn(Collections.emptyList());
         when(gradeSpiderFacade.getSchemeGrade(any())).thenThrow(new RuntimeException("fetch error"));
 
-        StudentUserBO user = studentUserRepository.getByAccount(2017025838);
+        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(2017025838);
 
         GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 

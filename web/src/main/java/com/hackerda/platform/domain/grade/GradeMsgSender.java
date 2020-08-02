@@ -4,7 +4,7 @@ import com.hackerda.platform.builder.TemplateBuilder;
 import com.hackerda.platform.config.wechat.WechatMpConfiguration;
 import com.hackerda.platform.config.wechat.WechatTemplateProperties;
 import com.hackerda.platform.domain.constant.MiniProgram;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.infrastructure.wechat.MiniProgramService;
 
@@ -33,7 +33,7 @@ public class GradeMsgSender {
     @Autowired
     private MiniProgramService miniProgramService;
 
-    private void sendMessageToApp(StudentUserBO student, GradeBO gradeVo){
+    private void sendMessageToApp(WechatStudentUserBO student, GradeBO gradeVo){
         if(student.hasBindApp()){
             SubscribeMessage<SubscribeGradeData> appMessage = new SubscribeMessage<>();
             appMessage.setTemplateId("dmE0nyulM8OVcUs-KojDxCYECrKTmzOGDkEUUm2T5UE")
@@ -49,7 +49,7 @@ public class GradeMsgSender {
 
     }
 
-    private void sendMessageToPlus(StudentUserBO student, GradeBO gradeVo){
+    private void sendMessageToPlus(WechatStudentUserBO student, GradeBO gradeVo){
         if(student.hasBindPlus()){
             WechatOpenidBO openid = student.getPlusOpenid();
             List<WxMpTemplateData> templateData = templateBuilder.gradeToTemplateData(student, gradeVo);
@@ -75,7 +75,7 @@ public class GradeMsgSender {
         }
     }
 
-    public void sendUpdateGradeToStudent(StudentUserBO student, List<GradeBO> sendGrade) {
+    public void sendUpdateGradeToStudent(WechatStudentUserBO student, List<GradeBO> sendGrade) {
         for (GradeBO gradeBO : sendGrade) {
             sendMessageToApp(student, gradeBO);
             sendMessageToPlus(student, gradeBO);

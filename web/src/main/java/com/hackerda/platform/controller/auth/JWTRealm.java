@@ -1,6 +1,6 @@
 package com.hackerda.platform.controller.auth;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.infrastructure.database.model.Permission;
 import com.hackerda.platform.infrastructure.database.model.Role;
@@ -78,13 +78,13 @@ public class JWTRealm extends AuthorizingRealm {
         }
         try {
             JwtUtils.verify(token, username, username);
-            StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(username));
+            WechatStudentUserBO wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(Integer.parseInt(username));
 
-            if(studentUserBO == null || !studentUserBO.getIsCorrect()) {
-                log.error("student account {} verify error {}", username, studentUserBO);
+            if(wechatStudentUserBO == null || !wechatStudentUserBO.getIsCorrect()) {
+                log.error("student account {} verify error {}", username, wechatStudentUserBO);
                 return null;
             }
-            return new SimpleAuthenticationInfo(studentUserBO, token, "JWTRealm");
+            return new SimpleAuthenticationInfo(wechatStudentUserBO, token, "JWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);
         }catch (Exception e){

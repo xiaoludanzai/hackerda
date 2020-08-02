@@ -2,7 +2,7 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.application.CourseTimetableQueryApp;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.utils.Term;
 import com.hackerda.platform.controller.vo.CourseTimeTableVo;
 import com.hackerda.platform.controller.vo.CourseTimetableOverviewVO;
@@ -30,9 +30,9 @@ public class CourseTimeTableService {
 
     public CourseTimetableOverviewVO getCurrentTermCourseTimeTableByStudent() {
 
-        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
+        WechatStudentUserBO wechatStudentUserBO = (WechatStudentUserBO) SecurityUtils.getSubject().getPrincipal();
 
-        return getCurrentTermCourseTimeTableByStudent(studentUserBO.getAccount());
+        return getCurrentTermCourseTimeTableByStudent(wechatStudentUserBO.getAccount());
     }
 
 

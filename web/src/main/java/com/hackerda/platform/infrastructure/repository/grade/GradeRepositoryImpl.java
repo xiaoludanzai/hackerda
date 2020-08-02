@@ -1,11 +1,11 @@
 package com.hackerda.platform.infrastructure.repository.grade;
 
 import com.hackerda.platform.MDCThreadPool;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.GradeDao;
 import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeRepository;
 import com.hackerda.platform.domain.grade.TermGradeBO;
-import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.Grade;
 import com.hackerda.platform.utils.SchoolTime;
 import com.hackerda.platform.utils.Term;
@@ -80,7 +80,7 @@ public class GradeRepositoryImpl implements GradeRepository {
     }
 
     @Override
-    public List<TermGradeBO> getAllByStudent(StudentUserBO student) {
+    public List<TermGradeBO> getAllByStudent(WechatStudentUserBO student) {
 
         CompletableFuture<List<TermGradeBO>> currentFuture =
                 CompletableFuture.supplyAsync(() -> {
@@ -117,7 +117,7 @@ public class GradeRepositoryImpl implements GradeRepository {
         return gradeList;
     }
 
-    private CompletableFuture<List<TermGradeBO>> getSchemeFuture(StudentUserBO student) {
+    private CompletableFuture<List<TermGradeBO>> getSchemeFuture(WechatStudentUserBO student) {
         if (recorder.needToFetch(FetchScene.EVER_GRADE, student.getAccount().toString())) {
             return CompletableFuture.supplyAsync(() -> {
                 List<TermGradeBO> gradeBOList = gradeToTermGradeList(gradeSpiderFacade.getSchemeGrade(student));

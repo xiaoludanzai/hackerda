@@ -1,6 +1,6 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.constant.SubscribeScene;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class StudentUserRepositoryTest {
 
     @Test
     public void getByAccount() {
-        StudentUserBO account = studentUserRepository.getByAccount(2019022404);
+        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2019022404);
         System.out.println(account);
 
     }
@@ -34,7 +34,7 @@ public class StudentUserRepositoryTest {
     @Test
     public void getSubscribe() {
 
-        List<StudentUserBO> userBOList = studentUserRepository.getSubscribe(SubscribeScene.GRADE_AUTO_UPDATE);
+        List<WechatStudentUserBO> userBOList = studentUserRepository.getSubscribe(SubscribeScene.GRADE_AUTO_UPDATE);
         System.out.println(userBOList.size());
     }
 }

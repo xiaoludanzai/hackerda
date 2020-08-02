@@ -1,7 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
 import com.hackerda.platform.domain.WechatPlatform;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.domain.student.WechatSubscribeBO;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
@@ -26,7 +26,7 @@ public class StudentUserAdapter {
     @Value("${student.password.salt}")
     private String key;
 
-    public StudentUserBO toBO(List<WechatStudentUserDO> wechatStudentUserDOList){
+    public WechatStudentUserBO toBO(List<WechatStudentUserDO> wechatStudentUserDOList){
 
         if(CollectionUtils.isEmpty(wechatStudentUserDOList)) {
            return null;
@@ -46,7 +46,7 @@ public class StudentUserAdapter {
                     Collections.emptyList()).stream().filter(WechatSubscribeBO::isNotNull).collect(Collectors.toList()));
         }
 
-        StudentUserBO bo = new StudentUserBO();
+        WechatStudentUserBO bo = new WechatStudentUserBO();
 
         bo.setAcademyName(studentUser.getAcademyName());
         bo.setAccount(studentUser.getAccount());
@@ -66,19 +66,19 @@ public class StudentUserAdapter {
         return bo;
     }
 
-    public StudentUser toDO(StudentUserBO studentUserBO){
+    public StudentUser toDO(WechatStudentUserBO wechatStudentUserBO){
         StudentUser user = new StudentUser();
 
-        user.setAccount(studentUserBO.getAccount());
-        user.setPassword(studentUserBO.getPassword());
-        user.setIsCorrect(studentUserBO.getIsCorrect());
-        user.setUrpclassNum(studentUserBO.getUrpClassNum());
-        user.setAcademyName(studentUserBO.getAcademyName());
-        user.setClassName(studentUserBO.getClassName());
-        user.setEthnic(studentUserBO.getEthnic());
-        user.setSubjectName(studentUserBO.getSubjectName());
-        user.setSex(studentUserBO.getSex());
-        user.setName(studentUserBO.getName());
+        user.setAccount(wechatStudentUserBO.getAccount());
+        user.setPassword(wechatStudentUserBO.getPassword());
+        user.setIsCorrect(wechatStudentUserBO.getIsCorrect());
+        user.setUrpclassNum(wechatStudentUserBO.getUrpClassNum());
+        user.setAcademyName(wechatStudentUserBO.getAcademyName());
+        user.setClassName(wechatStudentUserBO.getClassName());
+        user.setEthnic(wechatStudentUserBO.getEthnic());
+        user.setSubjectName(wechatStudentUserBO.getSubjectName());
+        user.setSex(wechatStudentUserBO.getSex());
+        user.setName(wechatStudentUserBO.getName());
 
         return user;
     }

@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface StudentUserRepository {
 
-    StudentUserBO getByAccount(int account);
+    WechatStudentUserBO getWetChatUserByAccount(int account);
 
-    List<StudentUserBO> getByAccountList(Collection<Integer> accountList);
+    List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList);
 
-    List<StudentUserBO> getSubscribe(SubscribeScene subscribeScene);
+    List<WechatStudentUserBO> getSubscribe(SubscribeScene subscribeScene);
 
-    void save(StudentUserBO studentUser);
+    void save(WechatStudentUserBO studentUser);
 
 }

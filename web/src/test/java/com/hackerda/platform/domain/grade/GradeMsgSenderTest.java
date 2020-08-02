@@ -2,7 +2,7 @@ package com.hackerda.platform.domain.grade;
 
 import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.course.CourseBO;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -14,8 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @Slf4j
 @ActiveProfiles("prod")
@@ -29,7 +27,7 @@ public class GradeMsgSenderTest {
     @Test
     public void sendUpdateGradeToStudent() {
 
-        StudentUserBO bo = new StudentUserBO();
+        WechatStudentUserBO bo = new WechatStudentUserBO();
 
         bo.setName("test");
 

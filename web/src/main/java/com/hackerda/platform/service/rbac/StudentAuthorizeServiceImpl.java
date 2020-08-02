@@ -1,7 +1,7 @@
 package com.hackerda.platform.service.rbac;
 
 import com.hackerda.platform.application.StudentBindApp;
-import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.domain.constant.ErrorCode;
@@ -28,36 +28,36 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
     @Override
     public StudentUserDetailVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String openid) {
-        StudentUserBO studentUser = studentBindApp.bindByOpenId(account, password, appId, openid);
+        WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(account, password, appId, openid);
 
         return getVO(studentUser);
     }
 
     @Override
     public StudentUserDetailVO appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String code) {
-        StudentUserBO studentUser = studentBindApp.bindByCode(account, password, appId, code);
+        WechatStudentUserBO studentUser = studentBindApp.bindByCode(account, password, appId, code);
 
         return getVO(studentUser);
     }
 
     @Override
     public void appStudentRevokeAuthorize(@Nonnull String account, @Nonnull String appId) {
-        StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
+        WechatStudentUserBO wechatStudentUserBO = (WechatStudentUserBO) SecurityUtils.getSubject().getPrincipal();
 
-        if(studentUserBO == null  && StringUtils.isNotEmpty(account)) {
-            studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+        if(wechatStudentUserBO == null  && StringUtils.isNotEmpty(account)) {
+            wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(Integer.parseInt(account));
         }
 
-        if(studentUserBO == null) {
+        if(wechatStudentUserBO == null) {
             throw new BusinessException(ErrorCode.ACCOUNT_MISS, account+"信息不存在");
         }
 
 
-        studentBindApp.unbindByPlatform(studentUserBO, appId);
+        studentBindApp.unbindByPlatform(wechatStudentUserBO, appId);
 
     }
 
-    private StudentUserDetailVO getVO(StudentUserBO studentUser){
+    private StudentUserDetailVO getVO(WechatStudentUserBO studentUser){
         String account = studentUser.getAccount().toString();
         String token = JwtUtils.signForUserDetail(account, new String[0], new String[0], account);
 

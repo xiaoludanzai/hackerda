@@ -6,5 +6,5 @@ public interface StudentInfoService {
 
     boolean checkCanBind(String account, String appId, String openid);
 
-    StudentUserBO getStudentInfo(String account, String enablePassword);
+    WechatStudentUserBO getStudentInfo(String account, String enablePassword);
 }
