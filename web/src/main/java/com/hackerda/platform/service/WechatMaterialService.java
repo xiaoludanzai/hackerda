@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Service
 @Slf4j
@@ -24,7 +26,6 @@ public class WechatMaterialService {
 
     public WechatArticleVO getArticle() {
 
-
         WxMpMaterialService materialService = wxProService.getMaterialService();
         WechatArticleVO articleVO = new WechatArticleVO();
         try {
@@ -33,6 +34,12 @@ public class WechatMaterialService {
             for (WxMpMaterialNewsBatchGetResult.WxMaterialNewsBatchGetNewsItem newsItem : result.getItems()) {
 
                 Date updateTime = newsItem.getUpdateTime();
+                Calendar instance = GregorianCalendar.getInstance();
+                instance.set(2020, Calendar.MAY, 1);
+                if(updateTime.before(instance.getTime()) ) {
+                    continue;
+                }
+
                 WxMpMaterialNews.WxMpMaterialNewsArticle article = newsItem.getContent().getArticles().get(0);
                 String thumbUrl = article.getThumbUrl();
                 String title = article.getTitle();
