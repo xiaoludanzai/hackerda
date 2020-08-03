@@ -18,7 +18,7 @@ public class WechatMaterialController {
     @RequestMapping("/article")
     public WebResponse<WechatArticleVO> getArticleList() {
 
-        WechatArticleVO article = wechatMaterialService.getArticle();
+        WechatArticleVO article = wechatMaterialService.getShowArticle();
 
         return WebResponse.success(article);
     }

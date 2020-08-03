@@ -65,4 +65,17 @@ public class WechatStudentUserBO extends StudentUserBO{
     }
 
 
+    @Override
+    public String toString() {
+        return "WechatStudentUserBO{" +
+                "account=" + super.getAccount() +
+                ", name='" + super.getName() + '\'' +
+                ", sex='" + super.getSex() + '\'' +
+                ", urpClassNum=" + super.getUrpClassNum() +
+                ", academyName='" + super.getAcademyName() + '\'' +
+                ", subjectName='" + super.getSubjectName() + '\'' +
+                ", className='" + super.getClassName() + '\'' +
+                "wechatOpenidList=" + wechatOpenidList +
+                '}';
+    }
 }

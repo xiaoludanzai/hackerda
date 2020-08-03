@@ -10,20 +10,6 @@ public class StudentUserBO {
 
     private Integer account;
 
-    @Override
-    public String toString() {
-        return "StudentUserBO{" +
-                "account=" + account +
-                ", name='" + name + '\'' +
-                ", sex='" + sex + '\'' +
-                ", urpClassNum=" + urpClassNum +
-                ", isCorrect=" + isCorrect +
-                ", academyName='" + academyName + '\'' +
-                ", subjectName='" + subjectName + '\'' +
-                ", className='" + className + '\'' +
-                '}';
-    }
-
     private String password;
 
     private String name;
@@ -104,5 +90,19 @@ public class StudentUserBO {
                 .append(subjectName)
                 .append(className)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "StudentUserBO{" +
+                "account=" + account +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", urpClassNum=" + urpClassNum +
+                ", isCorrect=" + isCorrect +
+                ", academyName='" + academyName + '\'' +
+                ", subjectName='" + subjectName + '\'' +
+                ", className='" + className + '\'' +
+                '}';
     }
 }

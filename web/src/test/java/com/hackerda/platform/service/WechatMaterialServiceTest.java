@@ -16,6 +16,6 @@ public class WechatMaterialServiceTest {
     @Test
     public void getArticle() {
 
-        wechatMaterialService.getArticle();
+        wechatMaterialService.save();
     }
 }
