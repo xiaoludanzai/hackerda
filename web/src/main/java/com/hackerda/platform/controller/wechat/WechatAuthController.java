@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @RestController
 @RequestMapping("/wechat/portal/{appid}")
-public class WechatController {
+public class WechatAuthController {
 
 	@Resource
 	private HttpSession httpSession;

@@ -1,6 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
 import com.hackerda.platform.domain.WechatPlatform;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.domain.student.WechatSubscribeBO;
@@ -64,6 +65,27 @@ public class StudentUserAdapter {
         bo.setKey(key);
 
         return bo;
+    }
+
+
+    public StudentUserBO toBO(StudentUser studentUser) {
+
+        StudentUserBO user = new StudentUserBO();
+
+        user.setAccount(studentUser.getAccount());
+        user.setPassword(studentUser.getPassword());
+        user.setIsCorrect(studentUser.getIsCorrect());
+        user.setUrpClassNum(studentUser.getUrpclassNum());
+        user.setAcademyName(studentUser.getAcademyName());
+        user.setClassName(studentUser.getClassName());
+        user.setEthnic(studentUser.getEthnic());
+        user.setSubjectName(studentUser.getSubjectName());
+        user.setSex(studentUser.getSex());
+        user.setName(studentUser.getName());
+        user.setKey(key);
+
+        return user;
+
     }
 
     public StudentUser toDO(WechatStudentUserBO wechatStudentUserBO){

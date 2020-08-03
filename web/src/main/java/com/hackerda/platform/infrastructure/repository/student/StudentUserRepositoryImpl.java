@@ -1,11 +1,13 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.infrastructure.database.model.WechatStudentUserDO;
 import com.hackerda.platform.domain.constant.SubscribeScene;
@@ -33,6 +35,12 @@ public class StudentUserRepositoryImpl implements StudentUserRepository {
         List<WechatStudentUserDO> wechatUserByAccount = studentUserDao.getWechatUserByAccount(account);
 
         return studentUserAdapter.toBO(wechatUserByAccount);
+    }
+
+    @Override
+    public StudentUserBO getByAccount(int account) {
+        StudentUser studentUser = studentUserDao.selectStudentByAccount(account);
+        return studentUserAdapter.toBO(studentUser);
     }
 
     public List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList){

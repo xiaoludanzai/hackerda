@@ -93,20 +93,32 @@ public class WechatMpConfiguration {
     private static final Map<String, WxMpService> mpServices = Maps.newHashMap();
 
     @Bean
-    public Object services() {
-        //plus的配置
+    public WxMpService wxPlusService() {
         WxMpInMemoryConfigStorage plusConfig = wechatMpPlusProperties.getWxMpInMemoryConfigStorage();
         WxMpService wxPlusMpService = new WxMpServiceImpl();
         wxPlusMpService.setWxMpConfigStorage(plusConfig);
-        routers.put(wechatMpPlusProperties.getAppId(), this.newRouter(wxPlusMpService));
-        mpServices.put(wechatMpPlusProperties.getAppId(), wxPlusMpService);
+        return wxPlusMpService;
+    }
 
-        //pro的配置
+    @Bean
+    public WxMpService wxProService() {
         WxMpInMemoryConfigStorage proConfig = wechatMpProProperties.getWxMpInMemoryConfigStorage();
         WxMpService wxProMpService = new WxMpServiceImpl();
         wxProMpService.setWxMpConfigStorage(proConfig);
-        routers.put(wechatMpProProperties.getAppId(), this.newRouter(wxProMpService));
-        mpServices.put(wechatMpProProperties.getAppId(), wxProMpService);
+        return wxProMpService;
+    }
+
+    @Bean
+    public Object services(WxMpService wxPlusService, WxMpService wxProService) {
+        //plus的配置
+
+        routers.put(wechatMpPlusProperties.getAppId(), this.newRouter(wxPlusService));
+        mpServices.put(wechatMpPlusProperties.getAppId(), wxPlusService);
+
+        //pro的配置
+
+        routers.put(wechatMpProProperties.getAppId(), this.newRouter(wxProService));
+        mpServices.put(wechatMpProProperties.getAppId(), wxProService);
         return Boolean.TRUE;
     }
 

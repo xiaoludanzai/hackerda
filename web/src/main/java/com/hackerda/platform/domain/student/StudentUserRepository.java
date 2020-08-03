@@ -9,6 +9,8 @@ public interface StudentUserRepository {
 
     WechatStudentUserBO getWetChatUserByAccount(int account);
 
+    StudentUserBO getByAccount(int account);
+
     List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList);
 
     List<WechatStudentUserBO> getSubscribe(SubscribeScene subscribeScene);

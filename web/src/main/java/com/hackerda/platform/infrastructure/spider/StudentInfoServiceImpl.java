@@ -1,7 +1,11 @@
 package com.hackerda.platform.infrastructure.spider;
 
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.StudentInfoService;
+import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
+import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
@@ -35,7 +39,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     @Autowired
     private UrpClassDao urpClassDao;
     @Autowired
-    private StudentUserDao studentUserDao;
+    private StudentUserRepository studentUserRepository;
     @Autowired
     private UrpSearchSpider urpSearchSpider;
     @Autowired
@@ -51,7 +55,11 @@ public class StudentInfoServiceImpl implements StudentInfoService {
             return false;
         } catch (UrpTimeoutException e) {
 
-
+            StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+            if (studentUserBO == null) {
+                throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
+            }
+            return studentUserBO.getIsCorrect();
 
         }
 
