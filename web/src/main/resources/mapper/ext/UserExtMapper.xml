@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.UserExtMapper">
+
+
+
+
+    <insert id="insertStudentRelative" parameterType="java.util.List">
+        insert into user_student (user_name, student_account) values (#{userName}, #{studentAccount})
+    </insert>
+
+    <select id="selectByStudentAccount" resultMap="com.hackerda.platform.infrastructure.database.mapper.UserMapper.BaseResultMap">
+        select u.* from user u
+            join user_student us on u.user_name = us.user_name
+
+        where us.student_account = #{studentAccount}
+    </select>
+</mapper>

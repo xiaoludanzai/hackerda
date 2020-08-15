@@ -35,7 +35,7 @@
     <select id="getWechatUserByAccount" resultMap="WechatStudentUserMap">
         select su.id, su.account, password, name, sex, ethnic, urpclass_num, is_correct, academy_name, subject_name,
                class_name, su.gmt_create, su.gmt_modified,  wo.openid, is_bind, wo.appid, scene, is_subscribe
-        from student_user su
+        from student su
             left join wechat_openid wo on su.account = wo.account
             left join schedule_task st on wo.openid = st.openid and wo.appid = st.appid
 
@@ -46,7 +46,7 @@
     <select id="getWechatUserByAccountList" resultMap="WechatStudentUserMap">
         select su.id, su.account, password, name, sex, ethnic, urpclass_num, is_correct, academy_name, subject_name,
                class_name, su.gmt_create, su.gmt_modified,  wo.openid, is_bind, wo.appid, scene, is_subscribe
-        from student_user su
+        from student su
                  left join wechat_openid wo on su.account = wo.account
                  left join schedule_task st on wo.openid = st.openid and wo.appid = st.appid
 
@@ -61,11 +61,11 @@
             keyProperty="id" keyColumn="id">
 
         <selectKey keyProperty="count" resultType="int" order="BEFORE">
-            SELECT COUNT(*) count FROM student_user where account = #{account}
+            SELECT COUNT(*) count FROM student where account = #{account}
         </selectKey>
 
         <if test="count > 0">
-            UPDATE student_user
+            UPDATE student
             <set >
                 <if test="account != null" >
                     account = #{account,jdbcType=INTEGER},
@@ -106,7 +106,7 @@
             </where>
         </if>
         <if test="count == 0">
-            insert into student_user
+            insert into student
             <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="account != null" >
                     account,

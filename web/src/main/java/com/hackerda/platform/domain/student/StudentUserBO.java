@@ -56,6 +56,10 @@ public class StudentUserBO {
         return DESUtil.decrypt(this.password, this.account + key);
     }
 
+    public boolean isUsingDefaultPassword () {
+        return "1".equals(getEnablePassword());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -2,10 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.RoleExtMapper">
 
-    <select id="selectPermissionById" resultMap="com.hackerda.platform.infrastructure.database.mapper.PermissionMapper.BaseResultMap">
+    <resultMap id="RoleDetailMap" type="com.hackerda.platform.infrastructure.database.model.RoleDetailDO">
+        <result column="name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="code" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="permission_name" property="permissionName" jdbcType="VARCHAR"/>
+        <result column="permission_code" property="permissionCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertUserRoleRelative">
+        insert into user_role (user_name, role_code) values
+        <foreach collection="roleCodeList" item="item" index="index" separator=",">
+            (#{userName,jdbcType=VARCHAR},#{item,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+
+    <select id="selectPermissionById"
+            resultMap="com.hackerda.platform.infrastructure.database.mapper.PermissionMapper.BaseResultMap">
         select p.id, p.permission_name, p.permission_code
         from role_permission rp
                  join permission p on rp.permission_id = p.id
         where rp.role_id = #{roleId}
+    </select>
+
+
+    <select id="selectRoleDetailByCode" resultMap="RoleDetailMap">
+        select r.name, r.code, p.permission_name, p.permission_code
+        from role r
+                 left join role_permission rp on r.id = rp.role_id
+                 left join permission p on rp.permission_id = p.id
+        where r.code = #{roleCode}
+    </select>
+
+    <select id="selectRoleDetailByUserName" resultMap="RoleDetailMap">
+        select r.name, r.code, p.permission_name, p.permission_code
+        from role r
+                 left join user_role ur on ur.role_code = r.code
+                 left join role_permission rp on r.id = rp.role_id
+                 left join permission p on rp.permission_id = p.id
+        where ur.user_name = #{userName}
     </select>
 </mapper>

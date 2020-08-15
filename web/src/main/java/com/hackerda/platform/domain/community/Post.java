@@ -10,10 +10,6 @@ import java.util.List;
 
 public class Post {
 
-    private Long id;
-    /** 标题 **/
-    private String title;
-
     /** 发布者信息 **/
     private PostUser postUser;
 
@@ -31,10 +27,10 @@ public class Post {
     private Date lastReplyTime;
 
     /** 图片文件信息集合 **/
-    private List<ImageInfo> imageInfoList = new ArrayList<>();
+    private List<ImageInfo> imageInfoList = new ArrayList<>(0);
 
     /** 媒体文件信息集合 **/
-    private List<MediaInfo> mediaInfoList = new ArrayList<>();
+    private List<MediaInfo> mediaInfoList = new ArrayList<>(0);
 
     /** 评论总数 **/
     private Long commentTotal = 0L;

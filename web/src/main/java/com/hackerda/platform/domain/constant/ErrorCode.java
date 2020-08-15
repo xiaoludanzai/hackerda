@@ -39,6 +39,16 @@ public enum  ErrorCode {
 	ACCOUNT_MISS(409),
 
 	/**
+	 * 用户手机号或者用户名已经被注册
+	 */
+	USER_ACCOUNT_EXIST(410),
+
+	/**
+	 * 请求参数校验不通过
+	 */
+	DATA_NOT_VALID(411),
+
+	/**
 	 *服务器端错误
 	 */
 	SYSTEM_ERROR(500),

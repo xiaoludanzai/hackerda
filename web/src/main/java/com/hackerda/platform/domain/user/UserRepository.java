@@ -1,13 +1,10 @@
 package com.hackerda.platform.domain.user;
 
-import org.springframework.stereotype.Repository;
+import com.hackerda.platform.domain.student.StudentAccount;
 
-@Repository
 public interface UserRepository {
 
+    AppStudentUserBO findByStudentAccount(StudentAccount account);
 
-    UserBO findByStudentAccount(int account);
-
-
-    
+    void store(AppStudentUserBO appStudentUserBO);
 }

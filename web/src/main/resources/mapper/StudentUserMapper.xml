@@ -84,7 +84,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from student_user
+    from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -95,21 +95,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from student_user
+    from student
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from student_user
+    delete from student
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" >
-    delete from student_user
+    delete from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    insert into student_user (id, account, password, 
+    insert into student (id, account, password,
       name, sex, ethnic, 
       urpclass_num, is_correct, gmt_create, 
       gmt_modified, academy_name, subject_name, 
@@ -121,7 +121,7 @@
       #{className,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    insert into student_user
+    insert into student
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -206,13 +206,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" resultType="java.lang.Integer" >
-    select count(*) from student_user
+    select count(*) from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update student_user
+    update student
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -259,7 +259,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update student_user
+    update student
     set id = #{record.id,jdbcType=INTEGER},
       account = #{record.account,jdbcType=INTEGER},
       password = #{record.password,jdbcType=VARCHAR},
@@ -278,7 +278,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    update student_user
+    update student
     <set >
       <if test="account != null" >
         account = #{account,jdbcType=INTEGER},
@@ -320,7 +320,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    update student_user
+    update student
     set account = #{account,jdbcType=INTEGER},
       password = #{password,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},

@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 评论
+ *
+ * 回复也是评论的一种
+ */
 public class Comment {
-
-    private Long id;
 
     /** 根评论的id **/
     private Long rootId;
@@ -29,8 +32,6 @@ public class Comment {
     private String content;
     /** 评论时间 **/
     private Date postTime = new Date();
-
-
     /** 用户角色名称集合 **/
     private List<String> userRoleNameList = new ArrayList<>();
     /** 总回复数 **/
