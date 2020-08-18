@@ -19,14 +19,17 @@ public class Comment {
 
     private boolean isRoot;
 
-    private PostUser replyUser;
+    private Poster replyUser;
 
     private ImageInfo imageInfo;
+
+    /** 用户身份 **/
+    private IdentityCategory identityCategory;
 
     /** 话题Id **/
     private Long postId;
     /** 状态 10.待审核 20.已发布 **/
-    private Integer status = 10;
+    private RecordStatus status;
 
     /** 评论内容 **/
     private String content;

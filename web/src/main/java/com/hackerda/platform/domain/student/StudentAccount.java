@@ -23,4 +23,7 @@ public class StudentAccount {
         return account;
     }
 
+    public String getGrade(){
+        return account.substring(0, 4);
+    }
 }

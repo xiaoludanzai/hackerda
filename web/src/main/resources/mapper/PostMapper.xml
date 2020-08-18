@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.PostMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.Post">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="allow_comment" jdbcType="TINYINT" property="allowComment" />
+    <result column="identity_code" jdbcType="INTEGER" property="identityCode" />
+    <result column="post_time" jdbcType="TIMESTAMP" property="postTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="view_count" jdbcType="INTEGER" property="viewCount" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_name, content, allow_comment, identity_code, post_time, `status`, comment_count, 
+    like_count, view_count, gmt_create, gmt_modify
+  </sql>
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.PostExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from post
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.PostExample">
+    delete from post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Post" useGeneratedKeys="true">
+    insert into post (user_name, content, allow_comment, 
+      identity_code, post_time, `status`, 
+      comment_count, like_count, view_count, 
+      gmt_create, gmt_modify)
+    values (#{userName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{allowComment,jdbcType=TINYINT}, 
+      #{identityCode,jdbcType=INTEGER}, #{postTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{commentCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Post" useGeneratedKeys="true">
+    insert into post
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="allowComment != null">
+        allow_comment,
+      </if>
+      <if test="identityCode != null">
+        identity_code,
+      </if>
+      <if test="postTime != null">
+        post_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="viewCount != null">
+        view_count,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="allowComment != null">
+        #{allowComment,jdbcType=TINYINT},
+      </if>
+      <if test="identityCode != null">
+        #{identityCode,jdbcType=INTEGER},
+      </if>
+      <if test="postTime != null">
+        #{postTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="viewCount != null">
+        #{viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.PostExample" resultType="java.lang.Long">
+    select count(*) from post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update post
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allowComment != null">
+        allow_comment = #{record.allowComment,jdbcType=TINYINT},
+      </if>
+      <if test="record.identityCode != null">
+        identity_code = #{record.identityCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.postTime != null">
+        post_time = #{record.postTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.viewCount != null">
+        view_count = #{record.viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModify != null">
+        gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update post
+    set id = #{record.id,jdbcType=BIGINT},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      allow_comment = #{record.allowComment,jdbcType=TINYINT},
+      identity_code = #{record.identityCode,jdbcType=INTEGER},
+      post_time = #{record.postTime,jdbcType=TIMESTAMP},
+      `status` = #{record.status,jdbcType=INTEGER},
+      comment_count = #{record.commentCount,jdbcType=INTEGER},
+      like_count = #{record.likeCount,jdbcType=INTEGER},
+      view_count = #{record.viewCount,jdbcType=INTEGER},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.Post">
+    update post
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="allowComment != null">
+        allow_comment = #{allowComment,jdbcType=TINYINT},
+      </if>
+      <if test="identityCode != null">
+        identity_code = #{identityCode,jdbcType=INTEGER},
+      </if>
+      <if test="postTime != null">
+        post_time = #{postTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="viewCount != null">
+        view_count = #{viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.Post">
+    update post
+    set user_name = #{userName,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      allow_comment = #{allowComment,jdbcType=TINYINT},
+      identity_code = #{identityCode,jdbcType=INTEGER},
+      post_time = #{postTime,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      view_count = #{viewCount,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

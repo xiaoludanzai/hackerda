@@ -1,6 +1,8 @@
 package com.hackerda.platform.infrastructure.database.dao.user;
 
+import com.hackerda.platform.domain.community.StudentPoster;
 import com.hackerda.platform.infrastructure.database.mapper.ext.UserExtMapper;
+import com.hackerda.platform.infrastructure.database.model.StudentPosterDO;
 import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.UserExample;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +37,9 @@ public class UserDao {
 
     public User selectByStudentAccount(String studentAccount) {
         return userExtMapper.selectByStudentAccount(studentAccount).stream().findFirst().orElse(null);
+    }
+
+    public StudentPosterDO selectByStudentPoster(String studentAccount) {
+        return userExtMapper.selectByStudentPoster(studentAccount);
     }
 }
