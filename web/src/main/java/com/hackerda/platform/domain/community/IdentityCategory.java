@@ -104,7 +104,7 @@ public enum IdentityCategory {
 
     private final int code;
 
-    private static Map<Integer, IdentityCategory> codeMap ;
+    private static Map<Integer, IdentityCategory> codeMap;
 
     IdentityCategory(int code) {
         this.code = code;

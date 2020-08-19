@@ -2,6 +2,7 @@ package com.hackerda.platform.infrastructure.repository.user;
 
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.AppStudentUserBO;
+import com.hackerda.platform.domain.user.AppUserBO;
 import com.hackerda.platform.domain.user.RoleBO;
 import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.infrastructure.database.dao.rbac.RoleDao;
@@ -27,6 +28,12 @@ public class UserRepositoryImpl implements UserRepository {
     public AppStudentUserBO findByStudentAccount(StudentAccount account) {
         User user = userDao.selectByStudentAccount(account.getAccount());
         return userAdapter.toStudentBO(user, account);
+    }
+
+    @Override
+    public AppUserBO findByUserName(String userName) {
+        User user = userDao.selectByUserName(userName);
+        return userAdapter.toBO(user);
     }
 
 

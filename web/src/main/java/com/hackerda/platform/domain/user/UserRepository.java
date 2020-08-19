@@ -6,5 +6,7 @@ public interface UserRepository {
 
     AppStudentUserBO findByStudentAccount(StudentAccount account);
 
+    AppUserBO findByUserName(String userName);
+
     void store(AppStudentUserBO appStudentUserBO);
 }

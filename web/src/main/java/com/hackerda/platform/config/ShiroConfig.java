@@ -1,12 +1,16 @@
 package com.hackerda.platform.config;
 
+import com.google.common.collect.Lists;
+import com.hackerda.platform.controller.auth.*;
 import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.service.rbac.UserDetailService;
-import com.hackerda.platform.controller.auth.JWTRealm;
-import com.hackerda.platform.controller.auth.JWTToken;
-import com.hackerda.platform.controller.auth.RestFilter;
+import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -16,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,23 +32,37 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
-    public JWTRealm JWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
-        JWTRealm jwtRealm = new JWTRealm(userDetailService, studentUserRepository);
-        jwtRealm.setAuthenticationTokenClass(JWTToken.class);
-        return jwtRealm;
+    public StudentJWTRealm studentJWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
+        StudentJWTRealm studentJwtRealm = new StudentJWTRealm(userDetailService, studentUserRepository);
+        studentJwtRealm.setAuthenticationTokenClass(JWTToken.class);
+        return studentJwtRealm;
+    }
+
+    @Bean
+    public UserJWTRealm userJWTRealm(UserRepository userRepository){
+        UserJWTRealm studentJwtRealm = new UserJWTRealm(userRepository);
+        studentJwtRealm.setAuthenticationTokenClass(UserJWTToken.class);
+        return studentJwtRealm;
     }
 
     @Bean("securityManager")
-    public DefaultWebSecurityManager getManager(JWTRealm realm) {
+    public DefaultWebSecurityManager getManager(StudentJWTRealm studentJWTRealm, UserJWTRealm userJWTRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 使用自己的realm
-        manager.setRealm(realm);
+
+        List<Realm> realms = Lists.newArrayList(studentJWTRealm, userJWTRealm);
+        manager.setRealms(realms);
 
         /*
          * 关闭shiro自带的session，详情见文档
          * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
          */
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+
+        ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+        modularRealmAuthenticator.setAuthenticationStrategy(new FirstSuccessfulStrategy());
+        modularRealmAuthenticator.setRealms(realms);
+        manager.setAuthenticator(modularRealmAuthenticator);
 
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);

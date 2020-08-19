@@ -26,15 +26,14 @@ import java.util.stream.Collectors;
  * @author chenjuanrong
  */
 @Slf4j
-public class JWTRealm extends AuthorizingRealm {
+public class StudentJWTRealm extends AuthorizingRealm {
 
     private final UserDetailService userDetailService;
     private final StudentUserRepository studentUserRepository;
 
-    public JWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
+    public StudentJWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
         this.userDetailService = userDetailService;
         this.studentUserRepository = studentUserRepository;
-
     }
 
     /**
@@ -84,7 +83,7 @@ public class JWTRealm extends AuthorizingRealm {
                 log.error("student account {} verify error {}", username, wechatStudentUserBO);
                 return null;
             }
-            return new SimpleAuthenticationInfo(wechatStudentUserBO, token, "JWTRealm");
+            return new SimpleAuthenticationInfo(wechatStudentUserBO, token, "studentJWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);
         }catch (Exception e){

@@ -23,6 +23,13 @@ public class UserDao {
         return userExtMapper.selectByExample(example).stream().findFirst().orElse(null);
     }
 
+    public User selectByUserName(String userName) {
+        UserExample example = new UserExample();
+        example.createCriteria().andUserNameEqualTo(userName);
+
+        return userExtMapper.selectByExample(example).stream().findFirst().orElse(null);
+    }
+
     public void insert(User user) {
         if(user == null) {
             log.warn("user is empty");

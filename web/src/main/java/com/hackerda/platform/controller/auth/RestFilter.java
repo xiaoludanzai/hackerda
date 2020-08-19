@@ -2,6 +2,7 @@ package com.hackerda.platform.controller.auth;
 
 import com.hackerda.platform.controller.auth.JWTToken;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 
 import javax.servlet.ServletRequest;
@@ -38,8 +39,15 @@ public class RestFilter extends BasicHttpAuthenticationFilter {
         if(!isLoginAttempt(request)){
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String token = httpServletRequest.getParameter("token");
+            String servletPath = httpServletRequest.getServletPath();
+
             try {
-                getSubject(request, response).login(new JWTToken(token));
+                if (servletPath.contains("community")) {
+                    getSubject(request, response).login(new UserJWTToken(token));
+                }else {
+                    getSubject(request, response).login(new JWTToken(token));
+                }
+
             }catch (AuthenticationException e){
                 sendChallenge(request, response);
             }
@@ -47,5 +55,18 @@ public class RestFilter extends BasicHttpAuthenticationFilter {
 
         return true;
 
+    }
+
+    private AuthenticationToken getToken(ServletRequest request) {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String token = httpServletRequest.getParameter("token");
+        String servletPath = httpServletRequest.getServletPath();
+
+        if (servletPath.contains("community")) {
+            return new UserJWTToken(token);
+        }else {
+            return new JWTToken(token);
+        }
     }
 }

@@ -54,4 +54,24 @@ public class UserAdapter {
 
         return appStudentUserBO;
     }
+
+    @Nullable
+    public AppUserBO toBO(User user) {
+        if(user == null) {
+            return null;
+        }
+
+        PhoneNumber phoneNumber = new PhoneNumber(user.getMobile());
+
+        AppUserBO appUserBO = new AppUserBO(user.getUserName(), user.getNickName(),
+                user.getPassword(),
+                user.getSalt(),
+                user.getAvatarPath(),
+                phoneNumber, Gender.formCode(user.getGender()),
+                user.getIntroduction(), user.getUseDefaultPassword() == (byte) 1);
+
+        appUserBO.setUserType(UserType.getByCode(user.getUserType()));
+
+        return appUserBO;
+    }
 }
