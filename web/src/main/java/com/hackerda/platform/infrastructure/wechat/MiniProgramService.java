@@ -2,6 +2,7 @@ package com.hackerda.platform.infrastructure.wechat;
 
 
 import com.hackerda.platform.config.wechat.MiniProgramProperties;
+import com.hackerda.platform.domain.community.ContentSecurityCheckService;
 import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.infrastructure.database.dao.ScheduleTaskDao;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
@@ -24,16 +25,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class MiniProgramService implements WechatAuthService {
+public class MiniProgramService implements WechatAuthService, ContentSecurityCheckService {
     @Resource
     private MiniProgramProperties miniProgramProperties;
     @Resource
@@ -49,6 +54,8 @@ public class MiniProgramService implements WechatAuthService {
             "=%s";
 
     private static final String SEND_SUBSCRIBE = root+ "/cgi-bin/message/subscribe/send?access_token=%s";
+
+    private static final String msg_check = root + "/wxa/msg_sec_check?access_token=%s";
 
     public AuthResponse auth(String code) {
 
@@ -151,5 +158,41 @@ public class MiniProgramService implements WechatAuthService {
     @Override
     public String appCodeToOpenId(String code) {
         return auth(code).getOpenid();
+    }
+
+    @Override
+    public boolean isSecurityContent(String content) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("content", content);
+        
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);
+        headers.setContentType(mediaType);
+        HttpEntity<String> request = new HttpEntity<>(JSON.toJSONString(map), headers);
+        try {
+            String url = String.format(msg_check, getAccessToken());
+            ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
+
+            Response response = parseResponse(entity.getBody(), Response.class);
+
+            if(response.getErrcode() == 0){
+                return true;
+            }
+            else if(response.getErrcode() == 87014) {
+                return false;
+            }
+            else {
+                log.info("check msg security error response {}", response);
+                return true;
+            }
+        } catch (Throwable throwable) {
+            log.error("check msg security error", throwable);
+            return true;
+        }
+
+
+
     }
 }

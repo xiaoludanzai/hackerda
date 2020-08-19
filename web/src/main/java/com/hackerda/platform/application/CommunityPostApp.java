@@ -17,7 +17,7 @@ public class CommunityPostApp {
 
     public void createPost(PostBO postBO) {
 
-        if(!contentSecurityCheckService.checkMsg(postBO.getContent())) {
+        if(!contentSecurityCheckService.isSecurityContent(postBO.getContent())) {
             postBO.setStatus(RecordStatus.UnderReview);
         }else {
             postBO.setStatus(RecordStatus.Release);

@@ -51,4 +51,16 @@ public class PostBO {
         this.identityCategory = identityCategory;
         this.postTime = postTime;
     }
+
+    public boolean isRelease() {
+        return status == RecordStatus.Release;
+    }
+
+    public String getUnReleaseReason() {
+        if(status != RecordStatus.Release) {
+            return "包含违规内容，校验不通过";
+        }else {
+            return "";
+        }
+    }
 }

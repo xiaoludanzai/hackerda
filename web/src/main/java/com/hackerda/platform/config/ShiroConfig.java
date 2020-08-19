@@ -91,6 +91,7 @@ public class ShiroConfig {
         Map<String, String> filterRuleMap = new HashMap<>(4);
         // 所有请求通过我们自己的JWT Filter
         filterRuleMap.put("/api/**", RestFilter.NAME);
+        filterRuleMap.put("/community/**", RestFilter.NAME);
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

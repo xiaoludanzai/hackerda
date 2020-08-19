@@ -1,6 +1,8 @@
 package com.hackerda.platform.controller.auth;
 
 import com.hackerda.platform.controller.auth.JWTToken;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.record.HeaderFooterRecord;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -37,17 +39,9 @@ public class RestFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {
         if(!isLoginAttempt(request)){
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            String token = httpServletRequest.getParameter("token");
-            String servletPath = httpServletRequest.getServletPath();
 
             try {
-                if (servletPath.contains("community")) {
-                    getSubject(request, response).login(new UserJWTToken(token));
-                }else {
-                    getSubject(request, response).login(new JWTToken(token));
-                }
-
+                getSubject(request, response).login(getToken(request));
             }catch (AuthenticationException e){
                 sendChallenge(request, response);
             }
@@ -60,7 +54,10 @@ public class RestFilter extends BasicHttpAuthenticationFilter {
     private AuthenticationToken getToken(ServletRequest request) {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getParameter("token");
+        String token = httpServletRequest.getHeader("Authorization");
+        if(StringUtils.isEmpty(token)) {
+            token = httpServletRequest.getParameter("token");
+        }
         String servletPath = httpServletRequest.getServletPath();
 
         if (servletPath.contains("community")) {

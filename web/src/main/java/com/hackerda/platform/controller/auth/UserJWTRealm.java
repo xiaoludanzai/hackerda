@@ -47,7 +47,7 @@ public class UserJWTRealm extends AuthorizingRealm {
                 return null;
             }
             JwtUtils.verify(token, username, userBO.getSalt());
-            return new SimpleAuthenticationInfo(userBO, token, "userJWTRealm");
+            return new SimpleAuthenticationInfo(username, token, "userJWTRealm");
         }catch (JWTVerificationException e){
             return null;
         }catch (Exception e){
