@@ -1,5 +1,6 @@
 package com.hackerda.platform.service;
 
+import com.hackerda.platform.controller.vo.WechatArticleVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class WechatMaterialServiceTest {
     @Test
     public void getArticle() {
 
-        wechatMaterialService.save();
+        WechatArticleVO showArticle = wechatMaterialService.getShowArticle();
+
+        System.out.println(showArticle);
     }
 }

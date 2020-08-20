@@ -112,6 +112,5 @@ public class StudentBindAppTest {
         WechatStudentUserBO except = studentUserRepository.getWetChatUserByAccount(2014025838);
 
         assertThat(actual).isEqualTo(except);
-
     }
 }

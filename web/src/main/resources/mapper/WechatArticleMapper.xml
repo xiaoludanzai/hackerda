@@ -116,7 +116,7 @@
       )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.WechatArticle" useGeneratedKeys="true">
-    insert into wechat_article
+    insert ignore into wechat_article
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="mediaId != null">
         media_id,

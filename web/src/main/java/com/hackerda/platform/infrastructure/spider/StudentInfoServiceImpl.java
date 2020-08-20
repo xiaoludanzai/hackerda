@@ -113,13 +113,11 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
             SearchClassInfoPost post = new SearchClassInfoPost();
             String start = account.substring(0, 4);
-            int end = Integer.parseInt(start) + 1;
             post.setYearNum(start);
-            post.setExecutiveEducationPlanNum(start + "-"+ end + "-1-1");
 
             List<UrpClass> results = searchUrpClass(post);
             Map<String, UrpClass> collect = results.stream()
-                    .collect(Collectors.toMap(UrpClass::getClassName, x -> x));
+                    .collect(Collectors.toMap(UrpClass::getClassName, x -> x, (k1, k2) -> k1));
 
 
             urpClassDao.insertBatch(new ArrayList<>(collect.values()));

@@ -126,7 +126,7 @@ public class UrpSearchSpiderImpl extends UrpBaseSpider implements UrpSearchSpide
 
     @Override
     public List<SearchResult<ClassInfoSearchResult>> searchClassInfo(SearchClassInfoPost searchClassInfoPost) {
-
+        login();
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("param_value", searchClassInfoPost.getParamValue());
         map.add("executiveEducationPlanNum", searchClassInfoPost.getExecutiveEducationPlanNum());
