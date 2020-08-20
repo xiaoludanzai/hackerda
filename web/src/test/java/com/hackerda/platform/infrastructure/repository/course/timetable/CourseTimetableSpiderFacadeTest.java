@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RunWith(SpringRunner.class)
-@ActiveProfiles("beta")
+@ActiveProfiles("prod")
 @SpringBootTest
 public class CourseTimetableSpiderFacadeTest {
 
@@ -27,9 +27,13 @@ public class CourseTimetableSpiderFacadeTest {
     @Test
     public void test(){
 
-        WechatStudentUserBO byAccount = studentUserRepository.getWetChatUserByAccount(2017025838);
+        WechatStudentUserBO byAccount = studentUserRepository.getWetChatUserByAccount(2017026003);
 
-        List<CourseTimetableDetailDO> id = courseTimetableSpiderFacade.getByClassID("2019-2020", 2, byAccount.getUrpClassNum().toString());
+        List<CourseTimetableDetailDO> id = courseTimetableSpiderFacade.getByClassID("2020-2021", 1,
+                byAccount.getUrpClassNum().toString());
+        for (CourseTimetableDetailDO detailDO : id) {
+            System.out.println(detailDO);
+        }
 
 
     }

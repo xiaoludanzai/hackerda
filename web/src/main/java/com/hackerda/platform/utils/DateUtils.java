@@ -88,7 +88,7 @@ public class DateUtils {
         SchoolTime schoolTime = new SchoolTime();
         schoolTime.setDay(getCurrentDay());
         schoolTime.setSchoolWeek(getCurrentWeek());
-        schoolTime.setTerm(new Term(2019, 2020, 2));
+        schoolTime.setTerm(new Term(2020, 2021, 1));
         return schoolTime;
     }
 
