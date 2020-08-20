@@ -15,7 +15,7 @@ public class FetchStatusRecorder {
     public boolean needToFetch(FetchScene fetchScene, String account){
         SetOperations<String, String> opsForSet = stringRedisTemplate.opsForSet();
 
-        return BooleanUtils.toBoolean(opsForSet.isMember(fetchScene.getKey(), account));
+        return !BooleanUtils.toBoolean(opsForSet.isMember(fetchScene.getKey(), account));
     }
 
 
@@ -32,6 +32,13 @@ public class FetchStatusRecorder {
         SetOperations<String, String> opsForSet = stringRedisTemplate.opsForSet();
 
         opsForSet.remove(fetchScene.getKey(), account);
+    }
+
+
+    public void clearRecord(FetchScene fetchScene){
+
+
+        stringRedisTemplate.delete(fetchScene.getKey());
     }
 
 

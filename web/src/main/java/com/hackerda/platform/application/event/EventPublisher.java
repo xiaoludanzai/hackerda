@@ -16,8 +16,5 @@ public class EventPublisher {
         applicationContext.publishEvent(new FetchFinishEvent(this, account, FetchScene.EVER_GRADE));
     }
 
-    public void publishPasswordUnCorrect(String account) {
-        applicationContext.publishEvent(new FetchFinishEvent(this, account, FetchScene.EVER_GRADE));
-    }
 
 }
