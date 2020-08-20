@@ -22,16 +22,19 @@ public class CourseTimetableQueryApp {
         CourseTimeTableOverview timeTableOverview;
         timeTableOverview = courseTimetableRepository.getByAccount(wechatStudentUserBO, termYear, termOrder);
 
-        if(timeTableOverview.isEmpty()){
+        if(timeTableOverview.isEmpty() || !timeTableOverview.isCurrentTerm()){
             timeTableOverview = courseTimetableRepository.getByClassId(wechatStudentUserBO.getUrpClassNum().toString(), termYear,
                     termOrder);
         }
 
-        if(timeTableOverview.isPersonal()){
-            courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), wechatStudentUserBO);
-        }else {
-            courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), wechatStudentUserBO.getUrpClassNum().toString());
+        if(timeTableOverview.isCurrentTerm()) {
+            if(timeTableOverview.isPersonal()){
+                courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), wechatStudentUserBO);
+            }else {
+                courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), wechatStudentUserBO.getUrpClassNum().toString());
+            }
         }
+
 
 
         return timeTableOverview;
