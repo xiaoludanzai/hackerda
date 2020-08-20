@@ -8,7 +8,7 @@
     <result column="allow_comment" jdbcType="TINYINT" property="allowComment" />
     <result column="identity_code" jdbcType="INTEGER" property="identityCode" />
     <result column="post_time" jdbcType="TIMESTAMP" property="postTime" />
-    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="record_status" jdbcType="INTEGER" property="recordStatus" />
     <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
@@ -74,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_name, content, allow_comment, identity_code, post_time, `status`, comment_count, 
+    id, user_name, content, allow_comment, identity_code, post_time, record_status, comment_count, 
     like_count, view_count, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.PostExample" resultMap="BaseResultMap">
@@ -109,11 +109,11 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Post" useGeneratedKeys="true">
     insert into post (user_name, content, allow_comment, 
-      identity_code, post_time, `status`, 
+      identity_code, post_time, record_status, 
       comment_count, like_count, view_count, 
       gmt_create, gmt_modify)
     values (#{userName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{allowComment,jdbcType=TINYINT}, 
-      #{identityCode,jdbcType=INTEGER}, #{postTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{identityCode,jdbcType=INTEGER}, #{postTime,jdbcType=TIMESTAMP}, #{recordStatus,jdbcType=INTEGER}, 
       #{commentCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER}, 
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
@@ -135,8 +135,8 @@
       <if test="postTime != null">
         post_time,
       </if>
-      <if test="status != null">
-        `status`,
+      <if test="recordStatus != null">
+        record_status,
       </if>
       <if test="commentCount != null">
         comment_count,
@@ -170,8 +170,8 @@
       <if test="postTime != null">
         #{postTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=INTEGER},
       </if>
       <if test="commentCount != null">
         #{commentCount,jdbcType=INTEGER},
@@ -217,8 +217,8 @@
       <if test="record.postTime != null">
         post_time = #{record.postTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.status != null">
-        `status` = #{record.status,jdbcType=INTEGER},
+      <if test="record.recordStatus != null">
+        record_status = #{record.recordStatus,jdbcType=INTEGER},
       </if>
       <if test="record.commentCount != null">
         comment_count = #{record.commentCount,jdbcType=INTEGER},
@@ -248,7 +248,7 @@
       allow_comment = #{record.allowComment,jdbcType=TINYINT},
       identity_code = #{record.identityCode,jdbcType=INTEGER},
       post_time = #{record.postTime,jdbcType=TIMESTAMP},
-      `status` = #{record.status,jdbcType=INTEGER},
+      record_status = #{record.recordStatus,jdbcType=INTEGER},
       comment_count = #{record.commentCount,jdbcType=INTEGER},
       like_count = #{record.likeCount,jdbcType=INTEGER},
       view_count = #{record.viewCount,jdbcType=INTEGER},
@@ -276,8 +276,8 @@
       <if test="postTime != null">
         post_time = #{postTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="status != null">
-        `status` = #{status,jdbcType=INTEGER},
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=INTEGER},
       </if>
       <if test="commentCount != null">
         comment_count = #{commentCount,jdbcType=INTEGER},
@@ -304,7 +304,7 @@
       allow_comment = #{allowComment,jdbcType=TINYINT},
       identity_code = #{identityCode,jdbcType=INTEGER},
       post_time = #{postTime,jdbcType=TIMESTAMP},
-      `status` = #{status,jdbcType=INTEGER},
+      record_status = #{recordStatus,jdbcType=INTEGER},
       comment_count = #{commentCount,jdbcType=INTEGER},
       like_count = #{likeCount,jdbcType=INTEGER},
       view_count = #{viewCount,jdbcType=INTEGER},
@@ -312,4 +312,12 @@
       gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectShowPost"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post
+    where id >= #{startId,jdbcType=INTEGER}  and record_status= 0  limit #{count,jdbcType=INTEGER}
+
+  </select>
 </mapper>

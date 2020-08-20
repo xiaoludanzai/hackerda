@@ -2,8 +2,7 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.application.CommunityPostApp;
 import com.hackerda.platform.controller.request.CreatePostRequest;
-import com.hackerda.platform.controller.vo.CreatePostResultVO;
-import com.hackerda.platform.controller.vo.PostIdentityVO;
+import com.hackerda.platform.controller.vo.*;
 import com.hackerda.platform.domain.community.*;
 import com.hackerda.platform.domain.student.StudentAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +54,55 @@ public class CommunityPostService {
         createPostResultVO.setErrMsg(postBO.getUnReleaseReason());
 
         return createPostResultVO;
+    }
+
+
+    public PostDetailVO getPostDetail(int startId, int count) {
+        List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
+
+        List<PostVO> postVOList = detailBOList.stream().map(x -> {
+
+            PostVO postVO = new PostVO();
+
+            postVO.setId(x.getId())
+                    .setContent(x.getContent())
+                    .setAllowComment(x.isAllowComment())
+                    .setAvatar(x.getShowAvatar())
+                    .setUserName(x.getUserName())
+                    .setViewCount(x.getViewCount())
+                    .setCommentCount(x.getCommentCount())
+                    .setLikeCount(x.getLikeCount())
+                    .setShowUserName(x.getShowUserName())
+                    .setPostTime(x.getPostTime());
+
+            List<ImageInfoVO> imageInfoVOList = x.getImageInfoList().stream().map(imageInfo -> {
+                ImageInfoVO infoVO = new ImageInfoVO();
+                infoVO.setFileId(imageInfo.getFileId());
+                infoVO.setUrl(imageInfo.getPath());
+                return infoVO;
+            }).collect(Collectors.toList());
+
+            postVO.setImageInfoList(imageInfoVOList);
+
+            return postVO;
+
+        }).collect(Collectors.toList());
+
+
+        PostDetailVO postDetailVO = new PostDetailVO();
+
+        postDetailVO.setPostList(postVOList);
+
+        postDetailVO.setCount(postVOList.size());
+
+        Long maxId = postVOList.stream()
+                .map(PostVO::getId)
+                .max(Long::compareUnsigned)
+                .orElse(-1L);
+
+        postDetailVO.setMaxId(maxId);
+
+        return postDetailVO;
+
     }
 }

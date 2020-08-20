@@ -1,10 +1,8 @@
 package com.hackerda.platform.infrastructure.repository;
 
-import com.hackerda.platform.domain.community.PostBO;
-import com.hackerda.platform.domain.community.PostDetailBO;
-import com.hackerda.platform.domain.community.PosterRepository;
-import com.hackerda.platform.domain.community.StudentPoster;
+import com.hackerda.platform.domain.community.*;
 import com.hackerda.platform.domain.student.StudentAccount;
+import com.hackerda.platform.domain.user.Gender;
 import com.hackerda.platform.infrastructure.database.dao.ImageDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.mapper.PostMapper;
@@ -33,8 +31,19 @@ public class PosterRepositoryImpl implements PosterRepository {
 
         StudentPosterDO studentPosterDO = userDao.selectByStudentPoster(studentAccount.getAccount());
 
+        return getStudentPoster(studentPosterDO, studentAccount);
+    }
+
+    @Override
+    public StudentPoster findStudentPosterByUserName(String userName) {
+        StudentPosterDO studentPosterDO = userDao.selectStudentPosterByUserName(userName);
+        StudentAccount studentAccount = new StudentAccount(studentPosterDO.getAccount());
+        return getStudentPoster(studentPosterDO, studentAccount);
+    }
+
+    private StudentPoster getStudentPoster(StudentPosterDO studentPosterDO, StudentAccount studentAccount) {
         StudentPoster.StudentPosterBuilder builder = StudentPoster.builder(studentPosterDO.getUserName(),
-                studentPosterDO.getNickName(), studentPosterDO.getAvatarUrl());
+                studentPosterDO.getNickName(), studentPosterDO.getAvatarUrl(), Gender.formCode(studentPosterDO.getGender()));
 
         builder.academyName(studentPosterDO.getAcademyName());
         builder.className(studentPosterDO.getClassName());
@@ -56,7 +65,7 @@ public class PosterRepositoryImpl implements PosterRepository {
         post.setAllowComment(postBO.isAllowComment() ? (byte) 1 : (byte) 0);
         post.setContent(postBO.getContent());
         post.setIdentityCode(postBO.getIdentityCategory().getCode());
-        post.setStatus(postBO.getStatus().getCode());
+        post.setRecordStatus(postBO.getStatus().getCode());
         post.setUserName(postBO.getUserName());
         post.setPostTime(postBO.getPostTime());
 
@@ -80,6 +89,31 @@ public class PosterRepositoryImpl implements PosterRepository {
     @Override
     public PostDetailBO findByPostById(long id) {
         return null;
+    }
+
+    @Override
+    public List<PostDetailBO> findShowPost(int startId, int limit) {
+
+        List<Post> postList = postMapper.selectShowPost(startId, limit);
+
+        return postList.stream().map(x -> {
+            List<ImageInfo> imageInfoList = imageDao.selectByPostId(x.getId()).stream()
+                    .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
+
+            PostDetailBO postDetailBO = new PostDetailBO(x.getId(), x.getUserName(), x.getContent(), imageInfoList,
+                    IdentityCategory.getByCode(x.getIdentityCode()), x.getPostTime());
+
+            StudentPoster poster = this.findStudentPosterByUserName(x.getUserName());
+
+            postDetailBO.setCommentCount(x.getCommentCount());
+            postDetailBO.setViewCount(x.getViewCount());
+            postDetailBO.setLikeCount(x.getLikeCount());
+            postDetailBO.setPostUser(poster);
+
+            return postDetailBO;
+
+        }).collect(Collectors.toList());
+
     }
 
 

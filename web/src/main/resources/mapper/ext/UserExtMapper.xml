@@ -7,6 +7,8 @@
         <result column="user_name" jdbcType="VARCHAR" property="userName" />
         <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarUrl" />
+        <result column="gender" jdbcType="INTEGER" property="gender" />
+        <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="sex" property="sex" jdbcType="VARCHAR"/>
         <result column="urpclass_num" property="urpClassNum" jdbcType="INTEGER"/>
@@ -30,14 +32,24 @@
         where us.student_account = #{studentAccount}
     </select>
     <select id="selectByStudentPoster" resultMap="StudentPosterDOMap">
-        select u.avatar_path, u.user_name, u.nick_name , st.name, st.sex, st.urpclass_num, st.urpclass_num,
+        select u.avatar_path, u.user_name, u.nick_name , u.gender,  st.account, st.name, st.sex, st.urpclass_num,
+               st.urpclass_num,
         st.academy_name , st.subject_name, st.class_name
         from user u
                  join user_student us on u.user_name = us.user_name
                  join student st on us.student_account = st.account
 
         where us.student_account = #{studentAccount}
+    </select>
 
+    <select id="selectStudentPosterByUserName" resultMap="StudentPosterDOMap">
+        select u.avatar_path, u.user_name, u.nick_name , u.gender,  st.account, st.name, st.sex, st.urpclass_num,
+               st.urpclass_num,
+               st.academy_name , st.subject_name, st.class_name
+        from user u
+                 join user_student us on u.user_name = us.user_name
+                 join student st on us.student_account = st.account
 
+        where us.user_name = #{userName}
     </select>
 </mapper>

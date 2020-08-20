@@ -1,28 +1,48 @@
 package com.hackerda.platform.domain.community;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 
+@Setter
+@Getter
 public class PostDetailBO extends PostBO {
+
+    private final long id;
 
     /** 发布者信息 **/
     private Poster postUser;
 
     /** 评论总数 **/
-    private Long commentTotal = 0L;
+    private int commentCount = 0;
 
-    /** 点赞列表 **/
-    private List<Like> likeList;
+    /** 点赞数 **/
+    private int likeCount = 0;
 
     /** 查看总数 **/
-    private Long viewTotal = 0L;
+    private int viewCount = 0;
 
 
-    public PostDetailBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory) {
+    public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
+                        IdentityCategory identityCategory) {
         super(userName, content, imageInfoList, identityCategory);
+        this.id = id;
     }
 
-    public PostDetailBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory, Date postTime) {
+    public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
+                        IdentityCategory identityCategory, Date postTime) {
         super(userName, content, imageInfoList, identityCategory, postTime);
+        this.id = id;
+    }
+
+    public String getShowUserName() {
+        return postUser.getShowName(super.getIdentityCategory());
+    }
+
+    public String getShowAvatar() {
+        return postUser.getShowAvatarUrl(super.getIdentityCategory());
     }
 }

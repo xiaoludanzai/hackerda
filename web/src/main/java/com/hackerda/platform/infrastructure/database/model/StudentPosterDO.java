@@ -18,6 +18,11 @@ public class StudentPosterDO {
     /** 用户名称 **/
     private String avatarUrl;
 
+    /** 性别 **/
+    private Integer gender;
+
+    private String account;
+
     /**
      * 用户实名
      */

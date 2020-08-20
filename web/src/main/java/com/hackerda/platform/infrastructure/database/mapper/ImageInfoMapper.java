@@ -36,4 +36,6 @@ public interface ImageInfoMapper {
     int insertBatch(List<ImageInfoDO> recordList);
 
     void insertPostImageRelative(Long postId, List<Long> imageIdList);
+
+    List<ImageInfoDO> selectByPostId(Long postId);
 }

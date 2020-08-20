@@ -49,4 +49,8 @@ public class UserDao {
     public StudentPosterDO selectByStudentPoster(String studentAccount) {
         return userExtMapper.selectByStudentPoster(studentAccount);
     }
+
+    public StudentPosterDO selectStudentPosterByUserName(String userName) {
+        return userExtMapper.selectStudentPosterByUserName(userName);
+    }
 }

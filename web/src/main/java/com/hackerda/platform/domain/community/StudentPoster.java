@@ -1,6 +1,7 @@
 package com.hackerda.platform.domain.community;
 
 import com.hackerda.platform.domain.student.StudentAccount;
+import com.hackerda.platform.domain.user.Gender;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -38,9 +39,10 @@ public class StudentPoster extends Poster {
 
 
 
-    private StudentPoster(String userName, String nickName, String avatarUrl, StudentAccount studentAccount,
-                         String name, String sex, Integer urpClassNum, String academyName, String subjectName, String className) {
-        super(userName, nickName, avatarUrl);
+    private StudentPoster(String userName, String nickName, String avatarUrl, Gender gender,
+                          StudentAccount studentAccount,
+                          String name, String sex, Integer urpClassNum, String academyName, String subjectName, String className) {
+        super(userName, nickName, avatarUrl, gender);
         this.studentAccount = studentAccount;
         this.name = name;
         this.sex = sex;
@@ -50,8 +52,8 @@ public class StudentPoster extends Poster {
         this.className = className;
     }
 
-    public static StudentPosterBuilder builder(String userName, String nickName, String avatarUrl) {
-        return new StudentPosterBuilder(userName, nickName, avatarUrl);
+    public static StudentPosterBuilder builder(String userName, String nickName, String avatarUrl, Gender gender) {
+        return new StudentPosterBuilder(userName, nickName, avatarUrl, gender);
     }
 
     public static class StudentPosterBuilder {
@@ -64,6 +66,8 @@ public class StudentPoster extends Poster {
         /** 用户名称 **/
         private final String avatarUrl;
 
+        private final Gender gender;
+
         private StudentAccount studentAccount;
         private String name;
         private String sex;
@@ -72,10 +76,12 @@ public class StudentPoster extends Poster {
         private String subjectName;
         private String className;
 
-        StudentPosterBuilder(String userName, String nickName, String avatarUrl) {
+
+        StudentPosterBuilder(String userName, String nickName, String avatarUrl,  Gender gender) {
             this.userName = userName;
             this.nickName = nickName;
             this.avatarUrl = avatarUrl;
+            this.gender = gender;
         }
 
         public StudentPosterBuilder studentAccount(StudentAccount studentAccount) {
@@ -114,7 +120,8 @@ public class StudentPoster extends Poster {
         }
 
         public StudentPoster build() {
-            return new StudentPoster(userName, nickName, avatarUrl, studentAccount, name, sex, urpClassNum, academyName,
+            return new StudentPoster(userName, nickName, avatarUrl, gender, studentAccount, name, sex, urpClassNum,
+                    academyName,
                     subjectName, className);
         }
 

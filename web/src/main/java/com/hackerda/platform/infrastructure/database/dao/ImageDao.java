@@ -25,4 +25,8 @@ public class ImageDao {
         }
     }
 
+    public List<ImageInfoDO> selectByPostId(Long postId) {
+        return imageInfoMapper.selectByPostId(postId);
+    }
+
 }

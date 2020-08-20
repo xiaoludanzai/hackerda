@@ -22,7 +22,7 @@ public class Post implements Serializable {
 
     private Date postTime;
 
-    private Integer status;
+    private Integer recordStatus;
 
     private Integer commentCount;
 

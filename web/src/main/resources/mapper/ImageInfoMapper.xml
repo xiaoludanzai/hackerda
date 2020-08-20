@@ -221,8 +221,18 @@
        #{postId,jdbcType=VARCHAR},
        #{item,jdbcType=VARCHAR})
     </foreach>
-
-
   </insert>
+
+  <select id="selectByPostId" resultMap="BaseResultMap">
+    select
+    i.id, i.url, i.file_id, i.gmt_create, i.gmt_modify
+
+    from image_info i
+
+    join post_image p on i.id = p.image_id
+
+    where p.post_id = #{postId, jdbcType=BIGINT}
+
+  </select>
 
 </mapper>

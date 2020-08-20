@@ -8,7 +8,11 @@ public interface PosterRepository {
 
     StudentPoster findByStudentAccount(StudentAccount studentAccount);
 
+    StudentPoster findStudentPosterByUserName(String userName);
+
     void save(PostBO postBO);
 
     PostDetailBO findByPostById(long id);
+
+    List<PostDetailBO> findShowPost(int start, int count);
 }
