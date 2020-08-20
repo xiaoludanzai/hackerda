@@ -1,6 +1,7 @@
 package com.hackerda.platform.domain.course.timetable;
 
 import com.hackerda.platform.domain.course.CourseBO;
+import com.hackerda.platform.utils.Term;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -55,4 +56,8 @@ public class CourseTimetableBO {
 
     @EqualsAndHashCode.Exclude
     private Date gmtCreate;
+
+    public Term getTerm() {
+        return new Term(termYear, termOrder);
+    }
 }

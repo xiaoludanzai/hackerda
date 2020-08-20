@@ -109,13 +109,9 @@ public class GradeOverviewBO {
      * 以往的成绩是否已经完成抓取
      * @return 完成抓取则返回true
      */
-    public boolean isEverGradeFinishFetch(){
+    public boolean isFinishFetch(){
         if (!CollectionUtils.isEmpty(termGradeList)) {
-            List<TermGradeBO> gradeBOList = termGradeList.stream()
-                    .filter(termGradeBO -> !termGradeBO.isCurrentTerm())
-                    .collect(Collectors.toList());
-
-            for (TermGradeBO grade : gradeBOList) {
+            for (TermGradeBO grade : termGradeList) {
                 if(!grade.isFinishFetch()){
                     return false;
                 }

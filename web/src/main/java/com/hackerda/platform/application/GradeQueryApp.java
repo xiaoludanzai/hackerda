@@ -32,7 +32,7 @@ public class GradeQueryApp {
         List<GradeBO> newGrade = gradeOverviewBO.getNewGrade();
         gradeRepository.save(newGrade);
 
-        if(gradeOverviewBO.isEverGradeFinishFetch()){
+        if(gradeOverviewBO.isFinishFetch()){
             eventPublisher.publishGradeFetchFinish(studentUser.getAccount().toString());
         }
 

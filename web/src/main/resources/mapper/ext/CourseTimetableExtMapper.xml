@@ -206,7 +206,7 @@
 
     </select>
 
-    <select id="selectDetailByClassId" resultType="com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO" parameterType="com.hackerda.platform.infrastructure.database.model.StudentCourseTimeTable">
+    <select id="selectDetailByClassId" resultMap="CourseTimetableDetailDOMap"  parameterType="com.hackerda.platform.infrastructure.database.model.StudentCourseTimeTable">
         select
         course_timetable.id,
         room_name,

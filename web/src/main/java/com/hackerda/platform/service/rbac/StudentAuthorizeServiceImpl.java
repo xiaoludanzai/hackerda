@@ -74,4 +74,5 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
         return vo;
     }
+
 }

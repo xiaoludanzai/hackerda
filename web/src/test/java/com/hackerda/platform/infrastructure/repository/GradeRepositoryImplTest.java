@@ -96,6 +96,13 @@ public class GradeRepositoryImplTest {
         assertThat(fetchStatusRecorder.needToFetch(FetchScene.EVER_GRADE, "2017025837")).isFalse();
     }
 
+    @Test
+    public void clear(){
+
+        fetchStatusRecorder.clearRecord(FetchScene.EVER_GRADE);
+
+    }
+
 
 
 }
