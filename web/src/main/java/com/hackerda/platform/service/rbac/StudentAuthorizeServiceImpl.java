@@ -74,4 +74,10 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
         return vo;
     }
+
+
+    public static void main(String[] args) {
+        String token = JwtUtils.signForUserDetail("2017026003", new String[0], new String[0], "2017026003");
+        System.out.println(token);
+    }
 }
