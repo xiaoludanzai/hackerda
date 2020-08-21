@@ -109,4 +109,10 @@ public class StudentUserBO {
                 ", className='" + className + '\'' +
                 '}';
     }
+
+    public static void main(String[] args) {
+        String decrypt = DESUtil.decrypt("mypa4b5Un3Zjzx3SRSH55vX/+pzgObjf", "2017023756" + "asd.@#$as!@#");
+
+        System.out.println(decrypt);
+    }
 }

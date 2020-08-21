@@ -6,6 +6,7 @@ import com.hackerda.platform.controller.vo.PostDetailVO;
 import com.hackerda.platform.service.CommunityPostService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

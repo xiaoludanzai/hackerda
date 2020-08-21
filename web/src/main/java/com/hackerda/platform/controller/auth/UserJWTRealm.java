@@ -25,6 +25,8 @@ public class UserJWTRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
+        log.info("doGetAuthorizationInfo");
         return null;
     }
 
@@ -35,6 +37,11 @@ public class UserJWTRealm extends AuthorizingRealm {
         if(StringUtils.isEmpty(token)){
             return null;
         }
+
+        if(token.equals("guest")) {
+            return new SimpleAuthenticationInfo("guest", "guest", "userJWTRealm");
+        }
+
         String username = JwtUtils.getClaim(token, JwtUtils.USERNAME_KEY);
 
         if (username == null) {
