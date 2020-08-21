@@ -53,7 +53,7 @@ public class NewUrpSpiderService {
     }
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public UrpCourseTimeTable getUrpCourseTimeTable(WechatStudentUserBO student) {
+    public UrpCourseTimeTable getUrpCourseTimeTable(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getUrpCourseTimeTable();

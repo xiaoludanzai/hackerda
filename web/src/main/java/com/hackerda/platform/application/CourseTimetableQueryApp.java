@@ -2,6 +2,7 @@ package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,21 @@ public class CourseTimetableQueryApp {
 
     public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
-        WechatStudentUserBO wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(account);
+        StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
 
         CourseTimeTableOverview timeTableOverview;
-        timeTableOverview = courseTimetableRepository.getByAccount(wechatStudentUserBO, termYear, termOrder);
+        timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
 
         if(timeTableOverview.isEmpty() || !timeTableOverview.isCurrentTerm()){
-            timeTableOverview = courseTimetableRepository.getByClassId(wechatStudentUserBO.getUrpClassNum().toString(), termYear,
+            timeTableOverview = courseTimetableRepository.getByClassId(studentUserBO.getUrpClassNum().toString(), termYear,
                     termOrder);
         }
 
         if(timeTableOverview.isCurrentTerm()) {
             if(timeTableOverview.isPersonal()){
-                courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), wechatStudentUserBO);
+                courseTimetableRepository.saveByStudent(timeTableOverview.getNewList(), studentUserBO);
             }else {
-                courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), wechatStudentUserBO.getUrpClassNum().toString());
+                courseTimetableRepository.saveByClass(timeTableOverview.getNewList(), studentUserBO.getUrpClassNum().toString());
             }
         }
 
