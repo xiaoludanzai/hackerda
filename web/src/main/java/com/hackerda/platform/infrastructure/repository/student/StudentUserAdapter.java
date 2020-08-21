@@ -70,6 +70,10 @@ public class StudentUserAdapter {
 
     public StudentUserBO toBO(StudentUser studentUser) {
 
+        if(studentUser == null) {
+            return null;
+        }
+
         StudentUserBO user = new StudentUserBO();
 
         user.setAccount(studentUser.getAccount());

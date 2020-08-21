@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.constant.SubscribeScene;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class StudentUserRepositoryTest {
 
     @Test
     public void getByAccount() {
-        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(2019022404);
+        StudentUserBO account = studentUserRepository.getByAccount(2017024981);
         System.out.println(account);
 
     }
