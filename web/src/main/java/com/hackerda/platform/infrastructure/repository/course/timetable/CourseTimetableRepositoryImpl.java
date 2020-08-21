@@ -1,6 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.MDCThreadPool;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.ClassCourseTimetableDao;
 import com.hackerda.platform.infrastructure.database.dao.CourseDao;
@@ -48,7 +49,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
             new LinkedBlockingQueue<>(), r -> new Thread(r, "courseSpider"));
 
     @Override
-    public CourseTimeTableOverview getByAccount(WechatStudentUserBO wechatStudentUserBO, String termYear, int termOrder) {
+    public CourseTimeTableOverview getByAccount(StudentUserBO wechatStudentUserBO, String termYear, int termOrder) {
 
         StudentCourseTimeTable courseTimeTable = new StudentCourseTimeTable()
                 .setStudentId(wechatStudentUserBO.getAccount())
@@ -126,7 +127,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
     @Override
     @Transactional
-    public void saveByStudent(List<CourseTimetableBO> tableList, WechatStudentUserBO wechatStudentUserBO) {
+    public void saveByStudent(List<CourseTimetableBO> tableList, StudentUserBO wechatStudentUserBO) {
 
         if(CollectionUtils.isEmpty(tableList)){
             return;
