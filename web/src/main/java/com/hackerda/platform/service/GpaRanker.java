@@ -1,5 +1,6 @@
 package com.hackerda.platform.service;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.constant.RedisKeys;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -17,7 +18,7 @@ public class GpaRanker {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public RankResult rank(WechatStudentUserBO studentUser, double gpa){
+    public RankResult rank(StudentUserBO studentUser, double gpa){
         ZSetOperations<String, String> zSet = stringRedisTemplate.opsForZSet();
         zSet.add(getKey(studentUser), studentUser.getAccount().toString(), gpa);
 
@@ -25,7 +26,7 @@ public class GpaRanker {
     }
 
 
-    public RankResult getRank(WechatStudentUserBO studentUser){
+    public RankResult getRank(StudentUserBO studentUser){
         ZSetOperations<String, String> zSet = stringRedisTemplate.opsForZSet();
         String key = getKey(studentUser);
         Long rank = zSet.reverseRank(key, studentUser.getAccount().toString());
@@ -34,7 +35,7 @@ public class GpaRanker {
         return new RankResult(size, rank);
     }
 
-    private String getKey(WechatStudentUserBO studentUser){
+    private String getKey(StudentUserBO studentUser){
         return RedisKeys.GPA_RANK.genKey(studentUser.getGrade(), studentUser.getSubjectName());
     }
 

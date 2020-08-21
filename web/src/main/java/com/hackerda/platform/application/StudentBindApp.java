@@ -104,6 +104,7 @@ public class StudentBindApp {
         bo.setName(studentUser.getName());
 
         bo.setKey(studentUser.getKey());
+        bo.setSaveOrUpdate(true);
 
         return bo;
     }

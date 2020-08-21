@@ -4,6 +4,7 @@ import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.domain.grade.GradeOverviewFactory;
 import com.hackerda.platform.domain.grade.GradeRepository;
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.application.event.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class GradeQueryApp {
     private EventPublisher eventPublisher;
 
 
-    public GradeOverviewBO getGradeOverview(WechatStudentUserBO studentUser) {
+    public GradeOverviewBO getGradeOverview(StudentUserBO studentUser) {
 
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 

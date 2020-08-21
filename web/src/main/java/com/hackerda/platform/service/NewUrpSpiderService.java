@@ -1,5 +1,6 @@
 package com.hackerda.platform.service;
 
+import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.utils.DESUtil;
@@ -37,7 +38,7 @@ public class NewUrpSpiderService {
      * 这个方法只有基本得成绩信息  包括相信成绩信息的抓取使用{@see #getCurrentTermGrade()}
      */
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<UrpGeneralGrade> getCurrentGeneralGrade(WechatStudentUserBO student) {
+    public List<UrpGeneralGrade> getCurrentGeneralGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getCurrentGeneralGrade();
@@ -86,7 +87,7 @@ public class NewUrpSpiderService {
 
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<UrpExamTime> getExamTime(WechatStudentUserBO student) {
+    public List<UrpExamTime> getExamTime(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getExamTime();
@@ -94,7 +95,7 @@ public class NewUrpSpiderService {
 
 
     @Retryable(value = UrpException.class, maxAttempts = 3)
-    public List<Scheme> getSchemeGrade(WechatStudentUserBO student) {
+    public List<Scheme> getSchemeGrade(StudentUserBO student) {
         UrpSpider baseSpider = getBaseSpider();
         baseSpider.login(student.getAccount().toString(), student.getEnablePassword());
         return baseSpider.getSchemeGrade();
