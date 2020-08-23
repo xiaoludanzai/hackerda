@@ -14,5 +14,5 @@ public interface PosterRepository {
 
     PostDetailBO findByPostById(long id);
 
-    List<PostDetailBO> findShowPost(int start, int count);
+    List<PostDetailBO> findShowPost(Integer start, int count);
 }

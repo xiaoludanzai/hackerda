@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class PostDetailVO {
 
-    private long maxId;
+    private long nextMaxId;
 
     private int count;
 

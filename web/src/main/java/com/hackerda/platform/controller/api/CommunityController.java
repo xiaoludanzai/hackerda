@@ -3,6 +3,7 @@ package com.hackerda.platform.controller.api;
 import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.controller.request.CreatePostRequest;
 import com.hackerda.platform.controller.vo.PostDetailVO;
+import com.hackerda.platform.controller.vo.PostVO;
 import com.hackerda.platform.service.CommunityPostService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -30,8 +31,13 @@ public class CommunityController {
         return WebResponse.success(communityPostService.cratePost(username, createPostRequest));
     }
 
+    @GetMapping("/getPostById")
+    public WebResponse<PostVO> getPost(@RequestParam(value = "postId") int postId){
+        return WebResponse.success(communityPostService.getPostById(postId));
+    }
+
     @GetMapping("/getPost")
-    public WebResponse<PostDetailVO> getPost(@RequestParam(value = "startId") int startId,
+    public WebResponse<PostDetailVO> getPost(@RequestParam(value = "startId", required = false) Integer startId,
                                                 @RequestParam(value = "count") int count){
         return WebResponse.success(communityPostService.getPostDetail(startId, count));
     }

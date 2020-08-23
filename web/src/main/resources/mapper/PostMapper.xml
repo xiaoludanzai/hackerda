@@ -317,7 +317,15 @@
     select
     <include refid="Base_Column_List" />
     from post
-    where id >= #{startId,jdbcType=INTEGER}  and record_status= 0  limit #{count,jdbcType=INTEGER}
+    <where>
+      <if test="startId != null">
+        and id  &lt; #{startId,jdbcType=INTEGER}
+      </if>
+
+      and record_status= 0
+
+    </where>
+     order by id desc limit  #{count,jdbcType=INTEGER}
 
   </select>
 </mapper>

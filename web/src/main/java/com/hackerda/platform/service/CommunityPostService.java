@@ -8,6 +8,7 @@ import com.hackerda.platform.domain.student.StudentAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,36 +58,46 @@ public class CommunityPostService {
     }
 
 
-    public PostDetailVO getPostDetail(int startId, int count) {
+    public PostVO getPostById(int postId) {
+
+        PostDetailBO post = posterRepository.findByPostById(postId);
+
+        return getPostVO(post);
+    }
+
+    private PostVO getPostVO(PostDetailBO post) {
+        PostVO postVO = new PostVO();
+
+        postVO.setId(post.getId())
+                .setContent(post.getContent())
+                .setAllowComment(post.isAllowComment())
+                .setAvatar(post.getShowAvatar())
+                .setUserName(post.getUserName())
+                .setViewCount(post.getViewCount())
+                .setCommentCount(post.getCommentCount())
+                .setLikeCount(post.getLikeCount())
+                .setShowUserName(post.getShowUserName())
+                .setPostTime(post.getPostTime());
+
+        List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
+            ImageInfoVO infoVO = new ImageInfoVO();
+            infoVO.setFileId(imageInfo.getFileId());
+            infoVO.setUrl(imageInfo.getPath());
+            return infoVO;
+        }).collect(Collectors.toList());
+
+        postVO.setImageInfoList(imageInfoVOList);
+
+        return postVO;
+    }
+
+    public PostDetailVO getPostDetail(Integer startId, int count) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
 
-        List<PostVO> postVOList = detailBOList.stream().map(x -> {
-
-            PostVO postVO = new PostVO();
-
-            postVO.setId(x.getId())
-                    .setContent(x.getContent())
-                    .setAllowComment(x.isAllowComment())
-                    .setAvatar(x.getShowAvatar())
-                    .setUserName(x.getUserName())
-                    .setViewCount(x.getViewCount())
-                    .setCommentCount(x.getCommentCount())
-                    .setLikeCount(x.getLikeCount())
-                    .setShowUserName(x.getShowUserName())
-                    .setPostTime(x.getPostTime());
-
-            List<ImageInfoVO> imageInfoVOList = x.getImageInfoList().stream().map(imageInfo -> {
-                ImageInfoVO infoVO = new ImageInfoVO();
-                infoVO.setFileId(imageInfo.getFileId());
-                infoVO.setUrl(imageInfo.getPath());
-                return infoVO;
-            }).collect(Collectors.toList());
-
-            postVO.setImageInfoList(imageInfoVOList);
-
-            return postVO;
-
-        }).collect(Collectors.toList());
+        List<PostVO> postVOList = detailBOList.stream()
+                .map(this::getPostVO)
+                .sorted(Comparator.comparing(PostVO :: getPostTime).reversed())
+                .collect(Collectors.toList());
 
 
         PostDetailVO postDetailVO = new PostDetailVO();
@@ -95,12 +106,12 @@ public class CommunityPostService {
 
         postDetailVO.setCount(postVOList.size());
 
-        Long maxId = postVOList.stream()
+        long nextMaxId = postVOList.stream()
                 .map(PostVO::getId)
-                .max(Long::compareUnsigned)
+                .min(Long::compareUnsigned)
                 .orElse(-1L);
 
-        postDetailVO.setMaxId(maxId);
+        postDetailVO.setNextMaxId(nextMaxId);
 
         return postDetailVO;
 

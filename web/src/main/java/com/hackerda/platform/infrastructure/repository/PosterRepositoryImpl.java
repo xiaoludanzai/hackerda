@@ -88,33 +88,35 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     @Override
     public PostDetailBO findByPostById(long id) {
-        return null;
+        Post post = postMapper.selectByPrimaryKey(id);
+
+        return getPostDetailBO(post);
     }
 
+
+
     @Override
-    public List<PostDetailBO> findShowPost(int startId, int limit) {
+    public List<PostDetailBO> findShowPost(Integer startId, int limit) {
 
         List<Post> postList = postMapper.selectShowPost(startId, limit);
 
-        return postList.stream().map(x -> {
-            List<ImageInfo> imageInfoList = imageDao.selectByPostId(x.getId()).stream()
-                    .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
-
-            PostDetailBO postDetailBO = new PostDetailBO(x.getId(), x.getUserName(), x.getContent(), imageInfoList,
-                    IdentityCategory.getByCode(x.getIdentityCode()), x.getPostTime());
-
-            StudentPoster poster = this.findStudentPosterByUserName(x.getUserName());
-
-            postDetailBO.setCommentCount(x.getCommentCount());
-            postDetailBO.setViewCount(x.getViewCount());
-            postDetailBO.setLikeCount(x.getLikeCount());
-            postDetailBO.setPostUser(poster);
-
-            return postDetailBO;
-
-        }).collect(Collectors.toList());
+        return postList.stream().map(this::getPostDetailBO).collect(Collectors.toList());
 
     }
 
+    private PostDetailBO getPostDetailBO(Post post) {
+        List<ImageInfo> imageInfoList = imageDao.selectByPostId(post.getId()).stream()
+                .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
 
+        PostDetailBO postDetailBO = new PostDetailBO(post.getId(), post.getUserName(), post.getContent(), imageInfoList,
+                IdentityCategory.getByCode(post.getIdentityCode()), post.getPostTime());
+
+        StudentPoster poster = this.findStudentPosterByUserName(post.getUserName());
+
+        postDetailBO.setCommentCount(post.getCommentCount());
+        postDetailBO.setViewCount(post.getViewCount());
+        postDetailBO.setLikeCount(post.getLikeCount());
+        postDetailBO.setPostUser(poster);
+        return postDetailBO;
+    }
 }

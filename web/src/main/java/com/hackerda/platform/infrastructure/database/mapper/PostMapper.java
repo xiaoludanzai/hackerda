@@ -33,5 +33,5 @@ public interface PostMapper {
 
     int updateByPrimaryKey(Post record);
 
-    List<Post> selectShowPost(int startId, int count);
+    List<Post> selectShowPost(Integer startId, int count);
 }

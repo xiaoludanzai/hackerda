@@ -1,5 +1,7 @@
 package com.hackerda.platform.domain.community;
 
+import com.hackerda.platform.domain.user.Gender;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,7 +43,13 @@ public enum IdentityCategory {
 
         @Override
         public String getAvatarUrl(Poster poster) {
-            return null;
+            if(poster.getGender() == Gender.Man) {
+               return  male_avatar;
+            }
+            if(poster.getGender() == Gender.Woman) {
+                return  female_avatar;
+            }
+            return anon;
         }
     },
 
@@ -62,7 +70,13 @@ public enum IdentityCategory {
 
         @Override
         public String getAvatarUrl(Poster poster) {
-            return null;
+            if(poster.getGender() == Gender.Man) {
+                return  male_avatar;
+            }
+            if(poster.getGender() == Gender.Woman) {
+                return  female_avatar;
+            }
+            return anon;
         }
     },
 
@@ -77,7 +91,13 @@ public enum IdentityCategory {
 
         @Override
         public String getAvatarUrl(Poster poster) {
-            return null;
+            if(poster.getGender() == Gender.Man) {
+                return  male_avatar;
+            }
+            if(poster.getGender() == Gender.Woman) {
+                return  female_avatar;
+            }
+            return anon;
         }
     },
 
@@ -98,13 +118,27 @@ public enum IdentityCategory {
 
         @Override
         public String getAvatarUrl(Poster poster) {
-            return null;
+            if(poster.getGender() == Gender.Man) {
+                return  male_avatar;
+            }
+            if(poster.getGender() == Gender.Woman) {
+                return  female_avatar;
+            }
+            return anon;
         }
     };
 
     private final int code;
 
     private static Map<Integer, IdentityCategory> codeMap;
+
+    private static final String female_avatar = "https%3A%2F%2F6861-hackerda-rfukj-1302818883.tcb.qcloud" +
+            ".la%2Favatar%2Fundraw_female_avatar_w3jk.png";
+
+    private static final String male_avatar = "https%3A%2F%2F6861-hackerda-rfukj-1302818883.tcb.qcloud.la%2Favatar%2Fundraw_male_avatar_323b.png";
+
+    private static final String anon = "https%3A%2F%2F6861-hackerda-rfukj-1302818883.tcb.qcloud" +
+            ".la%2Favatar%2Fundraw_hacker_mind_6y85.png";
 
     IdentityCategory(int code) {
         this.code = code;
