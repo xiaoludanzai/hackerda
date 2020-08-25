@@ -1,5 +1,9 @@
 package com.hackerda.platform.domain.community;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * 帖子和评论的状态
  */
@@ -33,11 +37,22 @@ public enum RecordStatus {
 
     private final int code;
 
+    private static Map<Integer, RecordStatus> codeMap;
+
     RecordStatus(int code) {
         this.code = code;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public static RecordStatus getByCode(int code) {
+        if(codeMap == null) {
+            codeMap = Arrays.stream(RecordStatus.values())
+                    .collect(Collectors.toMap(RecordStatus::getCode, x -> x));
+        }
+
+        return codeMap.get(code);
     }
 }

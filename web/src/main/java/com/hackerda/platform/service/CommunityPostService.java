@@ -19,6 +19,8 @@ public class CommunityPostService {
     private PosterRepository posterRepository;
     @Autowired
     private CommunityPostApp communityPostApp;
+    @Autowired
+    private LikeRepository likeRepository;
 
     public PostIdentityVO getPostIdentityByStudent(String account) {
 
@@ -58,11 +60,23 @@ public class CommunityPostService {
     }
 
 
-    public PostVO getPostById(int postId) {
+    public PostVO getPostById(String userName, int postId) {
 
         PostDetailBO post = posterRepository.findByPostById(postId);
+        PostVO postVO = getPostVO(post);
+        setLikeCount(userName, postVO);
+        return postVO;
+    }
 
-        return getPostVO(post);
+    private void setLikeCount(String userName, PostVO postVO) {
+        if(!userName.equals("guest")) {
+            LikeBO likeBO = likeRepository.find(userName, LikeType.Post, postVO.getId());
+            if(likeBO != null && likeBO.isShow()) {
+                postVO.setHasLike(true);
+            }
+        }
+        int size = likeRepository.findShow(LikeType.Post, postVO.getId()).size();
+        postVO.setLikeCount(size);
     }
 
     private PostVO getPostVO(PostDetailBO post) {
@@ -77,7 +91,8 @@ public class CommunityPostService {
                 .setCommentCount(post.getCommentCount())
                 .setLikeCount(post.getLikeCount())
                 .setShowUserName(post.getShowUserName())
-                .setPostTime(post.getPostTime());
+                .setPostTime(post.getPostTime())
+                .setIdentityCode(post.getIdentityCategory().getCode());
 
         List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
             ImageInfoVO infoVO = new ImageInfoVO();
@@ -91,7 +106,7 @@ public class CommunityPostService {
         return postVO;
     }
 
-    public PostDetailVO getPostDetail(Integer startId, int count) {
+    public PostDetailVO getPostDetail(String userName, Integer startId, int count) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
 
         List<PostVO> postVOList = detailBOList.stream()
@@ -99,6 +114,9 @@ public class CommunityPostService {
                 .sorted(Comparator.comparing(PostVO :: getPostTime).reversed())
                 .collect(Collectors.toList());
 
+        for (PostVO postVO : postVOList) {
+            setLikeCount(userName, postVO);
+        }
 
         PostDetailVO postDetailVO = new PostDetailVO();
 

@@ -26,9 +26,10 @@ public class UserRegisterAppTest {
 
     @Test
     public void register() {
-        StudentAccount studentAccount = new StudentAccount("2014025838");
-        PhoneNumber phoneNumber = new PhoneNumber("17301086259");
-        AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test", "1", "test_avatarPath", phoneNumber, Gender.Man,
+        StudentAccount studentAccount = new StudentAccount("2017025838");
+        PhoneNumber phoneNumber = new PhoneNumber("17301086276");
+        AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
+                phoneNumber, Gender.Woman,
                 "test_introduction");
 
         userRegisterApp.register(appStudentUserBO);

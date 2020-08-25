@@ -27,6 +27,8 @@ public class PostVO {
 
     private String content;
 
+    private int identityCode;
+
     private List<ImageInfoVO> imageInfoList;
 
     /** 评论总数 **/
@@ -43,4 +45,6 @@ public class PostVO {
 
     /** 是否允许评论 **/
     private boolean allowComment = true;
+
+    private boolean hasLike;
 }

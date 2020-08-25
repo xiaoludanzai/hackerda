@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.AppreciateMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.Appreciate">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="like_type" jdbcType="INTEGER" property="likeType" />
+    <result column="type_content_id" jdbcType="BIGINT" property="typeContentId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="like_time" jdbcType="TIMESTAMP" property="likeTime" />
+    <result column="show" jdbcType="TINYINT" property="show" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, like_type, type_content_id, user_name, like_time, `show`, gmt_create, gmt_modify
+  </sql>
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.AppreciateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from appreciate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from appreciate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from appreciate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.AppreciateExample">
+    delete from appreciate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
+    insert into appreciate (like_type, type_content_id, user_name, 
+      like_time, `show`, gmt_create, 
+      gmt_modify)
+    values (#{likeType,jdbcType=INTEGER}, #{typeContentId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
+      #{likeTime,jdbcType=TIMESTAMP}, #{show,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModify,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
+    insert into appreciate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="likeType != null">
+        like_type,
+      </if>
+      <if test="typeContentId != null">
+        type_content_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="likeTime != null">
+        like_time,
+      </if>
+      <if test="show != null">
+        `show`,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="likeType != null">
+        #{likeType,jdbcType=INTEGER},
+      </if>
+      <if test="typeContentId != null">
+        #{typeContentId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="likeTime != null">
+        #{likeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="show != null">
+        #{show,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.AppreciateExample" resultType="java.lang.Long">
+    select count(*) from appreciate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update appreciate
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.likeType != null">
+        like_type = #{record.likeType,jdbcType=INTEGER},
+      </if>
+      <if test="record.typeContentId != null">
+        type_content_id = #{record.typeContentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.likeTime != null">
+        like_time = #{record.likeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.show != null">
+        `show` = #{record.show,jdbcType=TINYINT},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModify != null">
+        gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update appreciate
+    set id = #{record.id,jdbcType=BIGINT},
+      like_type = #{record.likeType,jdbcType=INTEGER},
+      type_content_id = #{record.typeContentId,jdbcType=BIGINT},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      like_time = #{record.likeTime,jdbcType=TIMESTAMP},
+      `show` = #{record.show,jdbcType=TINYINT},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate">
+    update appreciate
+    <set>
+      <if test="likeType != null">
+        like_type = #{likeType,jdbcType=INTEGER},
+      </if>
+      <if test="typeContentId != null">
+        type_content_id = #{typeContentId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="likeTime != null">
+        like_time = #{likeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="show != null">
+        `show` = #{show,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate">
+    update appreciate
+    set like_type = #{likeType,jdbcType=INTEGER},
+      type_content_id = #{typeContentId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      like_time = #{likeTime,jdbcType=TIMESTAMP},
+      `show` = #{show,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
