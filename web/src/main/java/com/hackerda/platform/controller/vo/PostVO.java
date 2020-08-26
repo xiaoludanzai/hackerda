@@ -1,5 +1,6 @@
 package com.hackerda.platform.controller.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,7 +43,7 @@ public class PostVO {
     private int viewCount = 0;
 
     /** 发表时间 **/
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date postTime;
 
     /** 是否允许评论 **/
