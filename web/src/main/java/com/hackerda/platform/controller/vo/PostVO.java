@@ -2,6 +2,7 @@ package com.hackerda.platform.controller.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,7 @@ public class PostVO {
     private int viewCount = 0;
 
     /** 发表时间 **/
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date postTime;
 
     /** 是否允许评论 **/

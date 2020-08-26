@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@ActiveProfiles("beta")
+@ActiveProfiles("prod")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RoleRepositoryTest {

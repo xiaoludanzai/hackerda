@@ -1,6 +1,7 @@
 package com.hackerda.platform.service;
 
 import com.hackerda.platform.application.CommunityCommentApp;
+import com.hackerda.platform.application.event.EventPublisher;
 import com.hackerda.platform.controller.request.LikeRequest;
 import com.hackerda.platform.controller.request.CreateCommentRequest;
 import com.hackerda.platform.controller.vo.CommentDetailVO;
@@ -28,6 +29,8 @@ public class CommunityCommentService {
     private CommunityCommentApp communityCommentApp;
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private EventPublisher eventPublisher;
 
 
     public CreateCommentResultVO addComment(String userName, CreateCommentRequest request){
@@ -55,8 +58,9 @@ public class CommunityCommentService {
         Map<Long, CommentDetailBO> idMap = detailByPostId.stream()
                 .collect(Collectors.toMap(CommentDetailBO::getId, x -> x));
 
-        List<CommentVO> commentList = detailByPostId.stream().map(x -> {
+        eventPublisher.publishCommentCount(detailByPostId.size() , postId);
 
+        List<CommentVO> commentList = detailByPostId.stream().map(x -> {
             CommentVO commentVO = new CommentVO();
             commentVO.setContent(x.getContent());
             commentVO.setRootCommentId(x.getRootCommentId());

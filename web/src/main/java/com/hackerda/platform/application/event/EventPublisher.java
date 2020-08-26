@@ -17,4 +17,11 @@ public class EventPublisher {
     }
 
 
+    // 事件发布方法
+    public void publishCommentCount(int count , long postId) {
+        applicationContext.publishEvent(new CommentCountEvent(this, count, postId));
+    }
+
+
+
 }

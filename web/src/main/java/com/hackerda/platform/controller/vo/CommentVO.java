@@ -1,6 +1,7 @@
 package com.hackerda.platform.controller.vo;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -29,6 +30,7 @@ public class CommentVO {
 
     private String content;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date postTime;
 
     /** 点赞数 **/
