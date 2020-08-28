@@ -76,6 +76,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         vo.setSubjectName(studentUser.getSubjectName());
         vo.setClassName(studentUser.getClassName());
         vo.setToken(token);
+        vo.setUseDefaultPassword(studentUser.isUsingDefaultPassword());
 
         return vo;
     }

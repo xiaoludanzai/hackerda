@@ -20,6 +20,8 @@ public class StudentUserDetailVO {
 
     private String ethnic;
 
+    private boolean useDefaultPassword;
+
     private String academyName;
 
     private String subjectName;
