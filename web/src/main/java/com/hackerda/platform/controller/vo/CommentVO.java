@@ -38,4 +38,6 @@ public class CommentVO {
     private int likeCount = 0;
 
     private boolean hasLike;
+
+    private boolean selfComment;
 }

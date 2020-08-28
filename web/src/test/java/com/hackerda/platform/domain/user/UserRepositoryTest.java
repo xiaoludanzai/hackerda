@@ -33,8 +33,8 @@ public class UserRepositoryTest {
 
     @Test
     public void store() {
-        StudentAccount studentAccount = new StudentAccount("2014025838");
-        PhoneNumber phoneNumber = new PhoneNumber("17301086259");
+        StudentAccount studentAccount = new StudentAccount("2014025828");
+        PhoneNumber phoneNumber = new PhoneNumber("17301086159");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test", "1", "test_avatarPath", phoneNumber, Gender.Man,
                 "test_introdunction");
 

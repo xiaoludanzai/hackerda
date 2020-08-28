@@ -26,6 +26,9 @@ public class PostUserVO {
      */
     private String avatar;
 
-
+    /**
+     * 是否是圈子的博主
+     */
+    private boolean isPostAuthor;
 
 }

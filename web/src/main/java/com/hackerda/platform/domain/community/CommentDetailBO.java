@@ -49,4 +49,13 @@ public class CommentDetailBO extends CommentBO {
     public long getRootCommentId() {
         return isRoot() ? this.id : super.getRootCommentId();
     }
+
+    /**
+     * 是否是圈主的自评
+     * @return
+     */
+    public boolean isSelfComment() {
+        return super.getPostUserName().equals(poster.getUserName());
+    }
+
 }

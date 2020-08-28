@@ -71,6 +71,7 @@ public class CommunityCommentService {
             commentVO.setPostTime(x.getPostTime());
             commentVO.setLikeCount(x.getLikeCount());
             commentVO.setPostUser(userNamePosterMap.get(x.getUserName()));
+            
             if(!x.isRoot()) {
                 CommentDetailBO replyDetailBO = idMap.get(x.getReplyCommentId());
                 commentVO.setReplyUser(userNamePosterMap.get(replyDetailBO.getUserName()));
@@ -121,6 +122,7 @@ public class CommunityCommentService {
         postUserVO.setShowUserName(commentDetailBO.getShowUserName());
         postUserVO.setShowUserNameOrder(commentDetailBO.getUserShowNameOrder());
         postUserVO.setUserName(commentDetailBO.getUserName());
+        postUserVO.setPostAuthor(commentDetailBO.isSelfComment());
 
         return postUserVO;
     }
