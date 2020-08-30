@@ -7,4 +7,6 @@ public interface StudentInfoService {
     boolean checkCanBind(String account, String appId, String openid);
 
     WechatStudentUserBO getStudentInfo(String account, String enablePassword);
+
+    boolean isCommonWechat(String account, String appId, String openid);
 }

@@ -49,6 +49,11 @@ public enum  ErrorCode {
 	DATA_NOT_VALID(411),
 
 	/**
+	 * 使用非常用微信登录，需要调用验证身份
+	 */
+	UNCOMMON_WECHAT (412),
+
+	/**
 	 *服务器端错误
 	 */
 	SYSTEM_ERROR(500),

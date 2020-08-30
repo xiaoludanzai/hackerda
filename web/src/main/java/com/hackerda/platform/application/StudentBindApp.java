@@ -43,6 +43,11 @@ public class StudentBindApp {
 
         if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
+
+            if(studentUserBO.isUsingDefaultPassword()  ) {
+
+            }
+
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
             wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 

@@ -20,4 +20,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userDao.selectByMobile(appStudentUserBO.getPhoneNumber().getEnableNumber()) == null;
 
     }
+
+    @Override
+    public boolean needToCheckCommonWechat(AppStudentUserBO appStudentUserBO) {
+        return false;
+    }
 }

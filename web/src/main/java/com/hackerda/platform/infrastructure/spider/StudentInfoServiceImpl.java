@@ -101,6 +101,18 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         return user;
     }
 
+    @Override
+    public boolean isCommonWechat(String account, String appId, String openid) {
+        WechatOpenid wechatOpenid = new WechatOpenid()
+                .setAccount(Integer.parseInt(account))
+                .setAppid(appId);
+        List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
+
+
+
+        return false;
+    }
+
 
     public UrpClass getClassByName(String className, String account){
 

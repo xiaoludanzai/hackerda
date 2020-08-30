@@ -51,4 +51,12 @@ public class UserRepositoryImpl implements UserRepository {
                 appStudentUserBO.getRoleList().stream().map(RoleBO ::getCode).collect(Collectors.toList()));
 
     }
+
+    @Transactional
+    @Override
+    public void update(AppStudentUserBO appStudentUserBO) {
+        User user = userAdapter.toDO(appStudentUserBO);
+
+
+    }
 }
