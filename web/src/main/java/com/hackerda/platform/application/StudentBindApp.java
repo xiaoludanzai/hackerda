@@ -5,7 +5,7 @@ import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.StudentInfoService;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Map;
 
 @Service
@@ -22,7 +21,7 @@ public class StudentBindApp {
     @Autowired
     private WechatAuthService wechatAuthService;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
     @Autowired
     private StudentInfoService studentInfoService;
     @Lazy
@@ -51,7 +50,7 @@ public class StudentBindApp {
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
             wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
-            studentUserRepository.save(wechatStudentUserBO);
+            studentRepository.save(wechatStudentUserBO);
 
             return wechatStudentUserBO;
 
@@ -65,7 +64,7 @@ public class StudentBindApp {
 
         wechatStudentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
 
-        studentUserRepository.save(wechatStudentUserBO);
+        studentRepository.save(wechatStudentUserBO);
 
     }
 
@@ -76,7 +75,7 @@ public class StudentBindApp {
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
-        StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+        StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account));
 
         if(studentUserBO != null && !studentUserBO.checkEnablePasswordIsCorrect(password)) {
             studentUserBO.updatePassword(password);

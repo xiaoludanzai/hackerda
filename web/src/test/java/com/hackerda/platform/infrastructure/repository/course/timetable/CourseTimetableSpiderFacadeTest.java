@@ -2,7 +2,7 @@ package com.hackerda.platform.infrastructure.repository.course.timetable;
 
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.CourseTimetableDetailDO;
-import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
+import com.hackerda.platform.infrastructure.repository.student.StudentRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class CourseTimetableSpiderFacadeTest {
     @Autowired
     private CourseTimetableSpiderFacade courseTimetableSpiderFacade;
     @Autowired
-    private StudentUserRepositoryImpl studentUserRepository;
+    private StudentRepositoryImpl studentUserRepository;
 
     @Test
     public void test(){

@@ -5,7 +5,7 @@ import com.hackerda.platform.domain.constant.SubscribeScene;
 import java.util.Collection;
 import java.util.List;
 
-public interface StudentUserRepository {
+public interface StudentRepository {
 
     WechatStudentUserBO getWetChatUserByAccount(int account);
 

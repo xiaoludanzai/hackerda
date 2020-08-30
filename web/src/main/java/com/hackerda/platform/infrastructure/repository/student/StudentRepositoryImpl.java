@@ -4,7 +4,7 @@ import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
-import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.WechatOpenidBO;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class StudentUserRepositoryImpl implements StudentUserRepository {
+public class StudentRepositoryImpl implements StudentRepository {
 
     @Autowired
     private StudentUserDao studentUserDao;

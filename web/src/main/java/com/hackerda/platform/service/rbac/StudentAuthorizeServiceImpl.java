@@ -3,7 +3,7 @@ package com.hackerda.platform.service.rbac;
 import com.hackerda.platform.application.StudentBindApp;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.controller.vo.StudentUserDetailVO;
@@ -24,7 +24,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     @Autowired
     private StudentBindApp studentBindApp;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
 
 
     @Override
@@ -46,11 +46,11 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         WechatStudentUserBO wechatStudentUserBO;
 
         if(StringUtils.isNotEmpty(account)) {
-            wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(Integer.parseInt(account));
+            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(Integer.parseInt(account));
 
         }else {
             StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
-            wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(studentUserBO.getAccount());
+            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentUserBO.getAccount());
         }
 
         if(wechatStudentUserBO == null) {

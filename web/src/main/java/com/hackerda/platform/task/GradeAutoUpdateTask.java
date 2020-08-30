@@ -5,8 +5,8 @@ import com.hackerda.platform.domain.grade.GradeBO;
 import com.hackerda.platform.domain.grade.GradeMsgSender;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.application.GradeQueryApp;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.domain.constant.SubscribeScene;
 import com.hackerda.spider.exception.UrpEvaluationException;
 import com.hackerda.spider.exception.UrpException;
@@ -39,7 +39,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
     @Autowired
     private GradeMsgSender gradeMsgSender;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
 
     private static final BlockingQueue<UrpFetchTask> queue = new LinkedBlockingQueue<>();
 
@@ -57,7 +57,7 @@ public class GradeAutoUpdateTask extends BaseSubscriptionTask {
         while (true) {
             try {
 
-                Set<UrpFetchTask> fetchTasks = studentUserRepository.getSubscribe(SubscribeScene.GRADE_AUTO_UPDATE)
+                Set<UrpFetchTask> fetchTasks = studentRepository.getSubscribe(SubscribeScene.GRADE_AUTO_UPDATE)
                         .stream().map(UrpFetchTask::new)
                         .collect(Collectors.toSet());
 
