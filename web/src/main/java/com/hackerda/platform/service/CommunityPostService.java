@@ -20,7 +20,9 @@ public class CommunityPostService {
     @Autowired
     private CommunityPostApp communityPostApp;
     @Autowired
-    private LikeRepository likeRepository;
+    private LikeCountService likeCountService;
+    @Autowired
+    private CommentCountService commentCountService;
 
     public PostIdentityVO getPostIdentityByStudent(String account) {
 
@@ -70,12 +72,10 @@ public class CommunityPostService {
 
     private void setLikeCount(String userName, PostVO postVO) {
         if(!userName.equals("guest")) {
-            LikeBO likeBO = likeRepository.find(userName, LikeType.Post, postVO.getId());
-            if(likeBO != null && likeBO.isShow()) {
-                postVO.setHasLike(true);
-            }
+            boolean hasLike = likeCountService.hasLike(LikeType.Post, postVO.getId(), userName);
+            postVO.setHasLike(hasLike);
         }
-        int size = likeRepository.findShow(LikeType.Post, postVO.getId()).size();
+        long size = likeCountService.likeCount(LikeType.Post, postVO.getId());
         postVO.setLikeCount(size);
     }
 
@@ -88,7 +88,7 @@ public class CommunityPostService {
                 .setAvatar(post.getShowAvatar())
                 .setUserName(post.getUserName())
                 .setViewCount(post.getViewCount())
-                .setCommentCount(post.getCommentCount())
+                .setCommentCount(commentCountService.count(post.getId()))
                 .setLikeCount(post.getLikeCount())
                 .setShowUserName(post.getShowUserName())
                 .setPostTime(post.getPostTime())

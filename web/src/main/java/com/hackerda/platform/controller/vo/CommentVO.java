@@ -35,7 +35,7 @@ public class CommentVO {
     private Date postTime;
 
     /** 点赞数 **/
-    private int likeCount = 0;
+    private long likeCount = 0;
 
     private boolean hasLike;
 

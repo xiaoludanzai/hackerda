@@ -1,5 +1,7 @@
 package com.hackerda.platform.application.event;
 
+import com.hackerda.platform.domain.community.CommentBO;
+import com.hackerda.platform.domain.community.LikeBO;
 import com.hackerda.platform.infrastructure.repository.FetchScene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,17 +13,21 @@ public class EventPublisher {
     @Autowired
     private ApplicationContext applicationContext;
 
-    // 事件发布方法
     public void publishGradeFetchFinish(String account) {
         applicationContext.publishEvent(new FetchFinishEvent(this, account, FetchScene.EVER_GRADE));
     }
 
-
-    // 事件发布方法
     public void publishCommentCount(int count , long postId) {
         applicationContext.publishEvent(new CommentCountEvent(this, count, postId));
     }
 
+    public void addCommentEvent(CommentBO commentBO, boolean add) {
+        applicationContext.publishEvent(new CommentEvent(this, commentBO.getPostId(), add));
+    }
+
+    public void addLikeEvent(LikeBO likeBO) {
+        applicationContext.publishEvent(new AddLikeEvent(this, likeBO));
+    }
 
 
 }

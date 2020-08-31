@@ -12,7 +12,11 @@ public interface PosterRepository {
 
     void save(PostBO postBO);
 
+    void update(PostBO postBO, long id);
+
     PostDetailBO findByPostById(long id);
 
     List<PostDetailBO> findShowPost(Integer start, int count);
+
+    long count();
 }

@@ -61,6 +61,16 @@ public enum RedisKeys {
      * GPA 排名
      */
     GPA_RANK("GPA_RANK_ZSET"),
+
+    /**
+     * 圈子评论数缓存
+     */
+    COMMENT_COUNT("COMMENT_COUNT"),
+
+    /**
+     * 评论情况
+     */
+    LIKE_STATUS("LIKE_STATUS"),
     ;
     private String name;
 
