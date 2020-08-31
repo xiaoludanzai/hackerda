@@ -9,4 +9,8 @@ public interface CommentRepository {
     List<CommentDetailBO> findDetailByPostId(long postId);
 
     void update(CommentBO commentBO);
+
+    List<CommentDetailBO> find(RecordStatus recordStatus, long postId);
+
+    long count(RecordStatus recordStatus);
 }

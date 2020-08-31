@@ -8,6 +8,7 @@ import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.mapper.PostMapper;
 import com.hackerda.platform.infrastructure.database.model.ImageInfoDO;
 import com.hackerda.platform.infrastructure.database.model.Post;
+import com.hackerda.platform.infrastructure.database.model.PostExample;
 import com.hackerda.platform.infrastructure.database.model.StudentPosterDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -87,6 +88,22 @@ public class PosterRepositoryImpl implements PosterRepository {
     }
 
     @Override
+    public void update(PostBO postBO, long id) {
+        Post post = new Post();
+
+        post.setId(id);
+
+        post.setAllowComment(postBO.isAllowComment() ? (byte) 1 : (byte) 0);
+        post.setContent(postBO.getContent());
+        post.setIdentityCode(postBO.getIdentityCategory().getCode());
+        post.setRecordStatus(postBO.getStatus().getCode());
+        post.setUserName(postBO.getUserName());
+        post.setPostTime(postBO.getPostTime());
+
+        postMapper.updateByPrimaryKeySelective(post);
+    }
+
+    @Override
     public PostDetailBO findByPostById(long id) {
         Post post = postMapper.selectByPrimaryKey(id);
 
@@ -104,6 +121,11 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     }
 
+    @Override
+    public long count() {
+        return postMapper.countByExample(new PostExample());
+    }
+
     private PostDetailBO getPostDetailBO(Post post) {
         List<ImageInfo> imageInfoList = imageDao.selectByPostId(post.getId()).stream()
                 .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
@@ -117,6 +139,7 @@ public class PosterRepositoryImpl implements PosterRepository {
         postDetailBO.setViewCount(post.getViewCount());
         postDetailBO.setLikeCount(post.getLikeCount());
         postDetailBO.setPostUser(poster);
+        postDetailBO.setStatus(RecordStatus.getByCode(post.getRecordStatus()));
         return postDetailBO;
     }
 }

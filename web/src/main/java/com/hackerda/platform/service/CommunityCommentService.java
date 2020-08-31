@@ -28,9 +28,7 @@ public class CommunityCommentService {
     @Autowired
     private CommunityCommentApp communityCommentApp;
     @Autowired
-    private LikeRepository likeRepository;
-    @Autowired
-    private EventPublisher eventPublisher;
+    private LikeCountService likeCountService;
 
 
     public CreateCommentResultVO addComment(String userName, CreateCommentRequest request){
@@ -58,8 +56,6 @@ public class CommunityCommentService {
         Map<Long, CommentDetailBO> idMap = detailByPostId.stream()
                 .collect(Collectors.toMap(CommentDetailBO::getId, x -> x));
 
-        eventPublisher.publishCommentCount(detailByPostId.size() , postId);
-
         List<CommentVO> commentList = detailByPostId.stream().map(x -> {
             CommentVO commentVO = new CommentVO();
             commentVO.setContent(x.getContent());
@@ -78,13 +74,10 @@ public class CommunityCommentService {
             }
 
             if(!userName.equals("guest")) {
-                LikeBO likeBO = likeRepository.find(userName, LikeType.Comment, x.getId());
-                if(likeBO != null && likeBO.isShow()) {
-                    commentVO.setHasLike(true);
-                }
+                commentVO.setHasLike(likeCountService.hasLike(LikeType.Comment, x.getId(), userName));
             }
 
-            int size = likeRepository.findShow(LikeType.Comment, x.getId()).size();
+            long size = likeCountService.likeCount(LikeType.Comment, x.getId());
             commentVO.setLikeCount(size);
             return commentVO;
         }).collect(Collectors.toList());

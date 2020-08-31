@@ -34,10 +34,10 @@ public class PostVO {
     private List<ImageInfoVO> imageInfoList;
 
     /** 评论总数 **/
-    private int commentCount = 0;
+    private long commentCount = 0;
 
     /** 点赞数 **/
-    private int likeCount = 0;
+    private long likeCount = 0;
 
     /** 查看总数 **/
     private int viewCount = 0;

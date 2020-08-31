@@ -234,7 +234,10 @@
 
         left join course_timetable on class_course_timetable.course_timetable_id = course_timetable.id
 
-        left join course c on course_timetable.course_id = c.num and course_timetable.course_sequence_number = c.course_order
+        left join course c on course_timetable.course_id = c.num
+                                  and course_timetable.course_sequence_number = c.course_order
+                                  and course_timetable.term_order = c.term_order
+                                  and course_timetable.term_year = c.term_year
         <where>
             <if test="classId != null">
                 and class_id = #{classId}

@@ -52,6 +52,10 @@ public class CourseTimeTableService {
         vo.setErrorCode(timeTableOverview.getErrorCode());
         vo.setErrorMsg(timeTableOverview.getErrorMsg());
 
+        if(timeTableOverview.isEmpty()) {
+            return vo;
+        }
+
         List<CourseTimeTableVo> collect = timeTableOverview.getCourseTimetableBOList().stream().map(x -> {
 
             CourseTimeTableVo tableVo = new CourseTimeTableVo();

@@ -44,6 +44,38 @@ public class CommentRepositoryImpl implements CommentRepository {
 
         List<Comment> commentList = commentMapper.selectByExample(example);
 
+        return toDetailBO(commentList);
+
+    }
+
+    @Override
+    public void update(CommentBO commentBO) {
+
+    }
+
+    @Override
+    public List<CommentDetailBO> find(RecordStatus status, long postId) {
+        CommentExample example = new CommentExample();
+        example.createCriteria()
+                .andPostIdEqualTo(postId)
+                .andRecordStatusEqualTo(status.getCode());
+
+        List<Comment> commentList = commentMapper.selectByExample(example);
+        return toDetailBO(commentList);
+
+    }
+
+    @Override
+    public long count(RecordStatus recordStatus) {
+        CommentExample example = new CommentExample();
+        example.createCriteria().andRecordStatusEqualTo(recordStatus.getCode());
+
+        return commentMapper.countByExample(example);
+    }
+
+
+    private List<CommentDetailBO> toDetailBO(List<Comment> commentList ) {
+
         List<CommentDetailBO> detailBOList = commentList.stream().map(x -> {
             StudentPoster poster = posterRepository.findStudentPosterByUserName(x.getUserName());
             IdentityCategory identity = IdentityCategory.getByCode(x.getIdentityCode());
@@ -64,7 +96,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             // 在展示的名称中根据userName分组
             Map<String, List<CommentDetailBO>> userNameMap =
                     value.stream().collect(Collectors.groupingBy(CommentDetailBO::getUserName,
-                    Collectors.mapping(x -> x, Collectors.toList())));
+                            Collectors.mapping(x -> x, Collectors.toList())));
 
             value.sort(Comparator.comparing(CommentDetailBO :: getPostTime).reversed());
 
@@ -79,12 +111,5 @@ public class CommentRepositoryImpl implements CommentRepository {
         }
 
         return detailBOList;
-
     }
-
-    @Override
-    public void update(CommentBO commentBO) {
-
-    }
-
 }

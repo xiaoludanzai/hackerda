@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @Slf4j
-@ActiveProfiles("beta")
+@ActiveProfiles("prod")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CommunityCommentAppTest {
@@ -26,6 +26,8 @@ public class CommunityCommentAppTest {
     private CommentRepository commentRepository;
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private LikeCountService likeCountService;
 
     @Test
     public void addComment() {
@@ -57,5 +59,12 @@ public class CommunityCommentAppTest {
 
         LikeBO db = likeRepository.find("2014025838",  LikeType.Post, 1L);
 
+    }
+
+    @Test
+    public void countSynchronize() {
+        communityCommentApp.countSynchronize();
+        long count = likeCountService.likeCount(LikeType.Post, 1);
+        System.out.println(count);
     }
 }
