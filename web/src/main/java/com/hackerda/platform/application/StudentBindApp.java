@@ -2,10 +2,10 @@ package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.constant.ErrorCode;
-import com.hackerda.platform.domain.student.StudentInfoService;
-import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentRepository;
+import com.hackerda.platform.domain.student.*;
+import com.hackerda.platform.domain.user.AppStudentUserBO;
+import com.hackerda.platform.domain.user.PhoneNumber;
+import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ public class StudentBindApp {
     private StudentRepository studentRepository;
     @Autowired
     private StudentInfoService studentInfoService;
+    @Autowired
+    private UserRepository userRepository;
     @Lazy
     @Autowired
     private Map<String , WechatPlatform> wechatPlatformMap;
@@ -42,17 +44,41 @@ public class StudentBindApp {
 
         if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
-
-            if(studentUserBO.isUsingDefaultPassword()  ) {
-
+            WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
+            if(studentUserBO.isUsingDefaultPassword()  && studentInfoService.isCommonWechat(account, appId, openid)) {
+                studentRepository.save(wechatStudentUserBO);
+                throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
 
-            WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
             wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
             studentRepository.save(wechatStudentUserBO);
 
             return wechatStudentUserBO;
+
+        }else {
+            throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
+        }
+    }
+
+    public WechatStudentUserBO bindCommonWechatUser(@Nonnull StudentAccount account,
+                                                    @Nonnull PhoneNumber phoneNumber,
+                                                    @Nonnull String appId,
+                                                    @Nonnull String openid) {
+
+        if(studentInfoService.checkCanBind(account.getAccount(), appId, openid)) {
+            AppStudentUserBO user = userRepository.findByStudentAccount(account);
+            if(user.getPhoneNumber().equals(phoneNumber)) {
+                WechatStudentUserBO studentUserBO = studentRepository.getWetChatUserByAccount(Integer.parseInt(account.getAccount()));
+
+                studentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
+
+                studentRepository.save(studentUserBO);
+
+                return studentUserBO;
+            }
+
+            return null;
 
         }else {
             throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
