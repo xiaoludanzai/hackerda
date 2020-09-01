@@ -8,8 +8,10 @@ import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.UrpClass;
+import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.service.NewUrpSpiderService;
 
@@ -41,6 +43,8 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     private StudentRepository studentRepository;
     @Autowired
     private UrpSearchSpider urpSearchSpider;
+    @Autowired
+    private UserDao userDao;
     @Autowired
     private SpiderExceptionTransfer exceptionTransfer;
 
@@ -105,9 +109,17 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         WechatOpenid wechatOpenid = new WechatOpenid()
                 .setAccount(Integer.parseInt(account))
                 .setAppid(appId);
+
         List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
+        Map<String, WechatOpenid> openidMap = wechatOpenidList.stream().collect(Collectors.toMap(WechatOpenid::getOpenid, x -> x));
 
+        if(openidMap.get(openid) != null) {
 
+            User user = userDao.selectByStudentAccount(account);
+
+            return user == null || user.getGmtCreate().before(openidMap.get(openid).getGmtModified());
+
+        }
 
         return false;
     }

@@ -45,7 +45,7 @@ public class StudentBindApp {
         if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
-            if(studentUserBO.isUsingDefaultPassword()  && studentInfoService.isCommonWechat(account, appId, openid)) {
+            if(studentUserBO.isUsingDefaultPassword()  && !studentInfoService.isCommonWechat(account, appId, openid)) {
                 studentRepository.save(wechatStudentUserBO);
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
