@@ -68,17 +68,22 @@ public class StudentBindApp {
 
         if(studentInfoService.checkCanBind(account.getAccount(), appId, openid)) {
             AppStudentUserBO user = userRepository.findByStudentAccount(account);
+
+            if(user == null) {
+                throw new BusinessException(ErrorCode.ACCOUNT_MISS, "用户信息不存在");
+
+            }
             if(user.getPhoneNumber().equals(phoneNumber)) {
-                WechatStudentUserBO studentUserBO = studentRepository.getWetChatUserByAccount(Integer.parseInt(account.getAccount()));
+                StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account.getAccount()));
+                WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
+                wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
-                studentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
+                studentRepository.save(wechatStudentUserBO);
 
-                studentRepository.save(studentUserBO);
-
-                return studentUserBO;
+                return wechatStudentUserBO;
             }
 
-            return null;
+            throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
 
         }else {
             throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
