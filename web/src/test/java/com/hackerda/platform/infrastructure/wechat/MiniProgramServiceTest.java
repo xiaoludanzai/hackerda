@@ -23,7 +23,7 @@ public class MiniProgramServiceTest {
         boolean b1 = miniProgramService.isSecurityContent("特3456书yuuo莞6543李zxcz蒜7782法fgnv级\n" +
                 "完2347全dfji试3726测asad感3847知qwez到");
 
-        boolean b2 = miniProgramService.isSecurityContent("what the help");
+        boolean b2 = miniProgramService.isSecurityContent("毛泽东");
 
         System.out.println(b1);
         System.out.println(b2);

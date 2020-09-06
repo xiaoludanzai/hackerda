@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper">
+
+    <select id="selectShowPost"  resultMap="com.hackerda.platform.infrastructure.database.mapper.PostMapper.BaseResultMap">
+        select
+        <include refid="com.hackerda.platform.infrastructure.database.mapper.PostMapper.Base_Column_List" />
+        from post
+        <where>
+            <if test="startId != null">
+                and id  &lt; #{startId,jdbcType=INTEGER}
+            </if>
+
+            and record_status= 0
+
+        </where>
+        order by id desc limit  #{count,jdbcType=INTEGER}
+    </select>
+</mapper>

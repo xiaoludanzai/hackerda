@@ -36,7 +36,6 @@ public class WebResponse<T> {
 		return new WebResponse<T>().setStatus(SUCCESS_CODE).setMessage("").setData(data);
 	}
 
-	@SuppressWarnings({"unused"})
 	public static WebResponse fail(Integer status, String message) {
 		Objects.requireNonNull(status);
 		Objects.requireNonNull(message);

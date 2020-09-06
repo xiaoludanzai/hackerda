@@ -30,6 +30,8 @@ public class Post implements Serializable {
 
     private Integer viewCount;
 
+    private String equipment;
+
     private Date gmtCreate;
 
     private Date gmtModify;

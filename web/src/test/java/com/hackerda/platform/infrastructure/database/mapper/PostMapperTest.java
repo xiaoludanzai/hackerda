@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.database.mapper;
 
+import com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper;
 import com.hackerda.platform.infrastructure.database.model.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -18,11 +19,11 @@ import static org.junit.Assert.*;
 public class PostMapperTest {
 
     @Autowired
-    private PostMapper postMapper;
+    private PostExtMapper postExtMapper;
 
     @Test
     public void selectShowPost() {
-        List<Post> posts = postMapper.selectShowPost(null, 20);
+        List<Post> posts = postExtMapper.selectShowPost(null, 20);
         System.out.println(posts);
 
     }

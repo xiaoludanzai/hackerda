@@ -36,7 +36,7 @@ public class PosterRepositoryImplTest {
     @Test
     public void save() {
         List<ImageInfo> imageInfos = Lists.newArrayList(new ImageInfo("test1", "test1"), new ImageInfo("test2", "test2"));
-        PostBO postBO = new PostBO("2014025838", "测试内容", imageInfos, IdentityCategory.Community);
+        PostBO postBO = new PostBO("2014025838", "测试内容", imageInfos, IdentityCategory.Community, "IPhone X");
         postBO.setStatus(RecordStatus.Release);
         posterRepository.save(postBO);
 

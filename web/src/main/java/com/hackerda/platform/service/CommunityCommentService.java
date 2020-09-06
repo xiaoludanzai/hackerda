@@ -49,7 +49,7 @@ public class CommunityCommentService {
 
     public CommentDetailVO findByPostId(String userName, long postId) {
 
-        List<CommentDetailBO> detailByPostId = commentRepository.findDetailByPostId(postId);
+        List<CommentDetailBO> detailByPostId = commentRepository.find(RecordStatus.Release, postId);
         Map<String, PostUserVO> userNamePosterMap = detailByPostId.stream()
                 .collect(Collectors.toMap(CommentDetailBO::getUserName, this::toPostUserVO, (x1, x2) -> x1));
 

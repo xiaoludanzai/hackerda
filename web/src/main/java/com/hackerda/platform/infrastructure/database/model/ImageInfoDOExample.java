@@ -305,6 +305,66 @@ public class ImageInfoDOExample {
             return (Criteria) this;
         }
 
+        public Criteria andRecordStatusIsNull() {
+            addCriterion("record_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusIsNotNull() {
+            addCriterion("record_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusEqualTo(Integer value) {
+            addCriterion("record_status =", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusNotEqualTo(Integer value) {
+            addCriterion("record_status <>", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusGreaterThan(Integer value) {
+            addCriterion("record_status >", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("record_status >=", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusLessThan(Integer value) {
+            addCriterion("record_status <", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("record_status <=", value, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusIn(List<Integer> values) {
+            addCriterion("record_status in", values, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusNotIn(List<Integer> values) {
+            addCriterion("record_status not in", values, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusBetween(Integer value1, Integer value2) {
+            addCriterion("record_status between", value1, value2, "recordStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("record_status not between", value1, value2, "recordStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andGmtCreateIsNull() {
             addCriterion("gmt_create is null");
             return (Criteria) this;

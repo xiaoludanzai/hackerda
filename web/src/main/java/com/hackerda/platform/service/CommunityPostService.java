@@ -47,7 +47,7 @@ public class CommunityPostService {
                 .map(x -> new ImageInfo(x.getTempFileURL(), x.getFileID()))
                 .collect(Collectors.toList());
         PostBO postBO = new PostBO(userName, createPostRequest.getContent(), imageInfoList,
-                IdentityCategory.getByCode(createPostRequest.getIdentityCode()));
+                IdentityCategory.getByCode(createPostRequest.getIdentityCode()), createPostRequest.getEquipment());
 
         postBO.setStatus(RecordStatus.Create);
 

@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="record_status" jdbcType="INTEGER" property="recordStatus" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
   </resultMap>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, url, file_id, gmt_create, gmt_modify
+    id, url, file_id, record_status, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.ImageInfoDOExample" resultMap="BaseResultMap">
     select
@@ -100,10 +101,10 @@
     </if>
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.ImageInfoDO" useGeneratedKeys="true">
-    insert into image_info (url, file_id, gmt_create, 
-      gmt_modify)
-    values (#{url,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModify,jdbcType=TIMESTAMP})
+    insert into image_info (url, file_id, record_status, 
+      gmt_create, gmt_modify)
+    values (#{url,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, #{recordStatus,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.ImageInfoDO" useGeneratedKeys="true">
     insert into image_info
@@ -113,6 +114,9 @@
       </if>
       <if test="fileId != null">
         file_id,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
       </if>
       <if test="gmtCreate != null">
         gmt_create,
@@ -127,6 +131,9 @@
       </if>
       <if test="fileId != null">
         #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=INTEGER},
       </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -154,6 +161,9 @@
       <if test="record.fileId != null">
         file_id = #{record.fileId,jdbcType=VARCHAR},
       </if>
+      <if test="record.recordStatus != null">
+        record_status = #{record.recordStatus,jdbcType=INTEGER},
+      </if>
       <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -170,6 +180,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       url = #{record.url,jdbcType=VARCHAR},
       file_id = #{record.fileId,jdbcType=VARCHAR},
+      record_status = #{record.recordStatus,jdbcType=INTEGER},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -185,6 +196,9 @@
       <if test="fileId != null">
         file_id = #{fileId,jdbcType=VARCHAR},
       </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=INTEGER},
+      </if>
       <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -198,41 +212,9 @@
     update image_info
     set url = #{url,jdbcType=VARCHAR},
       file_id = #{fileId,jdbcType=VARCHAR},
+      record_status = #{recordStatus,jdbcType=INTEGER},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-    insert ignore into image_info
-    (url, file_id)
-    VALUES
-    <foreach collection="list" item="item" index="index" separator=",">
-      (
-      #{item.url,jdbcType=VARCHAR},
-      #{item.fileId,jdbcType=VARCHAR}
-      )
-    </foreach>
-  </insert>
-  <insert id="insertPostImageRelative" >
-    insert into post_image (post_id, image_id) values
-    <foreach collection="imageIdList" item="item" index="index" separator=",">
-      (
-       #{postId,jdbcType=VARCHAR},
-       #{item,jdbcType=VARCHAR})
-    </foreach>
-  </insert>
-
-  <select id="selectByPostId" resultMap="BaseResultMap">
-    select
-    i.id, i.url, i.file_id, i.gmt_create, i.gmt_modify
-
-    from image_info i
-
-    join post_image p on i.id = p.image_id
-
-    where p.post_id = #{postId, jdbcType=BIGINT}
-
-  </select>
-
 </mapper>

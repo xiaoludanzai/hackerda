@@ -16,6 +16,8 @@ public class ImageInfoDO implements Serializable {
 
     private String fileId;
 
+    private Integer recordStatus;
+
     private Date gmtCreate;
 
     private Date gmtModify;

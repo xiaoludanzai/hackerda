@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.ImageInfoExtMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert ignore into image_info
+        (url, file_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.url,jdbcType=VARCHAR},
+            #{item.fileId,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertPostImageRelative" >
+        insert into post_image (post_id, image_id) values
+        <foreach collection="imageIdList" item="item" index="index" separator=",">
+            (
+            #{postId,jdbcType=VARCHAR},
+            #{item,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="selectByPostId" resultMap="com.hackerda.platform.infrastructure.database.mapper.ImageInfoMapper.BaseResultMap">
+        select
+            i.id, i.url, i.file_id, i.gmt_create, i.gmt_modify
+
+        from image_info i
+
+                 join post_image p on i.id = p.image_id
+
+        where p.post_id = #{postId, jdbcType=BIGINT}
+
+    </select>
+</mapper>

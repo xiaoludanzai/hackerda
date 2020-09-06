@@ -725,6 +725,76 @@ public class PostExample {
             return (Criteria) this;
         }
 
+        public Criteria andEquipmentIsNull() {
+            addCriterion("equipment is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentIsNotNull() {
+            addCriterion("equipment is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentEqualTo(String value) {
+            addCriterion("equipment =", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentNotEqualTo(String value) {
+            addCriterion("equipment <>", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentGreaterThan(String value) {
+            addCriterion("equipment >", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentGreaterThanOrEqualTo(String value) {
+            addCriterion("equipment >=", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentLessThan(String value) {
+            addCriterion("equipment <", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentLessThanOrEqualTo(String value) {
+            addCriterion("equipment <=", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentLike(String value) {
+            addCriterion("equipment like", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentNotLike(String value) {
+            addCriterion("equipment not like", value, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentIn(List<String> values) {
+            addCriterion("equipment in", values, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentNotIn(List<String> values) {
+            addCriterion("equipment not in", values, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentBetween(String value1, String value2) {
+            addCriterion("equipment between", value1, value2, "equipment");
+            return (Criteria) this;
+        }
+
+        public Criteria andEquipmentNotBetween(String value1, String value2) {
+            addCriterion("equipment not between", value1, value2, "equipment");
+            return (Criteria) this;
+        }
+
         public Criteria andGmtCreateIsNull() {
             addCriterion("gmt_create is null");
             return (Criteria) this;

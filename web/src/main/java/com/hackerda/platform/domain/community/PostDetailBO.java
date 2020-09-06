@@ -27,14 +27,14 @@ public class PostDetailBO extends PostBO {
 
 
     public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
-                        IdentityCategory identityCategory) {
-        super(userName, content, imageInfoList, identityCategory);
+                        IdentityCategory identityCategory, String equipment) {
+        super(userName, content, imageInfoList, identityCategory, equipment);
         this.id = id;
     }
 
     public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
-                        IdentityCategory identityCategory, Date postTime) {
-        super(userName, content, imageInfoList, identityCategory, postTime);
+                        IdentityCategory identityCategory, Date postTime, String equipment) {
+        super(userName, content, imageInfoList, identityCategory, postTime, equipment);
         this.id = id;
     }
 

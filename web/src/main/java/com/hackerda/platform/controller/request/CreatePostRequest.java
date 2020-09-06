@@ -12,4 +12,6 @@ public class CreatePostRequest {
     private List<ImageInfoRequest> imageInfoRequestList;
 
     private Integer identityCode;
+
+    private String equipment;
 }

@@ -5,7 +5,7 @@ import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.Gender;
 import com.hackerda.platform.infrastructure.database.dao.ImageDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
-import com.hackerda.platform.infrastructure.database.mapper.PostMapper;
+import com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper;
 import com.hackerda.platform.infrastructure.database.model.ImageInfoDO;
 import com.hackerda.platform.infrastructure.database.model.Post;
 import com.hackerda.platform.infrastructure.database.model.PostExample;
@@ -25,7 +25,7 @@ public class PosterRepositoryImpl implements PosterRepository {
     @Autowired
     private ImageDao imageDao;
     @Autowired
-    private PostMapper postMapper;
+    private PostExtMapper postExtMapper;
 
     @Override
     public StudentPoster findByStudentAccount(StudentAccount studentAccount) {
@@ -61,16 +61,8 @@ public class PosterRepositoryImpl implements PosterRepository {
     @Transactional
     public void save(PostBO postBO) {
 
-        Post post = new Post();
-
-        post.setAllowComment(postBO.isAllowComment() ? (byte) 1 : (byte) 0);
-        post.setContent(postBO.getContent());
-        post.setIdentityCode(postBO.getIdentityCategory().getCode());
-        post.setRecordStatus(postBO.getStatus().getCode());
-        post.setUserName(postBO.getUserName());
-        post.setPostTime(postBO.getPostTime());
-
-        postMapper.insertSelective(post);
+        Post post = adapter(postBO);
+        postExtMapper.insertSelective(post);
 
         List<ImageInfoDO> imageInfoDOList = postBO.getImageInfoList().stream().map(x -> {
             ImageInfoDO imageInfoDO = new ImageInfoDO();
@@ -89,9 +81,15 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     @Override
     public void update(PostBO postBO, long id) {
-        Post post = new Post();
+        Post post = adapter(postBO);
 
         post.setId(id);
+
+        postExtMapper.updateByPrimaryKeySelective(post);
+    }
+
+    private Post adapter(PostBO postBO) {
+        Post post = new Post();
 
         post.setAllowComment(postBO.isAllowComment() ? (byte) 1 : (byte) 0);
         post.setContent(postBO.getContent());
@@ -99,13 +97,13 @@ public class PosterRepositoryImpl implements PosterRepository {
         post.setRecordStatus(postBO.getStatus().getCode());
         post.setUserName(postBO.getUserName());
         post.setPostTime(postBO.getPostTime());
-
-        postMapper.updateByPrimaryKeySelective(post);
+        post.setEquipment(postBO.getEquipment());
+        return post;
     }
 
     @Override
     public PostDetailBO findByPostById(long id) {
-        Post post = postMapper.selectByPrimaryKey(id);
+        Post post = postExtMapper.selectByPrimaryKey(id);
 
         return getPostDetailBO(post);
     }
@@ -115,7 +113,7 @@ public class PosterRepositoryImpl implements PosterRepository {
     @Override
     public List<PostDetailBO> findShowPost(Integer startId, int limit) {
 
-        List<Post> postList = postMapper.selectShowPost(startId, limit);
+        List<Post> postList = postExtMapper.selectShowPost(startId, limit);
 
         return postList.stream().map(this::getPostDetailBO).collect(Collectors.toList());
 
@@ -123,7 +121,7 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     @Override
     public long count() {
-        return postMapper.countByExample(new PostExample());
+        return postExtMapper.countByExample(new PostExample());
     }
 
     private PostDetailBO getPostDetailBO(Post post) {
@@ -131,7 +129,7 @@ public class PosterRepositoryImpl implements PosterRepository {
                 .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
 
         PostDetailBO postDetailBO = new PostDetailBO(post.getId(), post.getUserName(), post.getContent(), imageInfoList,
-                IdentityCategory.getByCode(post.getIdentityCode()), post.getPostTime());
+                IdentityCategory.getByCode(post.getIdentityCode()), post.getPostTime(), post.getEquipment());
 
         StudentPoster poster = this.findStudentPosterByUserName(post.getUserName());
 

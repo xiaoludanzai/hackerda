@@ -12,6 +12,7 @@
     <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
+    <result column="equipment" jdbcType="VARCHAR" property="equipment" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
   </resultMap>
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_name, content, allow_comment, identity_code, post_time, record_status, comment_count, 
-    like_count, view_count, gmt_create, gmt_modify
+    like_count, view_count, equipment, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.PostExample" resultMap="BaseResultMap">
     select
@@ -111,11 +112,13 @@
     insert into post (user_name, content, allow_comment, 
       identity_code, post_time, record_status, 
       comment_count, like_count, view_count, 
-      gmt_create, gmt_modify)
+      equipment, gmt_create, gmt_modify
+      )
     values (#{userName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{allowComment,jdbcType=TINYINT}, 
       #{identityCode,jdbcType=INTEGER}, #{postTime,jdbcType=TIMESTAMP}, #{recordStatus,jdbcType=INTEGER}, 
       #{commentCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER}, 
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
+      #{equipment,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Post" useGeneratedKeys="true">
     insert into post
@@ -146,6 +149,9 @@
       </if>
       <if test="viewCount != null">
         view_count,
+      </if>
+      <if test="equipment != null">
+        equipment,
       </if>
       <if test="gmtCreate != null">
         gmt_create,
@@ -181,6 +187,9 @@
       </if>
       <if test="viewCount != null">
         #{viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="equipment != null">
+        #{equipment,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -229,6 +238,9 @@
       <if test="record.viewCount != null">
         view_count = #{record.viewCount,jdbcType=INTEGER},
       </if>
+      <if test="record.equipment != null">
+        equipment = #{record.equipment,jdbcType=VARCHAR},
+      </if>
       <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -252,6 +264,7 @@
       comment_count = #{record.commentCount,jdbcType=INTEGER},
       like_count = #{record.likeCount,jdbcType=INTEGER},
       view_count = #{record.viewCount,jdbcType=INTEGER},
+      equipment = #{record.equipment,jdbcType=VARCHAR},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -288,6 +301,9 @@
       <if test="viewCount != null">
         view_count = #{viewCount,jdbcType=INTEGER},
       </if>
+      <if test="equipment != null">
+        equipment = #{equipment,jdbcType=VARCHAR},
+      </if>
       <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -308,24 +324,9 @@
       comment_count = #{commentCount,jdbcType=INTEGER},
       like_count = #{likeCount,jdbcType=INTEGER},
       view_count = #{viewCount,jdbcType=INTEGER},
+      equipment = #{equipment,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select id="selectShowPost"  resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from post
-    <where>
-      <if test="startId != null">
-        and id  &lt; #{startId,jdbcType=INTEGER}
-      </if>
-
-      and record_status= 0
-
-    </where>
-     order by id desc limit  #{count,jdbcType=INTEGER}
-
-  </select>
 </mapper>

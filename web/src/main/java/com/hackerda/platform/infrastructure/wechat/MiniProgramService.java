@@ -59,7 +59,6 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
 
     public AuthResponse auth(String code) {
 
-
         String url = String.format(authString, miniProgramProperties.getAppId(), miniProgramProperties.getSecret(), code);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
@@ -105,6 +104,7 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
                         response.getExpiresIn(), TimeUnit.SECONDS);
                 return response.getAccessToken();
             }else {
+                log.error("get access token error {}", response);
                 throw new RuntimeException();
             }
 
@@ -194,5 +194,10 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
 
 
 
+    }
+
+    @Override
+    public boolean isSecurityImage(byte[] image) {
+        return false;
     }
 }

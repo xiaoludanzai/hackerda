@@ -39,17 +39,21 @@ public class PostBO {
     @Setter
     private RecordStatus status;
 
+    private final String equipment;
 
-    public PostBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory) {
-        this(userName, content, imageInfoList, identityCategory, new Date());
+
+    public PostBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory, String equipment) {
+        this(userName, content, imageInfoList, identityCategory, new Date(), equipment);
     }
 
-    public PostBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory, Date postTime) {
+    public PostBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory,
+                  Date postTime, String equipment) {
         this.userName = userName;
         this.content = content;
         this.imageInfoList = imageInfoList;
         this.identityCategory = identityCategory;
         this.postTime = postTime;
+        this.equipment = equipment;
     }
 
     public boolean isRelease() {
