@@ -3,7 +3,7 @@ package com.hackerda.platform.service;
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.controller.vo.GradeResultVo;
 import org.apache.shiro.SecurityUtils;
@@ -16,7 +16,7 @@ public class GradeService {
     @Autowired
     private GradeQueryApp gradeQueryApp;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
     @Autowired
     private GradeTransfer gradeTransfer;
 
@@ -29,7 +29,7 @@ public class GradeService {
     }
 
     public GradeResultVo getGrade(int account) {
-        WechatStudentUserBO wechatStudentUserBO = studentUserRepository.getWetChatUserByAccount(account);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(account);
         String enablePassword = wechatStudentUserBO.getEnablePassword();
         System.out.println(enablePassword);
         GradeOverviewBO gradeOverview = gradeQueryApp.getGradeOverview(wechatStudentUserBO);

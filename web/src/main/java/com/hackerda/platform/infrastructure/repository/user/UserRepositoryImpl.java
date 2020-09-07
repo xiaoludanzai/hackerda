@@ -8,6 +8,7 @@ import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.infrastructure.database.dao.rbac.RoleDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.model.User;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,8 +48,21 @@ public class UserRepositoryImpl implements UserRepository {
 
         userDao.insertStudentRelative(user.getUserName(), appStudentUserBO.getAccount().getAccount());
 
-        roleDao.insertUserRoleRelative(user.getUserName(),
-                appStudentUserBO.getRoleList().stream().map(RoleBO ::getCode).collect(Collectors.toList()));
+        if(CollectionUtils.isNotEmpty(appStudentUserBO.getRoleList())) {
+            roleDao.insertUserRoleRelative(user.getUserName(),
+                    appStudentUserBO.getRoleList().stream()
+                            .map(RoleBO ::getCode)
+                            .collect(Collectors.toList()));
+        }
+
+
+    }
+
+    @Transactional
+    @Override
+    public void update(AppStudentUserBO appStudentUserBO) {
+        User user = userAdapter.toDO(appStudentUserBO);
+
 
     }
 }

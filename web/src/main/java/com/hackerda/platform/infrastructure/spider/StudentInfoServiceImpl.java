@@ -1,16 +1,14 @@
 package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.constant.ErrorCode;
-import com.hackerda.platform.domain.student.StudentInfoService;
-import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
-import com.hackerda.platform.domain.student.WechatStudentUserBO;
+import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.exception.BusinessException;
-import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
+import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.UrpClass;
+import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.service.NewUrpSpiderService;
 
@@ -21,10 +19,12 @@ import com.hackerda.spider.exception.UrpTimeoutException;
 import com.hackerda.spider.support.search.classInfo.ClassInfoSearchResult;
 import com.hackerda.spider.support.search.classInfo.SearchClassInfoPost;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,11 +39,15 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     @Autowired
     private UrpClassDao urpClassDao;
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
     @Autowired
     private UrpSearchSpider urpSearchSpider;
     @Autowired
+    private UserDao userDao;
+    @Autowired
     private SpiderExceptionTransfer exceptionTransfer;
+    @Autowired
+    private StudentInfoAssist studentInfoAssist;
 
 
     @Override
@@ -54,13 +58,11 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }catch (PasswordUnCorrectException e) {
             return false;
         } catch (UrpTimeoutException e) {
-
-            StudentUserBO studentUserBO = studentUserRepository.getByAccount(Integer.parseInt(account));
+            StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account));
             if (studentUserBO == null) {
                 throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
             }
             return studentUserBO.getIsCorrect();
-
         }
 
         catch (Throwable throwable){
@@ -69,9 +71,13 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public boolean checkCanBind(String account, String appId, String openid) {
+    public boolean checkCanBind(StudentAccount account, String appId, String openid) {
 
-        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(Integer.parseInt(account), appId);
+        if(studentInfoAssist.inLoginWhiteList(account)) {
+            return true;
+        }
+
+        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(account.getInt(), appId);
 
         if(wechatOpenid == null) {
             return true;
@@ -79,9 +85,9 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public WechatStudentUserBO getStudentInfo(String account, String enablePassword) {
+    public WechatStudentUserBO getStudentInfo(StudentAccount account, String enablePassword) {
 
-        StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account, enablePassword);
+        StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account.getAccount(), enablePassword);
         UrpClass urpClass = getClassByName(userInfo.getClassName(), userInfo.getAccount().toString());
 
         WechatStudentUserBO user = new WechatStudentUserBO();
@@ -101,6 +107,46 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         return user;
     }
 
+    /**
+     * 检查openid是否是学号的常用openid
+     * @param account 教务网账号
+     * @param appId 微信应用id
+     * @param openid 微信用户openid
+     * @return 是常用微信则返回true
+     */
+    @Override
+    public boolean isCommonWechat(StudentAccount account, String appId, String openid) {
+
+        User user = userDao.selectByStudentAccount(account.getAccount());
+        if(user == null) {
+            return true;
+        }
+
+        // TODO 这个逻辑应该移到领域对象中
+        WechatOpenid wechatOpenid = new WechatOpenid()
+                .setAccount(account.getInt())
+                .setAppid(appId);
+
+        List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
+
+        if(CollectionUtils.isEmpty(wechatOpenidList)) {
+            return false;
+        }
+
+        Map<String, WechatOpenid> openidMap = wechatOpenidList.stream().collect(Collectors.toMap(WechatOpenid::getOpenid, x -> x));
+        WechatOpenid commonWechat = openidMap.get(openid);
+
+        if(commonWechat != null) {
+            if(commonWechat.getIsBind()) {
+                return true;
+            }
+
+            Date gmtModified = commonWechat.getGmtModified();
+            return user.getGmtCreate().before(gmtModified) || user.getGmtCreate().equals(gmtModified);
+        }
+
+        return false;
+    }
 
     public UrpClass getClassByName(String className, String account){
 
@@ -119,9 +165,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
             Map<String, UrpClass> collect = results.stream()
                     .collect(Collectors.toMap(UrpClass::getClassName, x -> x, (k1, k2) -> k1));
 
-
             urpClassDao.insertBatch(new ArrayList<>(collect.values()));
-
 
             return collect.get(className);
         }catch (Exception e){

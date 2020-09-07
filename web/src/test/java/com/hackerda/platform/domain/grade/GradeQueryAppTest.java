@@ -4,7 +4,7 @@ import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.mapper.GradeMapper;
 import com.hackerda.platform.infrastructure.repository.grade.GradeSpiderFacade;
-import com.hackerda.platform.infrastructure.repository.student.StudentUserRepositoryImpl;
+import com.hackerda.platform.infrastructure.repository.student.StudentRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class GradeQueryAppTest {
     @Autowired
     private GradeMapper gradeMapper;
     @Autowired
-    private StudentUserRepositoryImpl studentUserRepository;
+    private StudentRepositoryImpl studentUserRepository;
     @MockBean
     private GradeSpiderFacade gradeSpiderFacade;
 

@@ -72,12 +72,4 @@ public class WechatOpenidBO {
         this.saveOrUpdate = true;
     }
 
-    @Override
-    public String toString() {
-        return "WechatOpenidBO{" +
-                "account=" + account +
-                ", wechatPlatform=" + wechatPlatform +
-                ", wechatSubscribeBOList=" + wechatSubscribeBOList +
-                '}';
-    }
 }

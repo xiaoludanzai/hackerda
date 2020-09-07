@@ -27,6 +27,17 @@ public class UserAuthorizeController {
         return WebResponse.success(userAuthorizeService.studentAuthorize(account, password, appid, openid));
     }
 
+    @RequestMapping(value = "/commonStudent", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public WebResponse<StudentUserDetailVO> bindCommonWechatUser(@RequestParam("account") String account,
+                                                         @RequestParam("phoneNumber") String phoneNumber,
+                                                         @RequestParam(value = "appid", required = false) String appId,
+                                                         @RequestParam(value = "openid", required = false) String openid){
+
+
+        return WebResponse.success(userAuthorizeService.bindCommonWechatUser(account, phoneNumber, appId, openid));
+    }
+
 
     @RequestMapping(value = "/app/student", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody

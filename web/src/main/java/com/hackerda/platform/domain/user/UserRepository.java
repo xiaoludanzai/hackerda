@@ -9,4 +9,6 @@ public interface UserRepository {
     AppUserBO findByUserName(String userName);
 
     void store(AppStudentUserBO appStudentUserBO);
+
+    void update(AppStudentUserBO appStudentUserBO);
 }

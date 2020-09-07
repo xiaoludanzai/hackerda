@@ -2,14 +2,13 @@ package com.hackerda.platform.config;
 
 import com.google.common.collect.Lists;
 import com.hackerda.platform.controller.auth.*;
-import com.hackerda.platform.domain.student.StudentUserRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.service.rbac.UserDetailService;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
-import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -20,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +30,8 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
-    public StudentJWTRealm studentJWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
-        StudentJWTRealm studentJwtRealm = new StudentJWTRealm(userDetailService, studentUserRepository);
+    public StudentJWTRealm studentJWTRealm(UserDetailService userDetailService, StudentRepository studentRepository){
+        StudentJWTRealm studentJwtRealm = new StudentJWTRealm(userDetailService, studentRepository);
         studentJwtRealm.setAuthenticationTokenClass(JWTToken.class);
         return studentJwtRealm;
     }

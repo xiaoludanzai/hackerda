@@ -2,9 +2,8 @@ package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.course.timetable.CourseTimeTableOverview;
 import com.hackerda.platform.domain.course.timetable.CourseTimetableRepository;
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +11,13 @@ import org.springframework.stereotype.Service;
 public class CourseTimetableQueryApp {
 
     @Autowired
-    private StudentUserRepository studentUserRepository;
+    private StudentRepository studentRepository;
     @Autowired
     private CourseTimetableRepository courseTimetableRepository;
 
     public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
-        StudentUserBO studentUserBO = studentUserRepository.getByAccount(account);
+        StudentUserBO studentUserBO = studentRepository.getByAccount(account);
 
         CourseTimeTableOverview timeTableOverview;
         timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);

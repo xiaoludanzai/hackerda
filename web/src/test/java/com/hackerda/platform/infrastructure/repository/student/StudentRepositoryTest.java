@@ -17,9 +17,9 @@ import java.util.List;
 @ActiveProfiles("prod")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StudentUserRepositoryTest {
+public class StudentRepositoryTest {
     @Autowired
-    private StudentUserRepositoryImpl studentUserRepository;
+    private StudentRepositoryImpl studentUserRepository;
 
     @Test
     public void getByAccount() {

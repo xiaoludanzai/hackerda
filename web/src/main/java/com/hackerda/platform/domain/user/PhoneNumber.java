@@ -1,9 +1,10 @@
 package com.hackerda.platform.domain.user;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class PhoneNumber {
-
 
     /**
      * 手机号格式校验正则
@@ -39,6 +40,26 @@ public class PhoneNumber {
 
     public String getEnableNumber() {
         return this.phoneNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PhoneNumber that = (PhoneNumber) o;
+
+        return new EqualsBuilder()
+                .append(phoneNumber, that.phoneNumber)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(phoneNumber)
+                .toHashCode();
     }
 
 }

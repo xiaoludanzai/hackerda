@@ -2,8 +2,10 @@ package com.hackerda.platform.domain.user;
 
 import com.hackerda.platform.domain.student.StudentAccount;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
 public class AppStudentUserBO extends AppUserBO{
 
     private final StudentAccount account;
@@ -24,13 +26,6 @@ public class AppStudentUserBO extends AppUserBO{
         super.setUserType(UserType.Student);
 
         this.account = studentAccount;
-    }
-
-    @Override
-    public String toString() {
-        return "AppStudentUserBO{" +
-                "account=" + account +
-                '}' + "AppUserBO{ "+ super.toString() + "}" ;
     }
 
     public StudentAccount getAccount() {

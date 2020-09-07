@@ -1,8 +1,7 @@
 package com.hackerda.platform.controller.auth;
 
+import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.StudentUserRepository;
 import com.hackerda.platform.infrastructure.database.model.Permission;
 import com.hackerda.platform.infrastructure.database.model.Role;
 import com.hackerda.platform.infrastructure.database.model.UserDetail;
@@ -30,11 +29,11 @@ import java.util.stream.Collectors;
 public class StudentJWTRealm extends AuthorizingRealm {
 
     private final UserDetailService userDetailService;
-    private final StudentUserRepository studentUserRepository;
+    private final StudentRepository studentRepository;
 
-    public StudentJWTRealm(UserDetailService userDetailService, StudentUserRepository studentUserRepository){
+    public StudentJWTRealm(UserDetailService userDetailService, StudentRepository studentRepository){
         this.userDetailService = userDetailService;
-        this.studentUserRepository = studentUserRepository;
+        this.studentRepository = studentRepository;
     }
 
     /**
@@ -78,7 +77,7 @@ public class StudentJWTRealm extends AuthorizingRealm {
         }
         try {
             JwtUtils.verify(token, username, username);
-            StudentUserBO account = studentUserRepository.getByAccount(Integer.parseInt(username));
+            StudentUserBO account = studentRepository.getByAccount(Integer.parseInt(username));
 
             if(account == null || !account.getIsCorrect()) {
                 log.error("student account {} verify error {}", username, account);
