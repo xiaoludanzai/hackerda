@@ -4,12 +4,13 @@
 
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert ignore into image_info
-        (url, file_id)
+        (url, file_id, record_status)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (
             #{item.url,jdbcType=VARCHAR},
-            #{item.fileId,jdbcType=VARCHAR}
+            #{item.fileId,jdbcType=VARCHAR},
+            #{item.recordStatus,jdbcType=INTEGER}
             )
         </foreach>
     </insert>

@@ -68,6 +68,7 @@ public class PosterRepositoryImpl implements PosterRepository {
             ImageInfoDO imageInfoDO = new ImageInfoDO();
             imageInfoDO.setFileId(x.getFileId());
             imageInfoDO.setUrl(x.getPath());
+            imageInfoDO.setRecordStatus(x.getRecordStatus().getCode());
             return imageInfoDO;
         }).collect(Collectors.toList());
 

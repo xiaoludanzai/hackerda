@@ -3,6 +3,7 @@ package com.hackerda.platform.domain.community;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,10 @@ public class PostBO {
 
     public boolean isRelease() {
         return status == RecordStatus.Release;
+    }
+
+    public boolean hasImage(){
+        return !CollectionUtils.isEmpty(imageInfoList);
     }
 
     public String getUnReleaseReason() {

@@ -17,6 +17,10 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpEntity;
@@ -28,8 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +44,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class MiniProgramService implements WechatAuthService, ContentSecurityCheckService {
-    @Resource
+    @Autowired
     private MiniProgramProperties miniProgramProperties;
-    @Resource
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Resource
+    @Autowired
     private ScheduleTaskDao scheduleTaskDao;
 
     private static final String root = "https://api.weixin.qq.com";
@@ -56,6 +61,8 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
     private static final String SEND_SUBSCRIBE = root+ "/cgi-bin/message/subscribe/send?access_token=%s";
 
     private static final String msg_check = root + "/wxa/msg_sec_check?access_token=%s";
+
+    private static final String img_check = root + "/wxa/img_sec_check?access_token=%s";
 
     public AuthResponse auth(String code) {
 
@@ -162,11 +169,15 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
 
     @Override
     public boolean isSecurityContent(String content) {
+
+        if(StringUtils.isEmpty(content)) {
+            return true;
+        }
         RestTemplate restTemplate = new RestTemplate();
 
         Map<String, String> map = new HashMap<>();
         map.put("content", content);
-        
+
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);
         headers.setContentType(mediaType);
@@ -198,6 +209,32 @@ public class MiniProgramService implements WechatAuthService, ContentSecurityChe
 
     @Override
     public boolean isSecurityImage(byte[] image) {
-        return false;
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        HttpEntity<byte[]> request = new HttpEntity<>(image, headers);
+
+        try {
+            String url = String.format(img_check, getAccessToken());
+            ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
+
+            Response response = parseResponse(entity.getBody(), Response.class);
+
+            if(response.getErrcode() == 0){
+                return true;
+            }
+            else if(response.getErrcode() == 87014) {
+                return false;
+            }
+            else {
+                log.info("check security error response {}", response);
+                return true;
+            }
+        } catch (Throwable throwable) {
+            log.error("check security error", throwable);
+            return true;
+        }
     }
 }

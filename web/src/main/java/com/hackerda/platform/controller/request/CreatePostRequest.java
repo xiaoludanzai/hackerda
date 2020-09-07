@@ -13,5 +13,5 @@ public class CreatePostRequest {
 
     private Integer identityCode;
 
-    private String equipment;
+    private String model;
 }
