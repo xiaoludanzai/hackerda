@@ -19,10 +19,12 @@ import com.hackerda.spider.exception.UrpTimeoutException;
 import com.hackerda.spider.support.search.classInfo.ClassInfoSearchResult;
 import com.hackerda.spider.support.search.classInfo.SearchClassInfoPost;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -105,21 +107,42 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         return user;
     }
 
+    /**
+     * 检查openid是否是学号的常用openid
+     * @param account 教务网账号
+     * @param appId 微信应用id
+     * @param openid 微信用户openid
+     * @return 是常用微信则返回true
+     */
     @Override
     public boolean isCommonWechat(StudentAccount account, String appId, String openid) {
+
+        User user = userDao.selectByStudentAccount(account.getAccount());
+        if(user == null) {
+            return true;
+        }
+
+        // TODO 这个逻辑应该移到领域对象中
         WechatOpenid wechatOpenid = new WechatOpenid()
                 .setAccount(account.getInt())
                 .setAppid(appId);
 
         List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
+
+        if(CollectionUtils.isEmpty(wechatOpenidList)) {
+            return false;
+        }
+
         Map<String, WechatOpenid> openidMap = wechatOpenidList.stream().collect(Collectors.toMap(WechatOpenid::getOpenid, x -> x));
+        WechatOpenid commonWechat = openidMap.get(openid);
 
-        if(openidMap.get(openid) != null) {
+        if(commonWechat != null) {
+            if(commonWechat.getIsBind()) {
+                return true;
+            }
 
-            User user = userDao.selectByStudentAccount(account.getAccount());
-
-            return user == null || user.getGmtCreate().before(openidMap.get(openid).getGmtModified());
-
+            Date gmtModified = commonWechat.getGmtModified();
+            return user.getGmtCreate().before(gmtModified) || user.getGmtCreate().equals(gmtModified);
         }
 
         return false;

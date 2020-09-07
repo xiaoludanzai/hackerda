@@ -26,6 +26,8 @@ public class StudentBindApp {
     private StudentInfoService studentInfoService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StudentInfoAssist studentInfoAssist;
     @Lazy
     @Autowired
     private Map<String , WechatPlatform> wechatPlatformMap;
@@ -45,7 +47,8 @@ public class StudentBindApp {
         if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
-            if(studentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(account, appId, openid)) {
+            if(!studentInfoAssist.inLoginWhiteList(account) && studentUserBO.isUsingDefaultPassword()
+                    && !studentInfoService.isCommonWechat(account, appId, openid)) {
                 studentRepository.save(wechatStudentUserBO);
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
@@ -117,7 +120,7 @@ public class StudentBindApp {
         return studentUserBO;
     }
 
-    private WechatStudentUserBO transfer(StudentUserBO studentUser ) {
+    private WechatStudentUserBO transfer(StudentUserBO studentUser) {
 
         WechatStudentUserBO bo = new WechatStudentUserBO();
 
@@ -134,7 +137,7 @@ public class StudentBindApp {
         bo.setName(studentUser.getName());
 
         bo.setKey(studentUser.getKey());
-        bo.setSaveOrUpdate(true);
+        bo.setSaveOrUpdate(studentUser.isSaveOrUpdate());
 
         return bo;
     }
