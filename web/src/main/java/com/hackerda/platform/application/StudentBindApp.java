@@ -31,21 +31,21 @@ public class StudentBindApp {
     private Map<String , WechatPlatform> wechatPlatformMap;
 
 
-    public WechatStudentUserBO bindByCode(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+    public WechatStudentUserBO bindByCode(@Nonnull StudentAccount studentAccount, @Nonnull String password, @Nonnull String appId,
                                           @Nonnull String code){
         // 查询对应的openid
         String openId = wechatAuthService.appCodeToOpenId(code);
 
-        return bindByOpenId(account, password, appId, openId);
+        return bindByOpenId(studentAccount, password, appId, openId);
     }
 
-    public WechatStudentUserBO bindByOpenId(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
+    public WechatStudentUserBO bindByOpenId(@Nonnull StudentAccount account, @Nonnull String password, @Nonnull String appId,
                                             @Nonnull String openid) {
 
         if(studentInfoService.checkCanBind(account, appId, openid)) {
             StudentUserBO studentUserBO = getStudentUserBO(account, password);
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
-            if(studentUserBO.isUsingDefaultPassword()  && !studentInfoService.isCommonWechat(account, appId, openid)) {
+            if(studentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(account, appId, openid)) {
                 studentRepository.save(wechatStudentUserBO);
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
@@ -66,15 +66,14 @@ public class StudentBindApp {
                                                     @Nonnull String appId,
                                                     @Nonnull String openid) {
 
-        if(studentInfoService.checkCanBind(account.getAccount(), appId, openid)) {
+        if(studentInfoService.checkCanBind(account, appId, openid)) {
             AppStudentUserBO user = userRepository.findByStudentAccount(account);
 
             if(user == null) {
                 throw new BusinessException(ErrorCode.ACCOUNT_MISS, "用户信息不存在");
-
             }
             if(user.getPhoneNumber().equals(phoneNumber)) {
-                StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account.getAccount()));
+                StudentUserBO studentUserBO = studentRepository.getByAccount(account.getInt());
                 WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
                 wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
@@ -96,17 +95,14 @@ public class StudentBindApp {
         wechatStudentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
 
         studentRepository.save(wechatStudentUserBO);
-
     }
 
-
-
-    private StudentUserBO getStudentUserBO(@Nonnull String account, @Nonnull String password) {
-        if(!studentInfoService.checkPasswordValid(account, password)){
+    private StudentUserBO getStudentUserBO(@Nonnull StudentAccount account, @Nonnull String password) {
+        if(!studentInfoService.checkPasswordValid(account.getAccount(), password)){
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
-        StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account));
+        StudentUserBO studentUserBO = studentRepository.getByAccount(account.getInt());
 
         if(studentUserBO != null && !studentUserBO.checkEnablePasswordIsCorrect(password)) {
             studentUserBO.updatePassword(password);
@@ -122,7 +118,6 @@ public class StudentBindApp {
     }
 
     private WechatStudentUserBO transfer(StudentUserBO studentUser ) {
-
 
         WechatStudentUserBO bo = new WechatStudentUserBO();
 

@@ -1,10 +1,7 @@
 package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.constant.ErrorCode;
-import com.hackerda.platform.domain.student.StudentInfoService;
-import com.hackerda.platform.domain.student.StudentRepository;
-import com.hackerda.platform.domain.student.StudentUserBO;
-import com.hackerda.platform.domain.student.WechatStudentUserBO;
+import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
@@ -47,6 +44,8 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     private UserDao userDao;
     @Autowired
     private SpiderExceptionTransfer exceptionTransfer;
+    @Autowired
+    private StudentInfoAssist studentInfoAssist;
 
 
     @Override
@@ -57,13 +56,11 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }catch (PasswordUnCorrectException e) {
             return false;
         } catch (UrpTimeoutException e) {
-
             StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account));
             if (studentUserBO == null) {
                 throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
             }
             return studentUserBO.getIsCorrect();
-
         }
 
         catch (Throwable throwable){
@@ -72,9 +69,13 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public boolean checkCanBind(String account, String appId, String openid) {
+    public boolean checkCanBind(StudentAccount account, String appId, String openid) {
 
-        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(Integer.parseInt(account), appId);
+        if(studentInfoAssist.inLoginWhiteList(account)) {
+            return true;
+        }
+
+        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(account.getInt(), appId);
 
         if(wechatOpenid == null) {
             return true;
@@ -82,9 +83,9 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public WechatStudentUserBO getStudentInfo(String account, String enablePassword) {
+    public WechatStudentUserBO getStudentInfo(StudentAccount account, String enablePassword) {
 
-        StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account, enablePassword);
+        StudentUser userInfo = newUrpSpiderService.getStudentUserInfo(account.getAccount(), enablePassword);
         UrpClass urpClass = getClassByName(userInfo.getClassName(), userInfo.getAccount().toString());
 
         WechatStudentUserBO user = new WechatStudentUserBO();
@@ -105,9 +106,9 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public boolean isCommonWechat(String account, String appId, String openid) {
+    public boolean isCommonWechat(StudentAccount account, String appId, String openid) {
         WechatOpenid wechatOpenid = new WechatOpenid()
-                .setAccount(Integer.parseInt(account))
+                .setAccount(account.getInt())
                 .setAppid(appId);
 
         List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
@@ -115,7 +116,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
         if(openidMap.get(openid) != null) {
 
-            User user = userDao.selectByStudentAccount(account);
+            User user = userDao.selectByStudentAccount(account.getAccount());
 
             return user == null || user.getGmtCreate().before(openidMap.get(openid).getGmtModified());
 
@@ -123,7 +124,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
         return false;
     }
-
 
     public UrpClass getClassByName(String className, String account){
 
@@ -142,9 +142,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
             Map<String, UrpClass> collect = results.stream()
                     .collect(Collectors.toMap(UrpClass::getClassName, x -> x, (k1, k2) -> k1));
 
-
             urpClassDao.insertBatch(new ArrayList<>(collect.values()));
-
 
             return collect.get(className);
         }catch (Exception e){

@@ -31,14 +31,17 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
     @Override
     public StudentUserDetailVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String openid) {
-        WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(account, password, appId, openid);
+        StudentAccount studentAccount = new StudentAccount(account);
+        WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(studentAccount, password, appId, openid);
 
         return getVO(studentUser);
     }
 
     @Override
     public StudentUserDetailVO appStudentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String code) {
-        WechatStudentUserBO studentUser = studentBindApp.bindByCode(account, password, appId, code);
+
+        StudentAccount studentAccount = new StudentAccount(account);
+        WechatStudentUserBO studentUser = studentBindApp.bindByCode(studentAccount, password, appId, code);
 
         return getVO(studentUser);
     }
