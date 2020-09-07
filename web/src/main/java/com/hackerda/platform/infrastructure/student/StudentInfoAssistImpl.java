@@ -16,4 +16,9 @@ public class StudentInfoAssistImpl implements StudentInfoAssist {
     public boolean inLoginWhiteList(StudentAccount studentAccount) {
         return studentAccountSet.contains(studentAccount);
     }
+
+    @Override
+    public boolean needToCheckWechatCommentUser() {
+        return false;
+    }
 }

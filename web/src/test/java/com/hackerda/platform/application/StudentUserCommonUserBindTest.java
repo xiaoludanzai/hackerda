@@ -44,6 +44,7 @@ public class StudentUserCommonUserBindTest {
     @Before
     public void init(){
         when(studentInfoAssist.inLoginWhiteList(any())).thenReturn(false);
+        when(studentInfoAssist.needToCheckWechatCommentUser()).thenReturn(true);
     }
 
     @Test

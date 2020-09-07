@@ -7,4 +7,5 @@ public interface StudentInfoAssist {
 
     boolean inLoginWhiteList(StudentAccount studentAccount);
 
+    boolean needToCheckWechatCommentUser();
 }
