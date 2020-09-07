@@ -33,7 +33,6 @@ import java.util.Map;
  */
 @Configuration
 @ComponentScan(basePackages = "com.hackerda.platform.config.*")
-@Component
 @EnableConfigurationProperties(value = {WechatMpProProperties.class, WechatMpPlusProperties.class, WechatTemplateProperties.class})
 public class WechatMpConfiguration {
 
