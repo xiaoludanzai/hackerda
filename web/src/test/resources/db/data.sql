@@ -1782,3 +1782,8 @@ INSERT INTO `permission` VALUES (2, '评论', 'comment');
 INSERT INTO `role_permission` VALUES (1, 1, 1);
 INSERT INTO `role_permission` VALUES (2, 1, 2);
 
+INSERT INTO `student` VALUES (1, 2014025838, 'T57DEgRq15w=', '陈隽嵘', '男', '汉族', 2014090011, 1, '计算机与信息工程学院', '物联网工程', '物联网14-2', '2020-08-03 12:19:12', '2020-08-03 12:28:31');
+INSERT INTO `student` VALUES (00000000003, 2017025838, 'mpgFIAYNT/k=', '侯慧敏', '女', '汉族', 2017120008, 1, '人文社会科学学院', '汉语言文学', '汉语言17-2', '2020-08-24 14:40:11', '2020-08-24 14:40:11');
+
+
+

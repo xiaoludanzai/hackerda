@@ -905,6 +905,66 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andLifeCycleStatusIsNull() {
+            addCriterion("life_cycle_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusIsNotNull() {
+            addCriterion("life_cycle_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusEqualTo(Integer value) {
+            addCriterion("life_cycle_status =", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusNotEqualTo(Integer value) {
+            addCriterion("life_cycle_status <>", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusGreaterThan(Integer value) {
+            addCriterion("life_cycle_status >", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("life_cycle_status >=", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusLessThan(Integer value) {
+            addCriterion("life_cycle_status <", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("life_cycle_status <=", value, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusIn(List<Integer> values) {
+            addCriterion("life_cycle_status in", values, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusNotIn(List<Integer> values) {
+            addCriterion("life_cycle_status not in", values, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusBetween(Integer value1, Integer value2) {
+            addCriterion("life_cycle_status between", value1, value2, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLifeCycleStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("life_cycle_status not between", value1, value2, "lifeCycleStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andGmtCreateIsNull() {
             addCriterion("gmt_create is null");
             return (Criteria) this;

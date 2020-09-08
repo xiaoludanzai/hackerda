@@ -9,6 +9,7 @@ import com.hackerda.platform.infrastructure.database.dao.rbac.RoleDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.model.User;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         userDao.insert(user);
 
-        userDao.insertStudentRelative(user.getUserName(), appStudentUserBO.getAccount().getAccount());
+        saveOrUpdateStudentRelative(appStudentUserBO, user);
 
         if(CollectionUtils.isNotEmpty(appStudentUserBO.getRoleList())) {
             roleDao.insertUserRoleRelative(user.getUserName(),
@@ -63,6 +64,20 @@ public class UserRepositoryImpl implements UserRepository {
     public void update(AppStudentUserBO appStudentUserBO) {
         User user = userAdapter.toDO(appStudentUserBO);
 
+        saveOrUpdateStudentRelative(appStudentUserBO, user);
+
+        userDao.updateByUserNameSelective(user);
 
     }
+
+    private void saveOrUpdateStudentRelative(AppStudentUserBO appStudentUserBO, User user) {
+        String userName = userDao.selectRelativeUserNameByStudentAccount(appStudentUserBO.getAccount().getAccount());
+
+        if (userName == null) {
+            userDao.insertStudentRelative(user.getUserName(), appStudentUserBO.getAccount().getAccount());
+        } else if (!userName.equals(appStudentUserBO.getUserName())) {
+            userDao.updateRelativeUserNameByStudentAccount(user.getUserName(), appStudentUserBO.getAccount().getAccount());
+        }
+    }
+
 }

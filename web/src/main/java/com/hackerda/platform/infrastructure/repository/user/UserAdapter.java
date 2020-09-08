@@ -32,6 +32,8 @@ public class UserAdapter {
 
         user.setUserType(appUserBO.getUserType().getCode());
 
+        user.setLifeCycleStatus(appUserBO.getLifeCycleStatus().getCode());
+
         return user;
     }
 
@@ -51,6 +53,7 @@ public class UserAdapter {
                 user.getIntroduction(), user.getUseDefaultPassword() == (byte) 1);
 
         appStudentUserBO.setUserType(UserType.Student);
+        appStudentUserBO.setLifeCycleStatus(LifeCycleStatus.getByCode(user.getLifeCycleStatus()));
 
         return appStudentUserBO;
     }
@@ -71,6 +74,7 @@ public class UserAdapter {
                 user.getIntroduction(), user.getUseDefaultPassword() == (byte) 1);
 
         appUserBO.setUserType(UserType.getByCode(user.getUserType()));
+        appUserBO.setLifeCycleStatus(LifeCycleStatus.getByCode(user.getLifeCycleStatus()));
 
         return appUserBO;
     }

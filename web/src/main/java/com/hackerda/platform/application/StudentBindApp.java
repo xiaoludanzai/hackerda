@@ -76,7 +76,7 @@ public class StudentBindApp {
                 throw new BusinessException(ErrorCode.ACCOUNT_MISS, "用户信息不存在");
             }
             if(user.getPhoneNumber().equals(phoneNumber)) {
-                StudentUserBO studentUserBO = studentRepository.getByAccount(account.getInt());
+                StudentUserBO studentUserBO = studentRepository.getByAccount(account);
                 WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
                 wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
 
@@ -105,7 +105,7 @@ public class StudentBindApp {
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
-        StudentUserBO studentUserBO = studentRepository.getByAccount(account.getInt());
+        StudentUserBO studentUserBO = studentRepository.getByAccount(account);
 
         if(studentUserBO != null && !studentUserBO.checkEnablePasswordIsCorrect(password)) {
             studentUserBO.updatePassword(password);

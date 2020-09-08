@@ -22,6 +22,9 @@
         insert into user_student (user_name, student_account)
         values (#{userName}, #{studentAccount})
     </insert>
+    <update id="updateRelativeUserNameByStudentAccount">
+        update user_student SET user_name = #{userName} where student_account = #{studentAccount}
+    </update>
 
     <select id="selectByStudentAccount"
             resultMap="com.hackerda.platform.infrastructure.database.mapper.UserMapper.BaseResultMap">
@@ -51,5 +54,11 @@
                  join student st on us.student_account = st.account
 
         where us.user_name = #{userName}
+    </select>
+    <select id="selectRelativeUserNameByStudentAccount" resultType="java.lang.String">
+        select user_name from user_student where student_account = #{studentAccount}
+    </select>
+    <select id="selectRelativeStudentAccountByUserName" resultType="java.lang.String">
+        select student_account from user_student where user_name = #{userName}
     </select>
 </mapper>

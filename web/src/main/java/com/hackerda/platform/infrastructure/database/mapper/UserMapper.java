@@ -3,13 +3,8 @@ package com.hackerda.platform.infrastructure.database.mapper;
 import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.UserExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-@Mapper
-@Repository
 public interface UserMapper {
     long countByExample(UserExample example);
 

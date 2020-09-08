@@ -30,6 +30,10 @@ public class CreateUserByStudentRequest {
     @NotEmpty
     private String avatarUrl;
 
+    private String openId;
+
+    private String appId;
+
 
 
 }

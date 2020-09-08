@@ -42,7 +42,7 @@ public class StudentBindAppTest {
 
     @Test
     public void bindByOpenId() {
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
         StudentAccount studentAccount = new StudentAccount("2014025838");
 
@@ -57,7 +57,7 @@ public class StudentBindAppTest {
 
     @Test
     public void testPasswordUnCorrect() {
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
         StudentAccount studentAccount = new StudentAccount("2014025838");
 
@@ -70,7 +70,7 @@ public class StudentBindAppTest {
 
     @Test
     public void testDuplicateBindWithDiffOpenId() {
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
 
         StudentAccount studentAccount = new StudentAccount("2014025838");
@@ -92,7 +92,7 @@ public class StudentBindAppTest {
     public void testDuplicateBindWithDiffOpenIdInWhiteList() {
 
         when(studentInfoAssist.inLoginWhiteList(any())).thenReturn(true);
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
 
         StudentAccount studentAccount = new StudentAccount("2014025838");
@@ -109,7 +109,7 @@ public class StudentBindAppTest {
 
     @Test
     public void testDuplicateBindWithSameOpenId() {
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
         StudentAccount studentAccount = new StudentAccount("2014025838");
         studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
@@ -126,7 +126,7 @@ public class StudentBindAppTest {
 
     @Test
     public void testReBindWith() {
-        truncateMapper.studentUser();
+
         truncateMapper.wechatOpenId();
         StudentAccount studentAccount = new StudentAccount("2014025838");
         studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");

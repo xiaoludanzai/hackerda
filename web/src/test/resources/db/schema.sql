@@ -57,17 +57,18 @@ CREATE TABLE `urp_class`
 CREATE TABLE `user`
 (
     `id`                   int(11)      NOT NULL AUTO_INCREMENT,
-    `user_name`            varchar(255) NOT NULL,
-    `nick_name`            varchar(255) NOT NULL,
+    `user_name`            varchar(64) NOT NULL,
+    `nick_name`            varchar(64) NOT NULL,
     `password`             varchar(255) NOT NULL,
     `salt`                 varchar(255) NOT NULL,
     `avatar_path`          varchar(255) NOT NULL,
     `email`                varchar(255) NOT NULL DEFAULT '',
-    `mobile`               varchar(255) NOT NULL,
-    `gender`               int(255)     NOT NULL,
+    `mobile`               varchar(32) NOT NULL,
+    `gender`               int(16)     NOT NULL,
     `introduction`         varchar(255) NOT NULL,
-    `user_type`            int(255)     NOT NULL,
+    `user_type`            int(16)     NOT NULL,
     `use_default_password` tinyint(255) NOT NULL,
+    `life_cycle_status`    int(16)      NOT NULL,
     `gmt_create`           timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `gmt_modify`           timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -81,12 +82,14 @@ CREATE TABLE `user`
 CREATE TABLE `user_student`
 (
     `id`              int(11)      NOT NULL AUTO_INCREMENT,
-    `student_account` varchar(255) NOT NULL,
-    `user_name`       varchar(255) NOT NULL,
+    `student_account` varchar(64) NOT NULL,
+    `user_name`       varchar(64) NOT NULL,
     `gmt_create`      timestamp    NULL DEFAULT CURRENT_TIMESTAMP,
     `gmt_modify`      timestamp    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `user_student_name` (`user_name`, `student_account`)
+    UNIQUE KEY `user_student_user_name` (`user_name`),
+    UNIQUE KEY `user_student_student_account` (`student_account`)
+
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8mb4;

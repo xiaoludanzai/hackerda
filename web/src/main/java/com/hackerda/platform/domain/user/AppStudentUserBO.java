@@ -4,6 +4,8 @@ import com.hackerda.platform.domain.student.StudentAccount;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 public class AppStudentUserBO extends AppUserBO{
@@ -12,7 +14,7 @@ public class AppStudentUserBO extends AppUserBO{
 
     public AppStudentUserBO(StudentAccount studentAccount, String nickname, String password, String avatarPath, PhoneNumber mobile,
                             Gender gender, String introduction) {
-        super(studentAccount.getAccount(), nickname, password, avatarPath, mobile, gender, introduction);
+        super(UUID.randomUUID().toString(), nickname, password, avatarPath, mobile, gender, introduction);
         super.setUserType(UserType.Student);
         super.setUseDefaultPassword(true);
         this.account = studentAccount;

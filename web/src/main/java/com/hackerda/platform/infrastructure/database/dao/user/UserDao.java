@@ -53,4 +53,23 @@ public class UserDao {
     public StudentPosterDO selectStudentPosterByUserName(String userName) {
         return userExtMapper.selectStudentPosterByUserName(userName);
     }
+
+    public void updateByUserNameSelective(User user) {
+        UserExample example = new UserExample();
+        example.createCriteria().andUserNameEqualTo(user.getUserName());
+        userExtMapper.updateByExampleSelective(user, example);
+    }
+
+
+    public String selectRelativeUserNameByStudentAccount(String studentAccount) {
+        return userExtMapper.selectRelativeUserNameByStudentAccount(studentAccount);
+    }
+
+    public String selectRelativeStudentAccountByUserName(String userName) {
+        return userExtMapper.selectRelativeStudentAccountByUserName(userName);
+    }
+
+    public void updateRelativeUserNameByStudentAccount(String userName, String studentAccount){
+        userExtMapper.updateRelativeUserNameByStudentAccount(userName, studentAccount);
+    }
 }

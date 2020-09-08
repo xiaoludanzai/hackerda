@@ -2,6 +2,7 @@ package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
+import com.hackerda.platform.domain.user.LifeCycleStatus;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
@@ -58,7 +59,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }catch (PasswordUnCorrectException e) {
             return false;
         } catch (UrpTimeoutException e) {
-            StudentUserBO studentUserBO = studentRepository.getByAccount(Integer.parseInt(account));
+            StudentUserBO studentUserBO = studentRepository.getByAccount(new StudentAccount(account));
             if (studentUserBO == null) {
                 throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
             }
@@ -118,7 +119,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     public boolean isCommonWechat(StudentAccount account, String appId, String openid) {
 
         User user = userDao.selectByStudentAccount(account.getAccount());
-        if(user == null) {
+        if(user == null || user.getLifeCycleStatus() == LifeCycleStatus.Normal.getCode()) {
             return true;
         }
 

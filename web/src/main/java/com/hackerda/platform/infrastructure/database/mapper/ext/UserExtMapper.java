@@ -20,4 +20,10 @@ public interface UserExtMapper extends UserMapper {
     StudentPosterDO selectByStudentPoster(String studentAccount);
 
     StudentPosterDO selectStudentPosterByUserName(String userName);
+
+    String selectRelativeUserNameByStudentAccount(String studentAccount);
+
+    String selectRelativeStudentAccountByUserName(String userName);
+
+    void updateRelativeUserNameByStudentAccount(String userName, String studentAccount);
 }

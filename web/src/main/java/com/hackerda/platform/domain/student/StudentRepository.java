@@ -9,7 +9,7 @@ public interface StudentRepository {
 
     WechatStudentUserBO getWetChatUserByAccount(int account);
 
-    StudentUserBO getByAccount(int account);
+    StudentUserBO getByAccount(StudentAccount account);
 
     List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList);
 

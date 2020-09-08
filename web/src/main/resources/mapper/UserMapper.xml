@@ -14,6 +14,7 @@
     <result column="introduction" jdbcType="VARCHAR" property="introduction" />
     <result column="user_type" jdbcType="INTEGER" property="userType" />
     <result column="use_default_password" jdbcType="TINYINT" property="useDefaultPassword" />
+    <result column="life_cycle_status" jdbcType="INTEGER" property="lifeCycleStatus" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
   </resultMap>
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_name, nick_name, `password`, salt, avatar_path, email, mobile, gender, introduction, 
-    user_type, use_default_password, gmt_create, gmt_modify
+    user_type, use_default_password, life_cycle_status, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.UserExample" resultMap="BaseResultMap">
     select
@@ -113,13 +114,13 @@
     insert into user (user_name, nick_name, `password`, 
       salt, avatar_path, email, 
       mobile, gender, introduction, 
-      user_type, use_default_password, gmt_create, 
-      gmt_modify)
+      user_type, use_default_password, life_cycle_status, 
+      gmt_create, gmt_modify)
     values (#{userName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{salt,jdbcType=VARCHAR}, #{avatarPath,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}, 
-      #{userType,jdbcType=INTEGER}, #{useDefaultPassword,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModify,jdbcType=TIMESTAMP})
+      #{userType,jdbcType=INTEGER}, #{useDefaultPassword,jdbcType=TINYINT}, #{lifeCycleStatus,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.User" useGeneratedKeys="true">
     insert into user
@@ -156,6 +157,9 @@
       </if>
       <if test="useDefaultPassword != null">
         use_default_password,
+      </if>
+      <if test="lifeCycleStatus != null">
+        life_cycle_status,
       </if>
       <if test="gmtCreate != null">
         gmt_create,
@@ -197,6 +201,9 @@
       </if>
       <if test="useDefaultPassword != null">
         #{useDefaultPassword,jdbcType=TINYINT},
+      </if>
+      <if test="lifeCycleStatus != null">
+        #{lifeCycleStatus,jdbcType=INTEGER},
       </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -251,6 +258,9 @@
       <if test="record.useDefaultPassword != null">
         use_default_password = #{record.useDefaultPassword,jdbcType=TINYINT},
       </if>
+      <if test="record.lifeCycleStatus != null">
+        life_cycle_status = #{record.lifeCycleStatus,jdbcType=INTEGER},
+      </if>
       <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -276,6 +286,7 @@
       introduction = #{record.introduction,jdbcType=VARCHAR},
       user_type = #{record.userType,jdbcType=INTEGER},
       use_default_password = #{record.useDefaultPassword,jdbcType=TINYINT},
+      life_cycle_status = #{record.lifeCycleStatus,jdbcType=INTEGER},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -318,6 +329,9 @@
       <if test="useDefaultPassword != null">
         use_default_password = #{useDefaultPassword,jdbcType=TINYINT},
       </if>
+      <if test="lifeCycleStatus != null">
+        life_cycle_status = #{lifeCycleStatus,jdbcType=INTEGER},
+      </if>
       <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -340,6 +354,7 @@
       introduction = #{introduction,jdbcType=VARCHAR},
       user_type = #{userType,jdbcType=INTEGER},
       use_default_password = #{useDefaultPassword,jdbcType=TINYINT},
+      life_cycle_status = #{lifeCycleStatus,jdbcType=INTEGER},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

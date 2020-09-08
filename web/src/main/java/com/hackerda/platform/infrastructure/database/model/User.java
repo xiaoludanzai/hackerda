@@ -34,6 +34,8 @@ public class User implements Serializable {
 
     private Byte useDefaultPassword;
 
+    private Integer lifeCycleStatus;
+
     private Date gmtCreate;
 
     private Date gmtModify;

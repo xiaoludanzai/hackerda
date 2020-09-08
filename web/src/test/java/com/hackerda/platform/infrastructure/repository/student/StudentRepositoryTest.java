@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
+import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.constant.SubscribeScene;
@@ -23,7 +24,7 @@ public class StudentRepositoryTest {
 
     @Test
     public void getByAccount() {
-        StudentUserBO account = studentUserRepository.getByAccount(2017024981);
+        StudentUserBO account = studentUserRepository.getByAccount(new StudentAccount(2017024981));
         System.out.println(account);
 
     }

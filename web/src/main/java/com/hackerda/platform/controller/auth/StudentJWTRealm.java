@@ -1,5 +1,6 @@
 package com.hackerda.platform.controller.auth;
 
+import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.Permission;
@@ -77,7 +78,7 @@ public class StudentJWTRealm extends AuthorizingRealm {
         }
         try {
             JwtUtils.verify(token, username, username);
-            StudentUserBO account = studentRepository.getByAccount(Integer.parseInt(username));
+            StudentUserBO account = studentRepository.getByAccount(new StudentAccount(username));
 
             if(account == null || !account.getIsCorrect()) {
                 log.error("student account {} verify error {}", username, account);

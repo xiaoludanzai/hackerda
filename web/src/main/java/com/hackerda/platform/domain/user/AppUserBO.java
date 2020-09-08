@@ -12,8 +12,6 @@ import java.util.UUID;
  * 黑科校际用户
  *
  */
-
-
 @Data
 public class AppUserBO {
 
@@ -42,8 +40,9 @@ public class AppUserBO {
 
     private UserType userType;
 
-    private boolean useDefaultPassword;
+    private LifeCycleStatus lifeCycleStatus;
 
+    private boolean useDefaultPassword;
 
     private List<RoleBO> roleList = new ArrayList<>(0);
 
@@ -59,6 +58,7 @@ public class AppUserBO {
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.introduction = introduction;
+        this.lifeCycleStatus = LifeCycleStatus.Creating;
     }
 
     public AppUserBO(String userName, String nickname, String password, String salt, String avatarPath, PhoneNumber phoneNumber,

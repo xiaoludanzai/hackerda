@@ -19,6 +19,10 @@ public class StudentAccount {
         this.account = account;
     }
 
+    public StudentAccount(int account){
+        this(String.valueOf(account));
+    }
+
     public String getAccount() {
         return account;
     }
