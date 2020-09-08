@@ -3,7 +3,7 @@ package com.hackerda.platform.infrastructure.repository.student;
 import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.WechatOpenidBO;
+import com.hackerda.platform.domain.student.StudentWechatBindDetail;
 import com.hackerda.platform.domain.student.WechatSubscribeBO;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
@@ -35,14 +35,14 @@ public class StudentUserAdapter {
 
         WechatStudentUserDO studentUser = wechatStudentUserDOList.get(0);
 
-        Map<WechatOpenidBO, List<WechatSubscribeBO>> listMap = wechatStudentUserDOList.stream()
-                .collect(Collectors.groupingBy(x -> new WechatOpenidBO(studentUser.getAccount(), x.getOpenId(),
+        Map<StudentWechatBindDetail, List<WechatSubscribeBO>> listMap = wechatStudentUserDOList.stream()
+                .collect(Collectors.groupingBy(x -> new StudentWechatBindDetail(studentUser.getAccount(), x.getOpenId(),
                                 x.getIsBind(),
                                 x.getAppId(),
                                 wechatPlatformMap.get(x.getAppId()), false),
                         Collectors.mapping(x -> new WechatSubscribeBO(x.getIsSubscribe(), x.getScene()), Collectors.toList())));
 
-        for (WechatOpenidBO openidBO : listMap.keySet()) {
+        for (StudentWechatBindDetail openidBO : listMap.keySet()) {
             openidBO.setWechatSubscribeBOList(listMap.getOrDefault(openidBO,
                     Collections.emptyList()).stream().filter(WechatSubscribeBO::isNotNull).collect(Collectors.toList()));
         }
@@ -109,13 +109,13 @@ public class StudentUserAdapter {
         return user;
     }
 
-    public WechatOpenid toDO(WechatOpenidBO wechatOpenidBO){
+    public WechatOpenid toDO(StudentWechatBindDetail studentWechatBindDetail){
         WechatOpenid wechatOpenid = new WechatOpenid();
 
-        wechatOpenid.setAccount(wechatOpenidBO.getAccount());
-        wechatOpenid.setIsBind(wechatOpenidBO.isBind());
-        wechatOpenid.setAppid(wechatOpenidBO.getAppId());
-        wechatOpenid.setOpenid(wechatOpenidBO.getOpenid());
+        wechatOpenid.setAccount(studentWechatBindDetail.getAccount());
+        wechatOpenid.setIsBind(studentWechatBindDetail.isBind());
+        wechatOpenid.setAppid(studentWechatBindDetail.getAppId());
+        wechatOpenid.setOpenid(studentWechatBindDetail.getOpenid());
 
         return wechatOpenid;
     }

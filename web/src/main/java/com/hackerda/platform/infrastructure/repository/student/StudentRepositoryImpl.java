@@ -69,9 +69,9 @@ public class StudentRepositoryImpl implements StudentRepository {
             studentUserDao.saveOrUpdate(studentUserAdapter.toDO(studentUser));
         }
 
-        List<WechatOpenidBO> openidBOList = studentUser.getWechatOpenidList().stream()
-                .filter(WechatOpenidBO::isSaveOrUpdate).collect(Collectors.toList());
-        for (WechatOpenidBO openidBO : openidBOList) {
+        List<StudentWechatBindDetail> openidBOList = studentUser.getWechatOpenidList().stream()
+                .filter(StudentWechatBindDetail::isSaveOrUpdate).collect(Collectors.toList());
+        for (StudentWechatBindDetail openidBO : openidBOList) {
             wechatOpenIdDao.saveOrUpdate(studentUserAdapter.toDO(openidBO));
         }
 

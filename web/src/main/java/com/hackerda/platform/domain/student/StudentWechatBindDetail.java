@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class WechatOpenidBO {
+public class StudentWechatBindDetail {
     private final int account;
 
     private String openid;
@@ -29,8 +29,8 @@ public class WechatOpenidBO {
     @Setter
     private List<WechatSubscribeBO> wechatSubscribeBOList;
 
-    public WechatOpenidBO(int account, String openid, Boolean isBind, String appId, WechatPlatform wechatPlatform,
-                          boolean saveOrUpdate){
+    public StudentWechatBindDetail(int account, String openid, Boolean isBind, String appId, WechatPlatform wechatPlatform,
+                                   boolean saveOrUpdate){
         this.account = account;
         this.openid = openid;
         this.appId = appId;
@@ -45,7 +45,7 @@ public class WechatOpenidBO {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        WechatOpenidBO that = (WechatOpenidBO) o;
+        StudentWechatBindDetail that = (StudentWechatBindDetail) o;
 
         return new EqualsBuilder()
                 .append(openid, that.openid)

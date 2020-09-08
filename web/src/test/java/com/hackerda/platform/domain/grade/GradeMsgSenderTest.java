@@ -3,7 +3,7 @@ package com.hackerda.platform.domain.grade;
 import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.course.CourseBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
-import com.hackerda.platform.domain.student.WechatOpenidBO;
+import com.hackerda.platform.domain.student.StudentWechatBindDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,10 +31,10 @@ public class GradeMsgSenderTest {
 
         bo.setName("test");
 
-        WechatOpenidBO openidBO = new WechatOpenidBO(1231, "oCxRO1G9N755dOY5dwcT5l3IlS3Y", true, "wx541fd36e6b400648",
+        StudentWechatBindDetail openidBO = new StudentWechatBindDetail(1231, "oCxRO1G9N755dOY5dwcT5l3IlS3Y", true, "wx541fd36e6b400648",
                 WechatPlatform.HKXJ_PLUS, false);
 
-        List<WechatOpenidBO> list = Collections.singletonList(openidBO);
+        List<StudentWechatBindDetail> list = Collections.singletonList(openidBO);
 
         bo.setWechatOpenidList(list);
 

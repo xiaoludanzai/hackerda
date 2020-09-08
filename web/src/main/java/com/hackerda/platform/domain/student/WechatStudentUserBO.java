@@ -1,12 +1,10 @@
 package com.hackerda.platform.domain.student;
 
 import com.hackerda.platform.domain.WechatPlatform;
-import com.hackerda.platform.utils.DESUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +12,17 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Slf4j
+@ToString(callSuper = true)
 public class WechatStudentUserBO extends StudentUserBO{
 
-    private List<WechatOpenidBO> wechatOpenidList = new ArrayList<>(0);
+    private List<StudentWechatBindDetail> wechatOpenidList = new ArrayList<>(0);
 
     public boolean hasBindApp() {
         return getAppOpenid() != null;
     }
 
 
-    public WechatOpenidBO getAppOpenid(){
+    public StudentWechatBindDetail getAppOpenid(){
         return getOpenId(WechatPlatform.HKXJ_APP);
     }
 
@@ -31,22 +30,22 @@ public class WechatStudentUserBO extends StudentUserBO{
         return getPlusOpenid() != null;
     }
 
-    public WechatOpenidBO getPlusOpenid(){
+    public StudentWechatBindDetail getPlusOpenid(){
         return getOpenId(WechatPlatform.HKXJ_PLUS);
     }
 
 
     public void bindWechatPlatform(String openid, String appId, WechatPlatform wechatPlatform){
-        WechatOpenidBO openId = getOpenId(wechatPlatform);
+        StudentWechatBindDetail openId = getOpenId(wechatPlatform);
         if(openId != null) {
             openId.bindOpenId(openid);
         }else {
-            wechatOpenidList.add(new WechatOpenidBO(this.getAccount(), openid, true, appId, wechatPlatform, true));
+            wechatOpenidList.add(new StudentWechatBindDetail(this.getAccount(), openid, true, appId, wechatPlatform, true));
         }
     }
 
     public void unbindWechatPlatform(WechatPlatform wechatPlatform){
-        WechatOpenidBO openId = getOpenId(wechatPlatform);
+        StudentWechatBindDetail openId = getOpenId(wechatPlatform);
         if(openId != null) {
             openId.unbind();
         } else {
@@ -54,28 +53,13 @@ public class WechatStudentUserBO extends StudentUserBO{
         }
     }
 
-    private WechatOpenidBO getOpenId(WechatPlatform wechatPlatform){
-        for (WechatOpenidBO wechatOpenidBO : wechatOpenidList) {
-            if(wechatOpenidBO.getWechatPlatform() == wechatPlatform){
-                return wechatOpenidBO;
+    private StudentWechatBindDetail getOpenId(WechatPlatform wechatPlatform){
+        for (StudentWechatBindDetail studentWechatBindDetail : wechatOpenidList) {
+            if(studentWechatBindDetail.getWechatPlatform() == wechatPlatform){
+                return studentWechatBindDetail;
             }
         }
         return null;
 
-    }
-
-
-    @Override
-    public String toString() {
-        return "WechatStudentUserBO{" +
-                "account=" + super.getAccount() +
-                ", name='" + super.getName() + '\'' +
-                ", sex='" + super.getSex() + '\'' +
-                ", urpClassNum=" + super.getUrpClassNum() +
-                ", academyName='" + super.getAcademyName() + '\'' +
-                ", subjectName='" + super.getSubjectName() + '\'' +
-                ", className='" + super.getClassName() + '\'' +
-                "wechatOpenidList=" + wechatOpenidList +
-                '}';
     }
 }

@@ -1,10 +1,10 @@
 package com.hackerda.platform.domain.wechat;
 
-import com.hackerda.platform.domain.student.WechatOpenidBO;
+import com.hackerda.platform.domain.student.StudentWechatBindDetail;
 
 public interface WechatOpenidRepository {
 
-    WechatOpenidBO findBindByAccount(String account);
+    StudentWechatBindDetail findBindByAccount(String account);
 
-    WechatOpenidBO findByOpenId(String account);
+    StudentWechatBindDetail findByOpenId(String account);
 }
