@@ -17,9 +17,6 @@ public class EventPublisher {
         applicationContext.publishEvent(new FetchFinishEvent(this, account, FetchScene.EVER_GRADE));
     }
 
-    public void publishCommentCount(int count , long postId) {
-        applicationContext.publishEvent(new CommentCountEvent(this, count, postId));
-    }
 
     public void addCommentEvent(CommentBO commentBO, boolean add) {
         applicationContext.publishEvent(new CommentEvent(this, commentBO.getPostId(), add));

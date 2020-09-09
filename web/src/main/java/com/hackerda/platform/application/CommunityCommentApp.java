@@ -34,9 +34,9 @@ public class CommunityCommentApp {
 
         if (!contentSecurityCheckService.isSecurityContent(commentBO.getContent())) {
             commentBO.setStatus(RecordStatus.UnderReview);
-            eventPublisher.addCommentEvent(commentBO, true);
         } else {
             commentBO.setStatus(RecordStatus.Release);
+            eventPublisher.addCommentEvent(commentBO, true);
         }
 
         commentRepository.save(commentBO);

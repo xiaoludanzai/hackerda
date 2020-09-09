@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CommentAndLikeRedisCache implements CommentCountService, LikeCountService {
@@ -72,6 +73,14 @@ public class CommentAndLikeRedisCache implements CommentCountService, LikeCountS
             String[] userNameArray = userNameCollection.toArray(new String[0]);
             stringRedisTemplate.opsForSet().add(getLikeKey(likeType, likeContentId), userNameArray);
         }
+    }
+
+    public void reset() {
+        Set<String> commentKeys = stringRedisTemplate.keys(RedisKeys.COMMENT_COUNT.genKey(profiles) + "*");
+        stringRedisTemplate.delete(commentKeys);
+
+        Set<String> likeKeys = stringRedisTemplate.keys(RedisKeys.LIKE_STATUS.genKey(profiles) + "*");
+        stringRedisTemplate.delete(likeKeys);
     }
 
     public String getCommentKey(long postId) {
