@@ -28,7 +28,11 @@ public class UserAdapter {
 
         // 用户区分相关
         user.setUserName(appUserBO.getUserName());
-        user.setMobile(appUserBO.getPhoneNumber().getEnableNumber());
+        if(appUserBO.isLogoutStatus()) {
+            user.setMobile(appUserBO.getUserName());
+        } else if(appUserBO.isNormalStatus()) {
+            user.setMobile(appUserBO.getPhoneNumber().getEnableNumber());
+        }
 
         user.setUserType(appUserBO.getUserType().getCode());
 

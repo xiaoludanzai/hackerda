@@ -29,7 +29,7 @@ public enum  ErrorCode {
 	URP_EXCEPTION(407),
 
 	/**
-	 * 账号已经别绑定
+	 * 账号已经被绑定
 	 */
 	ACCOUNT_HAS_BIND(408),
 
@@ -52,6 +52,11 @@ public enum  ErrorCode {
 	 * 使用非常用微信登录，需要调用验证身份
 	 */
 	UNCOMMON_WECHAT (412),
+
+	/**
+	 * 该微信账号已经被使用
+	 */
+	WECHAT_HAS_USED(413),
 
 	/**
 	 *服务器端错误

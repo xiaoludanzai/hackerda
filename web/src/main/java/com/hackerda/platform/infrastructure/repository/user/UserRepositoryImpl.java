@@ -71,13 +71,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private void saveOrUpdateStudentRelative(AppStudentUserBO appStudentUserBO, User user) {
-        String userName = userDao.selectRelativeUserNameByStudentAccount(appStudentUserBO.getAccount().getAccount());
-
-        if (userName == null) {
+        if(appStudentUserBO.isNormalStatus()) {
             userDao.insertStudentRelative(user.getUserName(), appStudentUserBO.getAccount().getAccount());
-        } else if (!userName.equals(appStudentUserBO.getUserName())) {
-            userDao.updateRelativeUserNameByStudentAccount(user.getUserName(), appStudentUserBO.getAccount().getAccount());
+        } else if(appStudentUserBO.isLogoutStatus()) {
+            userDao.deleteRelativeByStudent(appStudentUserBO.getAccount().getAccount());
         }
+
     }
 
 }

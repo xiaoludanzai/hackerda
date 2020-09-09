@@ -57,16 +57,16 @@ CREATE TABLE `urp_class`
 CREATE TABLE `user`
 (
     `id`                   int(11)      NOT NULL AUTO_INCREMENT,
-    `user_name`            varchar(64) NOT NULL,
-    `nick_name`            varchar(64) NOT NULL,
+    `user_name`            varchar(64)  NOT NULL,
+    `nick_name`            varchar(64)  NOT NULL,
     `password`             varchar(255) NOT NULL,
     `salt`                 varchar(255) NOT NULL,
     `avatar_path`          varchar(255) NOT NULL,
     `email`                varchar(255) NOT NULL DEFAULT '',
-    `mobile`               varchar(32) NOT NULL,
-    `gender`               int(16)     NOT NULL,
+    `mobile`               varchar(64)  NOT NULL,
+    `gender`               int(16)      NOT NULL,
     `introduction`         varchar(255) NOT NULL,
-    `user_type`            int(16)     NOT NULL,
+    `user_type`            int(16)      NOT NULL,
     `use_default_password` tinyint(255) NOT NULL,
     `life_cycle_status`    int(16)      NOT NULL,
     `gmt_create`           timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -81,11 +81,11 @@ CREATE TABLE `user`
 
 CREATE TABLE `user_student`
 (
-    `id`              int(11)      NOT NULL AUTO_INCREMENT,
+    `id`              int(11)     NOT NULL AUTO_INCREMENT,
     `student_account` varchar(64) NOT NULL,
     `user_name`       varchar(64) NOT NULL,
-    `gmt_create`      timestamp    NULL DEFAULT CURRENT_TIMESTAMP,
-    `gmt_modify`      timestamp    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `gmt_create`      timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`      timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_student_user_name` (`user_name`),
     UNIQUE KEY `user_student_student_account` (`student_account`)
@@ -154,4 +154,19 @@ CREATE TABLE `user_role`
     UNIQUE KEY `user_role_name` (`user_name`, `role_code`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `user_register_record`
+(
+    `id`                bigint(20)  NOT NULL AUTO_INCREMENT,
+    `appId`             varchar(64) NOT NULL,
+    `openId`            varchar(64) NOT NULL,
+    `phone_number`      varchar(64) NOT NULL,
+    `user_name`         varchar(64) NOT NULL,
+    `life_cycle_status` int(16)     NOT NULL,
+    `gmt_create`        timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`        timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;

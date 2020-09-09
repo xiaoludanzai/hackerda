@@ -1,11 +1,11 @@
-package com.hackerda.platform.domain.user;
+package com.hackerda.platform.domain.wechat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CommonWechat {
+public class WechatUser {
 
     private String appId;
     private String openId;

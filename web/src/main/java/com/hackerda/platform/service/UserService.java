@@ -4,10 +4,8 @@ import com.hackerda.platform.application.UserRegisterApp;
 import com.hackerda.platform.controller.request.CreateUserByStudentRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
 import com.hackerda.platform.domain.student.StudentAccount;
-import com.hackerda.platform.domain.user.AppStudentUserBO;
-import com.hackerda.platform.domain.user.AppUserBO;
-import com.hackerda.platform.domain.user.Gender;
-import com.hackerda.platform.domain.user.PhoneNumber;
+import com.hackerda.platform.domain.user.*;
+import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +31,10 @@ public class UserService {
 
         appUserBO.setUseDefaultPassword(true);
 
+        WechatUser wechatUser = new WechatUser(request.getAppId(), request.getOpenId());
 
-        userRegisterApp.register(appUserBO);
+
+        userRegisterApp.register(appUserBO, wechatUser);
 
         return toVO(appUserBO);
 
@@ -46,11 +46,9 @@ public class UserService {
 
         StudentAccount studentAccount = new StudentAccount(account);
 
-
         AppUserBO user = userRegisterApp.getUserByStudentAccount(studentAccount);
 
         return toVO(user);
-
 
     }
 

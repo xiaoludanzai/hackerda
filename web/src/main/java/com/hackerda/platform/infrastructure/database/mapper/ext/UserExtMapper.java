@@ -26,4 +26,6 @@ public interface UserExtMapper extends UserMapper {
     String selectRelativeStudentAccountByUserName(String userName);
 
     void updateRelativeUserNameByStudentAccount(String userName, String studentAccount);
+
+    void deleteRelativeByStudent(String studentAccount);
 }

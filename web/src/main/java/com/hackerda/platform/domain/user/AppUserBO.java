@@ -85,4 +85,20 @@ public class AppUserBO {
         roleList.addAll(roleBOList);
     }
 
+    /**
+     * 账号注销
+     */
+    public void logout() {
+        this.lifeCycleStatus = LifeCycleStatus.Logout;
+        this.phoneNumber = null;
+    }
+
+    public boolean isNormalStatus() {
+        return LifeCycleStatus.Normal == lifeCycleStatus;
+    }
+
+    public boolean isLogoutStatus() {
+        return LifeCycleStatus.Logout == lifeCycleStatus;
+    }
+
 }

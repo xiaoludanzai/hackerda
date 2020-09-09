@@ -25,6 +25,10 @@
     <update id="updateRelativeUserNameByStudentAccount">
         update user_student SET user_name = #{userName} where student_account = #{studentAccount}
     </update>
+    <delete id="deleteRelativeByStudent">
+        delete from user_student where student_account = #{studentAccount}
+
+    </delete>
 
     <select id="selectByStudentAccount"
             resultMap="com.hackerda.platform.infrastructure.database.mapper.UserMapper.BaseResultMap">

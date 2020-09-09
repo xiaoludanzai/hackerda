@@ -42,6 +42,10 @@ public class UserDao {
         userExtMapper.insertStudentRelative(userName, studentAccount);
     }
 
+    public void deleteRelativeByStudent(String studentAccount) {
+        userExtMapper.deleteRelativeByStudent(studentAccount);
+    }
+
     public User selectByStudentAccount(String studentAccount) {
         return userExtMapper.selectByStudentAccount(studentAccount).stream().findFirst().orElse(null);
     }
@@ -69,7 +73,4 @@ public class UserDao {
         return userExtMapper.selectRelativeStudentAccountByUserName(userName);
     }
 
-    public void updateRelativeUserNameByStudentAccount(String userName, String studentAccount){
-        userExtMapper.updateRelativeUserNameByStudentAccount(userName, studentAccount);
-    }
 }

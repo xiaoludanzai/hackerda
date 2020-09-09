@@ -39,4 +39,7 @@ public interface TruncateMapper {
 
     @Update("truncate table user_role")
     void userRole();
+
+    @Update("truncate table user_register_record")
+    void user_register_record();
 }
