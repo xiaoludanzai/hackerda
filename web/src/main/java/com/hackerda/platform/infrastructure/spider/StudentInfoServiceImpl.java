@@ -23,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +60,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
             return true;
         }catch (PasswordUnCorrectException e) {
             return false;
-        } catch (UrpTimeoutException e) {
+        } catch (UrpTimeoutException | ResourceAccessException e) {
             StudentUserBO studentUserBO = studentRepository.getByAccount(new StudentAccount(account));
             if (studentUserBO == null) {
                 throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
