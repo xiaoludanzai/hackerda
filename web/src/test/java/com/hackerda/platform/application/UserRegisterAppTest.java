@@ -4,7 +4,9 @@ import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
+import com.hackerda.platform.infrastructure.database.mapper.UserLogoutRecordMapper;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
+import com.hackerda.platform.infrastructure.database.model.UserLogoutRecordExample;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,8 @@ public class UserRegisterAppTest {
     private TruncateMapper truncateMapper;
     @Autowired
     private UserRegisterRecordRepository userRegisterRecordRepository;
+    @Autowired
+    private UserLogoutRecordMapper userLogoutRecordMapper;
 
     @Test
     public void registerNormal() {
@@ -113,13 +117,17 @@ public class UserRegisterAppTest {
 
         userRegisterApp.register(appStudentUserBO1, new WechatUser("test_appId", "test_openid"));
 
-        userRegisterApp.logout(appStudentUserBO1, LogoutType.USER_LOGOUT);
+        userRegisterApp.logout("admin", appStudentUserBO1, LogoutType.USER_LOGOUT, LogoutType.USER_LOGOUT.getSource());
 
         userRegisterApp.register(appStudentUserBO2, new WechatUser("test_appId", "test_openid"));
 
-        userRegisterApp.logout(appStudentUserBO2, LogoutType.USER_LOGOUT);
+        userRegisterApp.logout("admin", appStudentUserBO2, LogoutType.USER_LOGOUT, LogoutType.USER_LOGOUT.getSource());
 
         userRegisterApp.register(appStudentUserBO3, new WechatUser("test_appId", "test_openid"));
+
+        long count = userLogoutRecordMapper.countByExample(new UserLogoutRecordExample());
+
+        assertThat(count).isEqualTo(2);
     }
 
     private void before(){

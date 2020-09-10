@@ -1,11 +1,10 @@
 package com.hackerda.platform.infrastructure.repository.user;
 
-import com.hackerda.platform.domain.user.LifeCycleStatus;
-import com.hackerda.platform.domain.user.PhoneNumber;
-import com.hackerda.platform.domain.user.UserRegisterRecordBO;
-import com.hackerda.platform.domain.user.UserRegisterRecordRepository;
+import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
+import com.hackerda.platform.infrastructure.database.mapper.UserLogoutRecordMapper;
 import com.hackerda.platform.infrastructure.database.mapper.UserRegisterRecordMapper;
+import com.hackerda.platform.infrastructure.database.model.UserLogoutRecord;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecord;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecordExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ public class UserRegisterRecordRepositoryImpl implements UserRegisterRecordRepos
 
     @Autowired
     private UserRegisterRecordMapper userRegisterRecordMapper;
+    @Autowired
+    private UserLogoutRecordMapper userLogoutRecordMapper;
 
     @Override
     public void save(UserRegisterRecordBO userRegisterRecordBO) {
@@ -58,7 +59,20 @@ public class UserRegisterRecordRepositoryImpl implements UserRegisterRecordRepos
 
     }
 
+    @Override
+    public void save(LogoutRecordBO logoutRecordBO) {
+
+        UserLogoutRecord logoutRecord = new UserLogoutRecord();
+        logoutRecord.setLogoutReason(logoutRecordBO.getLogoutReason());
+        logoutRecord.setLogoutRecordId(logoutRecordBO.getLogoutRecordId());
+        logoutRecord.setLogoutType(logoutRecordBO.getLogoutType().getCode());
+        logoutRecord.setOperator(logoutRecordBO.getOperator());
+
+        userLogoutRecordMapper.insertSelective(logoutRecord);
+    }
+
     private UserRegisterRecord adapterDO(UserRegisterRecordBO userRegisterRecordBO) {
+
         UserRegisterRecord record = new UserRegisterRecord();
         record.setAppid(userRegisterRecordBO.getWechatUser().getAppId());
         record.setOpenid(userRegisterRecordBO.getWechatUser().getOpenId());

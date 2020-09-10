@@ -52,6 +52,13 @@ public class UserService {
 
     }
 
+    public void logout (String operator, String account, int logoutTypeCode, String logoutReason) {
+
+        StudentAccount studentAccount = new StudentAccount(account);
+        AppStudentUserBO user = userRegisterApp.getUserByStudentAccount(studentAccount);
+        userRegisterApp.logout(operator, user, LogoutType.getByCode(logoutTypeCode), logoutReason);
+    }
+
     @Nullable
     private AppUserVO toVO(AppUserBO appUserBO) {
 

@@ -7,4 +7,6 @@ public interface UserRegisterRecordRepository {
     UserRegisterRecordBO findByUserName(String userName);
 
     void update(UserRegisterRecordBO userRegisterRecordBO);
+
+    void save(LogoutRecordBO logoutRecordBO);
 }

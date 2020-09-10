@@ -7,12 +7,14 @@ import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserRegisterApp {
 
@@ -26,6 +28,7 @@ public class UserRegisterApp {
     private StudentRepository studentRepository;
     @Autowired
     private UserRegisterRecordRepository userRegisterRecordRepository;
+
 
     @Transactional
     public void register(AppStudentUserBO appUserBO, WechatUser wechatUser) {
@@ -60,7 +63,7 @@ public class UserRegisterApp {
     }
 
 
-    public AppUserBO getUserByStudentAccount(StudentAccount studentAccount) {
+    public AppStudentUserBO getUserByStudentAccount(StudentAccount studentAccount) {
 
         AppStudentUserBO appStudentUserBO = userRepository.findByStudentAccount(studentAccount);
 
@@ -72,8 +75,8 @@ public class UserRegisterApp {
         return appStudentUserBO;
     }
 
-
-    public void logout(AppStudentUserBO appUserBO, LogoutType logoutType) {
+    @Transactional
+    public void logout(String operator, AppStudentUserBO appUserBO, LogoutType logoutType, String logoutReason) {
         UserRegisterRecordBO record = userRegisterRecordRepository.findByUserName(appUserBO.getUserName());
 
         if(record != null) {
@@ -83,7 +86,13 @@ public class UserRegisterApp {
             record.setLifeCycleStatus(LifeCycleStatus.Logout);
 
             userRegisterRecordRepository.save(record);
-        }
 
+            LogoutRecordBO logoutRecordBO = new LogoutRecordBO(record.getId(), logoutType, logoutReason, operator);
+
+            userRegisterRecordRepository.save(logoutRecordBO);
+
+        } else {
+            log.error("user {} can`t find register record", operator);
+        }
     }
 }

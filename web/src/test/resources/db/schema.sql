@@ -170,3 +170,17 @@ CREATE TABLE `user_register_record`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `user_logout_record`
+(
+    `id`               bigint(20)   NOT NULL AUTO_INCREMENT,
+    `logout_record_id` bigint(20)   NOT NULL,
+    `logout_type`      int(16)      NOT NULL,
+    `logout_reason`    varchar(255) NOT NULL,
+    `operator`         varchar(64)  NOT NULL,
+    `gmt_create`       timestamp    NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`       timestamp    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
