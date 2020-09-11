@@ -28,7 +28,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     private WechatOpenIdDao wechatOpenIdDao;
 
 
-    public WechatStudentUserBO getWetChatUserByAccount(StudentAccount account){
+    public WechatStudentUserBO findWetChatUser(StudentAccount account){
 
         StudentUser studentUser = studentUserDao.selectStudentByAccount(account.getInt());
         WechatStudentUserBO wechatStudentUserBO = studentUserAdapter.toBO(studentUser);
@@ -42,7 +42,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public StudentUserBO getByAccount(StudentAccount account) {
+    public StudentUserBO find(StudentAccount account) {
         StudentUser studentUser = studentUserDao.selectStudentByAccount(account.getInt());
         return studentUserAdapter.toBO(studentUser);
     }

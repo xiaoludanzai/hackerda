@@ -44,7 +44,7 @@ public class GradeQueryAppTest {
 
         gradeMapper.truncate();
 
-        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO user = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 
@@ -71,7 +71,7 @@ public class GradeQueryAppTest {
         when(gradeSpiderFacade.getCurrentTermGrade(any())).thenReturn(Collections.emptyList());
         when(gradeSpiderFacade.getSchemeGrade(any())).thenThrow(new RuntimeException("fetch error"));
 
-        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO user = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         GradeOverviewBO bo = gradeQueryApp.getGradeOverview(user);
 

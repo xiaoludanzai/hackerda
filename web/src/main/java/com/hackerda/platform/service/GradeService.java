@@ -31,7 +31,7 @@ public class GradeService {
 
     public GradeResultVo getGrade(int account) {
         StudentAccount studentAccount = new StudentAccount(account);
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         String enablePassword = wechatStudentUserBO.getEnablePassword();
         System.out.println(enablePassword);
         GradeOverviewBO gradeOverview = gradeQueryApp.getGradeOverview(wechatStudentUserBO);

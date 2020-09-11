@@ -36,7 +36,7 @@ public class CourseTimetableRepositoryImplTest {
         truncateMapper.courseTimetable();
         truncateMapper.studentCourseTimetable();
 
-        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO account = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         CourseTimeTableOverview account1 = courseTimetableRepository.getByAccount(account, "2019-2020", 2);
         courseTimetableRepository.saveByStudent(account1.getNewList(), account);
@@ -65,7 +65,7 @@ public class CourseTimetableRepositoryImplTest {
         truncateMapper.courseTimetable();
         truncateMapper.studentCourseTimetable();
 
-        WechatStudentUserBO account = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO account = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         CourseTimeTableOverview account1 = courseTimetableRepository.getByClassId(account.getUrpClassNum().toString(), "2019" +
                 "-2020", 2);

@@ -39,7 +39,7 @@ public class ExamTimeTableService {
 
     public List<Exam> getExamTimeListFromSpider(int account) {
 
-        WechatStudentUserBO student = studentRepository.getWetChatUserByAccount(new StudentAccount(account));
+        WechatStudentUserBO student = studentRepository.findWetChatUser(new StudentAccount(account));
         if (student == null) {
             throw new PasswordUnCorrectException();
         }

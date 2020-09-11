@@ -67,11 +67,11 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         WechatStudentUserBO wechatStudentUserBO;
         StudentAccount studentAccount = new StudentAccount(account);
         if(StringUtils.isNotEmpty(account)) {
-            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(new StudentAccount(account));
+            wechatStudentUserBO = studentRepository.findWetChatUser(new StudentAccount(account));
 
         }else {
             StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
-            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(new StudentAccount(studentUserBO.getAccount()));
+            wechatStudentUserBO = studentRepository.findWetChatUser(new StudentAccount(studentUserBO.getAccount()));
         }
 
         if(wechatStudentUserBO == null) {

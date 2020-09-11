@@ -24,7 +24,7 @@ public class StudentRepositoryTest {
 
     @Test
     public void getByAccount() {
-        StudentUserBO account = studentUserRepository.getByAccount(new StudentAccount(2017024981));
+        StudentUserBO account = studentUserRepository.find(new StudentAccount(2017024981));
         System.out.println(account);
 
     }

@@ -18,7 +18,7 @@ public class CourseTimetableQueryApp {
 
     public CourseTimeTableOverview getByAccount(int account, String termYear, int termOrder){
 
-        StudentUserBO studentUserBO = studentRepository.getByAccount(new StudentAccount(account));
+        StudentUserBO studentUserBO = studentRepository.find(new StudentAccount(account));
 
         CourseTimeTableOverview timeTableOverview;
         timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);

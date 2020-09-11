@@ -28,7 +28,7 @@ public class CourseTimetableSpiderFacadeTest {
     @Test
     public void test(){
 
-        WechatStudentUserBO byAccount = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO byAccount = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         List<CourseTimetableDetailDO> id = courseTimetableSpiderFacade.getByClassID("2020-2021", 1,
                 byAccount.getUrpClassNum().toString());

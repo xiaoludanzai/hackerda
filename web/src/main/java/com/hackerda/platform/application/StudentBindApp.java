@@ -1,6 +1,5 @@
 package com.hackerda.platform.application;
 
-import com.hackerda.platform.domain.WechatPlatform;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.domain.user.AppStudentUserBO;
@@ -10,11 +9,9 @@ import com.hackerda.platform.domain.wechat.WechatAuthService;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 @Service
 public class StudentBindApp {
@@ -73,7 +70,7 @@ public class StudentBindApp {
                 throw new BusinessException(ErrorCode.ACCOUNT_MISS, "用户信息不存在");
             }
             if(user.getPhoneNumber().equals(phoneNumber)) {
-                StudentUserBO studentUserBO = studentRepository.getByAccount(account);
+                StudentUserBO studentUserBO = studentRepository.find(account);
                 WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
                 wechatStudentUserBO.bindWechatUser(wechatUser);
 
@@ -102,7 +99,7 @@ public class StudentBindApp {
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
-        StudentUserBO studentUserBO = studentRepository.getByAccount(account);
+        StudentUserBO studentUserBO = studentRepository.findWetChatUser(account);
 
         if(studentUserBO != null && !studentUserBO.checkEnablePasswordIsCorrect(password)) {
             studentUserBO.updatePassword(password);

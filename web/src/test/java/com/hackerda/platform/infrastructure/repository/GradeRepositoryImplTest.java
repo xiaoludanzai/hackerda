@@ -43,7 +43,7 @@ public class GradeRepositoryImplTest {
     public void testUpdate(){
         gradeMapper.truncate();
 
-        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO user = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 
@@ -64,7 +64,7 @@ public class GradeRepositoryImplTest {
     @Test
     public void testNewGrade(){
 
-        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO user = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         List<TermGradeBO> termGradeBOList = gradeRepository.getAllByStudent(user);
 
@@ -80,7 +80,7 @@ public class GradeRepositoryImplTest {
     @Test
     public void testGetGrade(){
 
-        WechatStudentUserBO user = studentUserRepository.getWetChatUserByAccount(new StudentAccount(2017025838));
+        WechatStudentUserBO user = studentUserRepository.findWetChatUser(new StudentAccount(2017025838));
 
         fetchStatusRecorder.removeRecord(FetchScene.EVER_GRADE, "2017025838");
 

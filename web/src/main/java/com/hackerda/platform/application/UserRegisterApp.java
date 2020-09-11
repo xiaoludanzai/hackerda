@@ -33,7 +33,7 @@ public class UserRegisterApp {
     @Transactional
     public void register(AppStudentUserBO appUserBO, WechatUser wechatUser) {
 
-        StudentUserBO student = studentRepository.getByAccount(appUserBO.getAccount());
+        StudentUserBO student = studentRepository.find(appUserBO.getAccount());
 
         if (student == null) {
             throw new BusinessException(ErrorCode.ACCOUNT_MISS, "学生信息不存在");

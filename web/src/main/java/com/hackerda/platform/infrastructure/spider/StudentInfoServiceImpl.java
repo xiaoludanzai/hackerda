@@ -2,7 +2,6 @@ package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
-import com.hackerda.platform.domain.user.LifeCycleStatus;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
@@ -10,8 +9,6 @@ import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.UrpClass;
-import com.hackerda.platform.infrastructure.database.model.User;
-import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
 import com.hackerda.platform.service.NewUrpSpiderService;
 
 
@@ -21,14 +18,11 @@ import com.hackerda.spider.exception.UrpTimeoutException;
 import com.hackerda.spider.support.search.classInfo.ClassInfoSearchResult;
 import com.hackerda.spider.support.search.classInfo.SearchClassInfoPost;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,7 +56,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }catch (PasswordUnCorrectException e) {
             return false;
         } catch (UrpTimeoutException | ResourceAccessException e) {
-            StudentUserBO studentUserBO = studentRepository.getByAccount(new StudentAccount(account));
+            StudentUserBO studentUserBO = studentRepository.find(new StudentAccount(account));
             if (studentUserBO == null) {
                 throw new BusinessException(ErrorCode.READ_TIMEOUT, "读取验证码超时");
             }

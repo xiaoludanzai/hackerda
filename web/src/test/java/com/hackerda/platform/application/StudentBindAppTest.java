@@ -49,7 +49,7 @@ public class StudentBindAppTest {
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
         WechatStudentUserBO wechatStudentUserBO = studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
-        WechatStudentUserBO account = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO account = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(wechatStudentUserBO).isEqualTo(account);
 
@@ -83,7 +83,7 @@ public class StudentBindAppTest {
                 .isInstanceOf(BusinessException.class)
                 .hasMessageEndingWith("该学号已经被绑定");
 
-        WechatStudentUserBO account = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO account = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(wechatStudentUserBO).isEqualTo(account);
 
@@ -102,7 +102,7 @@ public class StudentBindAppTest {
 
         studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId", "test_openid_duplicate"));
 
-        WechatStudentUserBO account = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO account = studentRepository.findWetChatUser(studentAccount);
 
 
     }
@@ -118,7 +118,7 @@ public class StudentBindAppTest {
         WechatStudentUserBO actual = studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
 
-        WechatStudentUserBO except = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO except = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(actual).isEqualTo(except);
 
@@ -133,12 +133,12 @@ public class StudentBindAppTest {
         studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
 
-        studentBindApp.unbindByPlatform(studentRepository.getWetChatUserByAccount(studentAccount), "test_appId");
+        studentBindApp.unbindByPlatform(studentRepository.findWetChatUser(studentAccount), "test_appId");
 
         WechatStudentUserBO actual = studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId", "test_openid_new"));
 
 
-        WechatStudentUserBO except = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO except = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(actual).isEqualTo(except);
     }

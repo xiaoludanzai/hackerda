@@ -66,7 +66,7 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
         studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
@@ -139,7 +139,7 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
         assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",
@@ -167,7 +167,7 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
         StudentAccount otherAccount = new StudentAccount("2017025839");
@@ -199,7 +199,7 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
         studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",

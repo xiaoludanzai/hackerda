@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface StudentRepository {
 
-    WechatStudentUserBO getWetChatUserByAccount(StudentAccount account);
+    WechatStudentUserBO findWetChatUser(StudentAccount account);
 
-    StudentUserBO getByAccount(StudentAccount account);
+    StudentUserBO find(StudentAccount account);
 
     List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList);
 

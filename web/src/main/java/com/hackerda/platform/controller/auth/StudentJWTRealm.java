@@ -78,7 +78,7 @@ public class StudentJWTRealm extends AuthorizingRealm {
         }
         try {
             JwtUtils.verify(token, username, username);
-            StudentUserBO account = studentRepository.getByAccount(new StudentAccount(username));
+            StudentUserBO account = studentRepository.find(new StudentAccount(username));
 
             if(account == null || !account.getIsCorrect()) {
                 log.error("student account {} verify error {}", username, account);
