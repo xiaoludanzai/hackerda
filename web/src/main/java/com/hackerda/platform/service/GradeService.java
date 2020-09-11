@@ -2,6 +2,7 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.application.GradeQueryApp;
 import com.hackerda.platform.domain.grade.GradeOverviewBO;
+import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
@@ -29,7 +30,8 @@ public class GradeService {
     }
 
     public GradeResultVo getGrade(int account) {
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(account);
+        StudentAccount studentAccount = new StudentAccount(account);
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
         String enablePassword = wechatStudentUserBO.getEnablePassword();
         System.out.println(enablePassword);
         GradeOverviewBO gradeOverview = gradeQueryApp.getGradeOverview(wechatStudentUserBO);

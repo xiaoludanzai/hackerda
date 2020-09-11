@@ -1,5 +1,7 @@
 package com.hackerda.platform.domain.student;
 
+import com.hackerda.platform.domain.wechat.WechatUser;
+
 public interface StudentInfoService {
 
     /**
@@ -20,14 +22,13 @@ public interface StudentInfoService {
      * 对于白名单学号，一个学号可以与多个openid绑定。所以如果学号在白名单内，会一直返回true。
      *
      * @param account 教务网账号
-     * @param appId 微信appId
-     * @param openid 微信用户 openid
+     * @param wechatUser 微信用户
      * @return 可以绑定则返回true
      */
-    boolean checkCanBind(StudentAccount account, String appId, String openid);
+    boolean checkCanBind(StudentAccount account, WechatUser wechatUser);
 
     WechatStudentUserBO getStudentInfo(StudentAccount account, String enablePassword);
 
-    boolean isCommonWechat(StudentAccount account, String appId, String openid);
+    boolean isCommonWechat(StudentAccount account, WechatUser wechatUser);
 
 }

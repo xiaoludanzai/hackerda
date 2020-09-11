@@ -7,6 +7,7 @@ import com.hackerda.platform.domain.user.AppStudentUserBO;
 import com.hackerda.platform.domain.user.PhoneNumber;
 import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.domain.wechat.WechatAuthService;
+import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -28,9 +29,6 @@ public class StudentBindApp {
     private UserRepository userRepository;
     @Autowired
     private StudentInfoAssist studentInfoAssist;
-    @Lazy
-    @Autowired
-    private Map<String , WechatPlatform> wechatPlatformMap;
 
 
     public WechatStudentUserBO bindByCode(@Nonnull StudentAccount studentAccount, @Nonnull String password, @Nonnull String appId,
@@ -38,22 +36,22 @@ public class StudentBindApp {
         // 查询对应的openid
         String openId = wechatAuthService.appCodeToOpenId(code);
 
-        return bindByOpenId(studentAccount, password, appId, openId);
+        return bindByOpenId(studentAccount, password, new WechatUser(appId, openId));
     }
 
-    public WechatStudentUserBO bindByOpenId(@Nonnull StudentAccount account, @Nonnull String password, @Nonnull String appId,
-                                            @Nonnull String openid) {
+    public WechatStudentUserBO bindByOpenId(@Nonnull StudentAccount account, @Nonnull String password, WechatUser wechatUser) {
+        StudentUserBO studentUserBO = getStudentUserBO(account, password);
 
-        if(studentInfoService.checkCanBind(account, appId, openid)) {
-            StudentUserBO studentUserBO = getStudentUserBO(account, password);
+        if(studentInfoService.checkCanBind(account, wechatUser)) {
+
             WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
             if(studentInfoAssist.needToCheckWechatCommentUser() && !studentInfoAssist.inLoginWhiteList(account)
-                    && studentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(account, appId, openid)) {
+                    && studentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(account, wechatUser)) {
                 studentRepository.save(wechatStudentUserBO);
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
 
-            wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
+            wechatStudentUserBO.bindWechatUser(wechatUser);
 
             studentRepository.save(wechatStudentUserBO);
 
@@ -66,10 +64,9 @@ public class StudentBindApp {
 
     public WechatStudentUserBO bindCommonWechatUser(@Nonnull StudentAccount account,
                                                     @Nonnull PhoneNumber phoneNumber,
-                                                    @Nonnull String appId,
-                                                    @Nonnull String openid) {
+                                                    WechatUser wechatUser) {
 
-        if(studentInfoService.checkCanBind(account, appId, openid)) {
+        if(studentInfoService.checkCanBind(account, wechatUser)) {
             AppStudentUserBO user = userRepository.findByStudentAccount(account);
 
             if(user == null) {
@@ -78,7 +75,7 @@ public class StudentBindApp {
             if(user.getPhoneNumber().equals(phoneNumber)) {
                 StudentUserBO studentUserBO = studentRepository.getByAccount(account);
                 WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
-                wechatStudentUserBO.bindWechatPlatform(openid, appId, wechatPlatformMap.get(appId));
+                wechatStudentUserBO.bindWechatUser(wechatUser);
 
                 studentRepository.save(wechatStudentUserBO);
 
@@ -95,7 +92,7 @@ public class StudentBindApp {
 
     public void unbindByPlatform(@Nonnull WechatStudentUserBO wechatStudentUserBO, @Nonnull String appId) {
 
-        wechatStudentUserBO.unbindWechatPlatform(wechatPlatformMap.get(appId));
+        wechatStudentUserBO.revokeWechatUser(appId);
 
         studentRepository.save(wechatStudentUserBO);
     }

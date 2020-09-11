@@ -6,6 +6,7 @@ import com.hackerda.platform.domain.student.StudentUserBO;
 import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.user.PhoneNumber;
+import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.controller.vo.StudentUserDetailVO;
@@ -32,7 +33,10 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     @Override
     public StudentUserDetailVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId, @Nonnull String openid) {
         StudentAccount studentAccount = new StudentAccount(account);
-        WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(studentAccount, password, appId, openid);
+
+        WechatUser wechatUser = new WechatUser(appId, openid);
+
+        WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(studentAccount, password, wechatUser);
 
         return getVO(studentUser);
     }
@@ -52,8 +56,8 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
         StudentAccount studentAccount = new StudentAccount(account);
         PhoneNumber number = new PhoneNumber(phoneNumber);
-
-        WechatStudentUserBO studentUser = studentBindApp.bindCommonWechatUser(studentAccount, number, appId, openId);
+        WechatUser wechatUser = new WechatUser(appId, openId);
+        WechatStudentUserBO studentUser = studentBindApp.bindCommonWechatUser(studentAccount, number, wechatUser);
 
         return getVO(studentUser);
     }
@@ -61,13 +65,13 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     @Override
     public void appStudentRevokeAuthorize(@Nonnull String account, @Nonnull String appId) {
         WechatStudentUserBO wechatStudentUserBO;
-
+        StudentAccount studentAccount = new StudentAccount(account);
         if(StringUtils.isNotEmpty(account)) {
-            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(Integer.parseInt(account));
+            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(new StudentAccount(account));
 
         }else {
             StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
-            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentUserBO.getAccount());
+            wechatStudentUserBO = studentRepository.getWetChatUserByAccount(new StudentAccount(studentUserBO.getAccount()));
         }
 
         if(wechatStudentUserBO == null) {

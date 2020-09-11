@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StudentRepository {
 
-    WechatStudentUserBO getWetChatUserByAccount(int account);
+    WechatStudentUserBO getWetChatUserByAccount(StudentAccount account);
 
     StudentUserBO getByAccount(StudentAccount account);
 

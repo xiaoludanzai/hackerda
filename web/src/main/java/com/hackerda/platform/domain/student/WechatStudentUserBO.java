@@ -1,65 +1,66 @@
 package com.hackerda.platform.domain.student;
 
 import com.hackerda.platform.domain.WechatPlatform;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.hackerda.platform.domain.constant.ErrorCode;
+import com.hackerda.platform.domain.wechat.WechatUser;
+import com.hackerda.platform.exception.BusinessException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
 @Slf4j
 @ToString(callSuper = true)
 public class WechatStudentUserBO extends StudentUserBO{
 
-    private List<StudentWechatBindDetail> wechatOpenidList = new ArrayList<>(0);
+    private Map<String, WechatUser> wechatUserMap = new HashMap<>(0);
+
+    private Set<WechatUser> originWechatUserSet = Collections.emptySet();
 
     public boolean hasBindApp() {
         return getAppOpenid() != null;
     }
 
 
-    public StudentWechatBindDetail getAppOpenid(){
-        return getOpenId(WechatPlatform.HKXJ_APP);
-    }
+    public void setBindWechatUser(List<WechatUser> wechatUserList) {
+        originWechatUserSet = new HashSet<>(wechatUserList);
 
-    public boolean hasBindPlus() {
-        return getPlusOpenid() != null;
-    }
-
-    public StudentWechatBindDetail getPlusOpenid(){
-        return getOpenId(WechatPlatform.HKXJ_PLUS);
+        this.wechatUserMap = wechatUserList.stream().collect(Collectors.toMap(WechatUser::getAppId,
+                wechatUser -> wechatUser));
     }
 
 
-    public void bindWechatPlatform(String openid, String appId, WechatPlatform wechatPlatform){
-        StudentWechatBindDetail openId = getOpenId(wechatPlatform);
-        if(openId != null) {
-            openId.bindOpenId(openid);
-        }else {
-            wechatOpenidList.add(new StudentWechatBindDetail(this.getAccount(), openid, true, appId, wechatPlatform, true));
+    public String getAppOpenid(){
+        return "";
+    }
+
+
+    public void bindWechatUser(WechatUser wechatUser) {
+        if(wechatUserMap.containsKey(wechatUser.getAppId())) {
+            throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, "微信"+ wechatUser.toString()+ "无法绑定此学号"+super.getAccount());
+        }
+        wechatUserMap.put(wechatUser.getAppId(), wechatUser);
+    }
+
+    public void revokeWechatUser(String appId) {
+        WechatUser wechatUser = wechatUserMap.remove(appId);
+        if(wechatUser == null) {
+            log.error("{} have`t bin appId {}", this, appId);
         }
     }
 
-    public void unbindWechatPlatform(WechatPlatform wechatPlatform){
-        StudentWechatBindDetail openId = getOpenId(wechatPlatform);
-        if(openId != null) {
-            openId.unbind();
-        } else {
-            log.warn("account {} can't find wechatPlatform {} ", this.getAccount(), wechatPlatform);
-        }
+    public List<WechatUser> getNewBindWechatUser() {
+        return wechatUserMap.values().stream()
+                .filter(x-> !originWechatUserSet.contains(x))
+                .collect(Collectors.toList());
     }
 
-    private StudentWechatBindDetail getOpenId(WechatPlatform wechatPlatform){
-        for (StudentWechatBindDetail studentWechatBindDetail : wechatOpenidList) {
-            if(studentWechatBindDetail.getWechatPlatform() == wechatPlatform){
-                return studentWechatBindDetail;
-            }
-        }
-        return null;
-
+    public List<WechatUser> getRevokeWechatUser() {
+        return originWechatUserSet.stream()
+                .filter(x-> !wechatUserMap.containsValue(x))
+                .collect(Collectors.toList());
     }
+
 }

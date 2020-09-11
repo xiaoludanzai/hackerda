@@ -34,10 +34,6 @@ public class GradeMsgSenderTest {
         StudentWechatBindDetail openidBO = new StudentWechatBindDetail(1231, "oCxRO1G9N755dOY5dwcT5l3IlS3Y", true, "wx541fd36e6b400648",
                 WechatPlatform.HKXJ_PLUS, false);
 
-        List<StudentWechatBindDetail> list = Collections.singletonList(openidBO);
-
-        bo.setWechatOpenidList(list);
-
 
         GradeBO gradeBO = new GradeBO();
 

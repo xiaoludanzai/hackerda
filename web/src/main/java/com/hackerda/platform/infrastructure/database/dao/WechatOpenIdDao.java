@@ -4,6 +4,7 @@ package com.hackerda.platform.infrastructure.database.dao;
 import com.hackerda.platform.infrastructure.database.mapper.ext.WechatOpenIdExtMapper;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
 import com.hackerda.platform.infrastructure.database.model.WechatOpenid;
+import com.hackerda.platform.infrastructure.database.model.WechatUserDO;
 import com.hackerda.platform.infrastructure.database.model.example.WechatOpenidExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,12 @@ public class WechatOpenIdDao {
 
         return openidList.stream().findFirst().orElse(null);
     }
+
+    public List<WechatUserDO> selectBindWechat(Integer account) {
+
+        return null;
+    }
+
 
 
     public void insertSelective(WechatOpenid wechatOpenid){

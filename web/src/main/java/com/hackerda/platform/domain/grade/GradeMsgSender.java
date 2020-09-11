@@ -38,7 +38,7 @@ public class GradeMsgSender {
             SubscribeMessage<SubscribeGradeData> appMessage = new SubscribeMessage<>();
             appMessage.setTemplateId("dmE0nyulM8OVcUs-KojDxCYECrKTmzOGDkEUUm2T5UE")
                     .setPage(MiniProgram.GRADE_PATH.getValue())
-                    .setToUser(student.getAppOpenid().getOpenid())
+                    .setToUser(student.getAppOpenid())
                     .setData(new SubscribeGradeData()
                             .setCourseName(new SubscribeValue(gradeVo.getCourse().getName()))
                             .setName(new SubscribeValue(student.getName()))
@@ -50,19 +50,19 @@ public class GradeMsgSender {
     }
 
     private void sendMessageToPlus(WechatStudentUserBO student, GradeBO gradeVo){
-        if(student.hasBindPlus()){
-            StudentWechatBindDetail openid = student.getPlusOpenid();
-            List<WxMpTemplateData> templateData = templateBuilder.gradeToTemplateData(student, gradeVo);
-            WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
-            miniProgram.setAppid(MiniProgram.APP_ID);
-            miniProgram.setPagePath(MiniProgram.GRADE_PATH.getValue());
-            WxMpTemplateMessage templateMessage =
-                    templateBuilder.build(openid.getOpenid(), templateData,
-                            wechatTemplateProperties.getPlusGradeUpdateTemplateId(),
-                            miniProgram);
-
-            sendTemplateMessage(openid.getAppId(), templateMessage);
-        }
+//        if(student.hasBindPlus()){
+//            StudentWechatBindDetail openid = student.getPlusOpenid();
+//            List<WxMpTemplateData> templateData = templateBuilder.gradeToTemplateData(student, gradeVo);
+//            WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
+//            miniProgram.setAppid(MiniProgram.APP_ID);
+//            miniProgram.setPagePath(MiniProgram.GRADE_PATH.getValue());
+//            WxMpTemplateMessage templateMessage =
+//                    templateBuilder.build(openid.getOpenid(), templateData,
+//                            wechatTemplateProperties.getPlusGradeUpdateTemplateId(),
+//                            miniProgram);
+//
+//            sendTemplateMessage(openid.getAppId(), templateMessage);
+//        }
     }
 
     private void sendTemplateMessage(String appId, WxMpTemplateMessage templateMessage){

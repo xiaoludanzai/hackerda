@@ -1,6 +1,7 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
 import com.hackerda.platform.domain.student.*;
+import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.infrastructure.database.model.ScheduleTask;
@@ -27,11 +28,17 @@ public class StudentRepositoryImpl implements StudentRepository {
     private WechatOpenIdDao wechatOpenIdDao;
 
 
-    public WechatStudentUserBO getWetChatUserByAccount(int account){
+    public WechatStudentUserBO getWetChatUserByAccount(StudentAccount account){
 
-        List<WechatStudentUserDO> wechatUserByAccount = studentUserDao.getWechatUserByAccount(account);
+        StudentUser studentUser = studentUserDao.selectStudentByAccount(account.getInt());
+        WechatStudentUserBO wechatStudentUserBO = studentUserAdapter.toBO(studentUser);
+        List<WechatUser> wechatUserList = wechatOpenIdDao.selectBindWechat(account.getInt()).stream()
+                .map(x -> new WechatUser(x.getAppId(), x.getOpenId()))
+                .collect(Collectors.toList());
 
-        return studentUserAdapter.toBO(wechatUserByAccount);
+        wechatStudentUserBO.setBindWechatUser(wechatUserList);
+
+        return wechatStudentUserBO;
     }
 
     @Override
@@ -41,16 +48,9 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     public List<WechatStudentUserBO> getByAccountList(Collection<Integer> accountList){
+        // TODO implement
 
-        if(CollectionUtils.isEmpty(accountList)){
-            return Collections.emptyList();
-        }
-
-        List<WechatStudentUserDO> wechatUserList = studentUserDao.getWechatUserByAccountList(accountList);
-
-        Map<Integer, List<WechatStudentUserDO>> listMap = wechatUserList.stream().collect(Collectors.groupingBy(WechatStudentUserDO::getAccount, Collectors.toList()));
-
-        return listMap.values().stream().map(x-> studentUserAdapter.toBO(x)).collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     public List<WechatStudentUserBO> getSubscribe(SubscribeScene subscribeScene) {
@@ -65,15 +65,12 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     @Transactional
     public void save(WechatStudentUserBO studentUser) {
+        // TODO implement
+
         if(studentUser.isSaveOrUpdate()) {
             studentUserDao.saveOrUpdate(studentUserAdapter.toDO(studentUser));
         }
 
-        List<StudentWechatBindDetail> openidBOList = studentUser.getWechatOpenidList().stream()
-                .filter(StudentWechatBindDetail::isSaveOrUpdate).collect(Collectors.toList());
-        for (StudentWechatBindDetail openidBO : openidBOList) {
-            wechatOpenIdDao.saveOrUpdate(studentUserAdapter.toDO(openidBO));
-        }
 
     }
 

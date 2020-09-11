@@ -58,7 +58,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
@@ -66,10 +66,10 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount.getInt());
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
     }
 
 
@@ -84,7 +84,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
@@ -92,7 +92,7 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
     }
 
     @Test
@@ -106,16 +106,15 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
                 phoneNumber, Gender.Woman, "test_introduction");
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
-
-        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", "test_appId",
-                "uncommon_user_openid"))
+        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1",  new WechatUser("test_appId",
+                "uncommon_user_openid")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageEndingWith("该学号已经被绑定");
 
@@ -132,7 +131,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
@@ -140,11 +139,11 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount.getInt());
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
-        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", "test_appId",
-                "uncommon_user_openid"))
+        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",
+                "uncommon_user_openid")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageEndingWith("非常用微信号登录");
     }
@@ -160,7 +159,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
@@ -168,15 +167,14 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount.getInt());
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
         StudentAccount otherAccount = new StudentAccount("2017025839");
 
-        studentBindApp.bindByOpenId(otherAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(otherAccount, "1", wechatUser);
 
-        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", "test_appId",
-                "test_openid"))
+        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", wechatUser))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageEndingWith("非常用微信号登录");
     }
@@ -193,7 +191,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "test_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
@@ -201,10 +199,11 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount.getInt());
+        WechatStudentUserBO wechatStudentUserBO = studentRepository.getWetChatUserByAccount(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
 
-        studentBindApp.bindByOpenId(studentAccount, "1", "test_appId", "uncommon_user_openid");
+        studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",
+                "uncommon_user_openid"));
 
     }
 

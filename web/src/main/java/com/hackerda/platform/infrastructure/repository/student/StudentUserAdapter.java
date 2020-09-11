@@ -22,59 +22,18 @@ import java.util.stream.Collectors;
 @Service
 public class StudentUserAdapter {
 
-    @Autowired
-    private Map<String , WechatPlatform> wechatPlatformMap;
+
     @Value("${student.password.salt}")
     private String key;
 
-    public WechatStudentUserBO toBO(List<WechatStudentUserDO> wechatStudentUserDOList){
 
-        if(CollectionUtils.isEmpty(wechatStudentUserDOList)) {
-           return null;
-        }
-
-        WechatStudentUserDO studentUser = wechatStudentUserDOList.get(0);
-
-        Map<StudentWechatBindDetail, List<WechatSubscribeBO>> listMap = wechatStudentUserDOList.stream()
-                .collect(Collectors.groupingBy(x -> new StudentWechatBindDetail(studentUser.getAccount(), x.getOpenId(),
-                                x.getIsBind(),
-                                x.getAppId(),
-                                wechatPlatformMap.get(x.getAppId()), false),
-                        Collectors.mapping(x -> new WechatSubscribeBO(x.getIsSubscribe(), x.getScene()), Collectors.toList())));
-
-        for (StudentWechatBindDetail openidBO : listMap.keySet()) {
-            openidBO.setWechatSubscribeBOList(listMap.getOrDefault(openidBO,
-                    Collections.emptyList()).stream().filter(WechatSubscribeBO::isNotNull).collect(Collectors.toList()));
-        }
-
-        WechatStudentUserBO bo = new WechatStudentUserBO();
-
-        bo.setAcademyName(studentUser.getAcademyName());
-        bo.setAccount(studentUser.getAccount());
-        bo.setClassName(studentUser.getClassName());
-        bo.setEthnic(studentUser.getEthnic());
-        bo.setIsCorrect(studentUser.getIsCorrect());
-
-        bo.setSex(studentUser.getSex());
-        bo.setSubjectName(studentUser.getSubjectName());
-        bo.setUrpClassNum(studentUser.getUrpClassNum());
-        bo.setPassword(studentUser.getPassword());
-        bo.setName(studentUser.getName());
-        bo.setWechatOpenidList(new ArrayList<>(listMap.keySet()));
-
-        bo.setKey(key);
-
-        return bo;
-    }
-
-
-    public StudentUserBO toBO(StudentUser studentUser) {
+    public WechatStudentUserBO toBO(StudentUser studentUser) {
 
         if(studentUser == null) {
             return null;
         }
 
-        StudentUserBO user = new StudentUserBO();
+        WechatStudentUserBO user = new WechatStudentUserBO();
 
         user.setAccount(studentUser.getAccount());
         user.setPassword(studentUser.getPassword());
