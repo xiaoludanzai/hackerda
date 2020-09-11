@@ -33,7 +33,7 @@ public class CourseTimeTableService {
 
         StudentUserBO wechatStudentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
 
-        return getCurrentTermCourseTimeTableByStudent(wechatStudentUserBO.getAccount());
+        return getCurrentTermCourseTimeTableByStudent(wechatStudentUserBO.getAccount().getInt());
     }
 
 

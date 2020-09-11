@@ -90,7 +90,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
         WechatStudentUserBO user = new WechatStudentUserBO();
 
-        user.setAccount(userInfo.getAccount());
+        user.setAccount(new StudentAccount(userInfo.getAccount()));
         user.setPassword(userInfo.getPassword());
         user.setIsCorrect(userInfo.getIsCorrect());
         user.setUrpClassNum(Integer.parseInt(urpClass.getClassNum()));

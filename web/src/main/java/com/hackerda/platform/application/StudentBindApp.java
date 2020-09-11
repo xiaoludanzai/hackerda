@@ -102,8 +102,7 @@ public class StudentBindApp {
 
         studentRepository.save(wechatStudentUserBO);
 
-        wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.AccountHasBind,
-                new StudentAccount(wechatStudentUserBO.getAccount())));
+        wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.AccountHasBind, wechatStudentUserBO.getAccount()));
     }
 
     private WechatStudentUserBO getStudentUserBO(@Nonnull StudentAccount account, @Nonnull String password,

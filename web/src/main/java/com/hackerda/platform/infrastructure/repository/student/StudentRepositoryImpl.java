@@ -76,7 +76,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
         for (WechatUser wechatUser : studentUser.getNewBindWechatUser()) {
             WechatOpenidStudentRelative relative = new WechatOpenidStudentRelative();
-            relative.setAccount(studentUser.getAccount());
+            relative.setAccount(studentUser.getAccount().getInt());
             relative.setAppid(wechatUser.getAppId());
             relative.setOpenid(wechatUser.getOpenId());
             wechatOpenidStudentRelativeMapper.insertSelective(relative);
@@ -84,7 +84,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
         for (WechatUser wechatUser : studentUser.getRevokeWechatUser()) {
             WechatOpenidStudentRelativeExample example = new WechatOpenidStudentRelativeExample();
-            example.createCriteria().andAccountEqualTo(studentUser.getAccount())
+            example.createCriteria().andAccountEqualTo(studentUser.getAccount().getInt())
                     .andAppidEqualTo(wechatUser.getAppId());
 
             wechatOpenidStudentRelativeMapper.deleteByExample(example);

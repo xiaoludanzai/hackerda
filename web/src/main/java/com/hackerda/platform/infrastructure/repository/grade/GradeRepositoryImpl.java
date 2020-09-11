@@ -104,10 +104,10 @@ public class GradeRepositoryImpl implements GradeRepository {
         try {
             gradeList = completableFuture.get(getGradeTimeout, TimeUnit.MILLISECONDS);
 
-            gradeList = checkUpdate(student.getAccount(), gradeList);
+            gradeList = checkUpdate(student.getAccount().getInt(), gradeList);
 
         } catch (Exception e) {
-            gradeList = gradeToTermGradeList(gradeDao.getGradeByAccount(student.getAccount()));
+            gradeList = gradeToTermGradeList(gradeDao.getGradeByAccount(student.getAccount().getInt()));
             exception = e;
         }
 
@@ -126,7 +126,8 @@ public class GradeRepositoryImpl implements GradeRepository {
                 return gradeBOList;
             }, gradeAutoUpdatePool);
         }else {
-            List<TermGradeBO> termGradeBOList = gradeToTermGradeList(gradeDao.getEverTermGradeByAccount(student.getAccount()));
+            List<TermGradeBO> termGradeBOList =
+                    gradeToTermGradeList(gradeDao.getEverTermGradeByAccount(student.getAccount().getInt()));
             termGradeBOList.forEach(x-> x.setFinishFetch(true));
             return CompletableFuture.completedFuture(termGradeBOList);
         }

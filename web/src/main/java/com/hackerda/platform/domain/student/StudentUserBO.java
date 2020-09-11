@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Data
 public class StudentUserBO {
 
-    private Integer account;
+    private StudentAccount account;
 
     private String password;
 

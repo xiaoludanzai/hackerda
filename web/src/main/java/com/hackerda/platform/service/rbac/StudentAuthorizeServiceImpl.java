@@ -65,13 +65,13 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
     @Override
     public void appStudentRevokeAuthorize(@Nonnull String account, @Nonnull String appId) {
         WechatStudentUserBO wechatStudentUserBO;
-        StudentAccount studentAccount = new StudentAccount(account);
+
         if(StringUtils.isNotEmpty(account)) {
             wechatStudentUserBO = studentRepository.findWetChatUser(new StudentAccount(account));
 
         }else {
             StudentUserBO studentUserBO = (StudentUserBO) SecurityUtils.getSubject().getPrincipal();
-            wechatStudentUserBO = studentRepository.findWetChatUser(new StudentAccount(studentUserBO.getAccount()));
+            wechatStudentUserBO = studentRepository.findWetChatUser(studentUserBO.getAccount());
         }
 
         if(wechatStudentUserBO == null) {
@@ -89,7 +89,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
         StudentUserDetailVO vo = new StudentUserDetailVO();
 
-        vo.setAccount(studentUser.getAccount());
+        vo.setAccount(studentUser.getAccount().getInt());
         vo.setName(studentUser.getName());
         vo.setSex(studentUser.getSex());
         vo.setEthnic(studentUser.getEthnic());

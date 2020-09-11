@@ -52,7 +52,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
     public CourseTimeTableOverview getByAccount(StudentUserBO wechatStudentUserBO, String termYear, int termOrder) {
 
         StudentCourseTimeTable courseTimeTable = new StudentCourseTimeTable()
-                .setStudentId(wechatStudentUserBO.getAccount())
+                .setStudentId(wechatStudentUserBO.getAccount().getInt())
                 .setTermYear(termYear)
                 .setTermOrder(termOrder);
 
@@ -152,7 +152,7 @@ public class CourseTimetableRepositoryImpl implements CourseTimetableRepository 
 
         List<StudentCourseTimeTable> relativeList = idList.stream().map(x -> new StudentCourseTimeTable()
                 .setCourseTimetableId(x)
-                .setStudentId(wechatStudentUserBO.getAccount())
+                .setStudentId(wechatStudentUserBO.getAccount().getInt())
                 .setTermYear(termYear)
                 .setTermOrder(termOrder)).collect(Collectors.toList());
 

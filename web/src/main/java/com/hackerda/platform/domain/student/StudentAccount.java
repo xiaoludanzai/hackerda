@@ -5,7 +5,6 @@ import com.hackerda.platform.exception.BusinessException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString
 @EqualsAndHashCode
 public class StudentAccount {
 
@@ -33,6 +32,10 @@ public class StudentAccount {
 
     public String getGrade(){
         return account.substring(0, 4);
+    }
+
+    public String toString(){
+        return this.account;
     }
 
 }
