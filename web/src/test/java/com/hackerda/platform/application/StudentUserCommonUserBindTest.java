@@ -44,7 +44,6 @@ public class StudentUserCommonUserBindTest {
 
     @Before
     public void init(){
-        when(studentInfoAssist.inLoginWhiteList(any())).thenReturn(false);
         when(studentInfoAssist.needToCheckWechatCommentUser()).thenReturn(true);
     }
 
@@ -186,7 +185,6 @@ public class StudentUserCommonUserBindTest {
         需要检查是否是常用微信用户
          */
         before();
-        when(studentInfoAssist.inLoginWhiteList(any())).thenReturn(true);
 
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");

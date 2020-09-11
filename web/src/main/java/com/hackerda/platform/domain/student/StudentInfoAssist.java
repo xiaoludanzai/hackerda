@@ -5,7 +5,5 @@ package com.hackerda.platform.domain.student;
  */
 public interface StudentInfoAssist {
 
-    boolean inLoginWhiteList(StudentAccount studentAccount);
-
     boolean needToCheckWechatCommentUser();
 }

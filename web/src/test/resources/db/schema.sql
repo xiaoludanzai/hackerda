@@ -184,3 +184,29 @@ CREATE TABLE `user_logout_record`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `wechat_openid_student`
+(
+    `id`      int(11)     NOT NULL AUTO_INCREMENT,
+    `appid`   varchar(32) NOT NULL,
+    `openid`  varchar(32) NOT NULL,
+    `account` int(16)     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique_bind` (`appid`, `account`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `wechat_action_record`
+(
+    `id`         bigint(20)  NOT NULL AUTO_INCREMENT,
+    `appid`      varchar(32) NOT NULL,
+    `openid`     varchar(32) NOT NULL,
+    `account`    varchar(32) NOT NULL,
+    `action`     int(16)     NOT NULL,
+    `gmt_create` timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;

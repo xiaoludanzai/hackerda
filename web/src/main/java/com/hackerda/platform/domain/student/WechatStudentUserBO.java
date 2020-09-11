@@ -17,6 +17,7 @@ public class WechatStudentUserBO extends StudentUserBO{
 
     private Map<String, WechatUser> wechatUserMap = new HashMap<>(0);
 
+    @EqualsAndHashCode.Exclude
     private Set<WechatUser> originWechatUserSet = Collections.emptySet();
 
     public boolean hasBindApp() {
@@ -37,6 +38,18 @@ public class WechatStudentUserBO extends StudentUserBO{
     }
 
 
+    public boolean hasBindApp(String appId) {
+        return wechatUserMap.containsKey(appId);
+    }
+
+    public boolean hasBindWechatUser(WechatUser wechatUser) {
+        return originWechatUserSet.contains(wechatUser) || wechatUserMap.containsValue(wechatUser);
+    }
+
+    public boolean hasBindWechatUser() {
+        return !originWechatUserSet.isEmpty() || !wechatUserMap.isEmpty();
+    }
+
     public void bindWechatUser(WechatUser wechatUser) {
         if(wechatUserMap.containsKey(wechatUser.getAppId())) {
             throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, "微信"+ wechatUser.toString()+ "无法绑定此学号"+super.getAccount());
@@ -44,11 +57,12 @@ public class WechatStudentUserBO extends StudentUserBO{
         wechatUserMap.put(wechatUser.getAppId(), wechatUser);
     }
 
-    public void revokeWechatUser(String appId) {
+    public WechatUser revokeWechatUser(String appId) {
         WechatUser wechatUser = wechatUserMap.remove(appId);
         if(wechatUser == null) {
             log.error("{} have`t bin appId {}", this, appId);
         }
+        return wechatUser;
     }
 
     public List<WechatUser> getNewBindWechatUser() {

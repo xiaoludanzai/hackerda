@@ -1,6 +1,8 @@
 package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
+import com.hackerda.platform.infrastructure.database.mapper.WechatOpenidStudentRelativeMapper;
+import com.hackerda.platform.infrastructure.database.model.WechatOpenidStudentRelativeExample;
 import com.hackerda.platform.service.OpenIdService;
 import com.hackerda.spider.IExceptionHandler;
 import com.hackerda.spider.exception.PasswordUnCorrectException;
@@ -10,11 +12,12 @@ import org.springframework.stereotype.Component;
 public class SpiderExceptionHandler implements IExceptionHandler {
 
     private final StudentUserDao studentUserDao;
-    private final OpenIdService openIdService;
 
-    public SpiderExceptionHandler(StudentUserDao studentUserDao, OpenIdService openIdService) {
+    private final WechatOpenidStudentRelativeMapper wechatOpenidStudentRelativeMapper;
+
+    public SpiderExceptionHandler(StudentUserDao studentUserDao, WechatOpenidStudentRelativeMapper wechatOpenidStudentRelativeMapper) {
         this.studentUserDao = studentUserDao;
-        this.openIdService = openIdService;
+        this.wechatOpenidStudentRelativeMapper = wechatOpenidStudentRelativeMapper;
     }
 
 
@@ -23,7 +26,11 @@ public class SpiderExceptionHandler implements IExceptionHandler {
 
         if(e instanceof PasswordUnCorrectException){
             studentUserDao.updatePasswordUnCorrect(Integer.parseInt(account));
-            openIdService.openIdUnbindAllPlatform(Integer.parseInt(account));
+
+            WechatOpenidStudentRelativeExample example = new WechatOpenidStudentRelativeExample();
+            example.createCriteria().andAppidEqualTo(account);
+
+            wechatOpenidStudentRelativeMapper.deleteByExample(example);
         }
 
     }

@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-@AllArgsConstructor
+import java.util.Date;
+
 @Getter
 @ToString
+@AllArgsConstructor
 public class ActionRecord {
 
     private final WechatUser wechatUser;
@@ -16,4 +18,16 @@ public class ActionRecord {
     private final Action action;
 
     private final StudentAccount studentAccount;
+
+    private final Date gmtCreate;
+
+    private final Date gmtModify;
+
+    public ActionRecord(WechatUser wechatUser, Action action, StudentAccount studentAccount) {
+        this.wechatUser = wechatUser;
+        this.action = action;
+        this.studentAccount = studentAccount;
+        this.gmtCreate = new Date();
+        this.gmtModify = new Date();
+    }
 }
