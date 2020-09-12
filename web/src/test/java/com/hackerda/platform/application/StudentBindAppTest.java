@@ -8,10 +8,12 @@ import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -50,7 +52,7 @@ public class StudentBindAppTest {
 
         assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser()).isFalse();
 
-        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
+        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(1);
 
     }
 
@@ -70,6 +72,11 @@ public class StudentBindAppTest {
                 .hasMessageContaining("账号或密码错误");
 
         assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
+
+        WechatStudentUserBO studentUserBO = studentRepository.findWetChatUser(studentAccount);
+
+        assertThat(studentUserBO.getIsCorrect()).isFalse();
+        assertThat(studentUserBO.hasBindWechatUser()).isFalse();
     }
 
     @Test
@@ -111,7 +118,7 @@ public class StudentBindAppTest {
         WechatStudentUserBO except = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(actual).isEqualTo(except);
-        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(1);
+        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
 
     }
 
@@ -134,7 +141,60 @@ public class StudentBindAppTest {
         WechatStudentUserBO except = studentRepository.findWetChatUser(studentAccount);
 
         assertThat(actual).isEqualTo(except);
-        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
+        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(1);
         assertThat(wechatActionRecordRepository.find(newBind).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testReBindAfterRevokeFailed() {
+
+        truncateMapper.wechatOpenId();
+        truncateMapper.wechat_action_record();
+
+
+        WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
+        studentBindApp.bindByOpenId(new StudentAccount("2014025838"), "1", wechatUser);
+
+        WechatStudentUserBO actual = studentBindApp.bindByOpenId(new StudentAccount("2017025838"), "1", wechatUser);
+
+
+        WechatStudentUserBO except = studentRepository.findWetChatUser(new StudentAccount("2017025838"));
+
+        assertThat(actual).isEqualTo(except);
+        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testConcurrentBindDiffOpenId() {
+
+        truncateMapper.wechatOpenId();
+        truncateMapper.wechat_action_record();
+
+        StudentAccount studentAccount = new StudentAccount("2014025838");
+
+        WechatStudentUserBO before = studentRepository.findWetChatUser(studentAccount);
+        WechatStudentUserBO after = studentRepository.findWetChatUser(studentAccount);
+        studentBindApp.bindByOpenId(before, new WechatUser("test_appId", "test_openid_before"));
+        assertThatThrownBy(() -> studentBindApp.bindByOpenId(after, new WechatUser("test_appId", "test_openid_after")))
+                .hasCauseInstanceOf(DuplicateKeyException.class);
+
+    }
+
+    @Test
+    @Ignore
+    public void testConcurrentBindDiffAccount() {
+
+        truncateMapper.wechatOpenId();
+        truncateMapper.wechat_action_record();
+
+        WechatStudentUserBO before = studentBindApp.getStudentUserBO(new StudentAccount("2014025838"), "1");
+        WechatStudentUserBO after = studentBindApp.getStudentUserBO(new StudentAccount("2017025838"), "1");
+
+        WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
+        studentBindApp.bindByOpenId(before, wechatUser);
+        studentBindApp.bindByOpenId(after, wechatUser);
+
+        assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(2);
+
     }
 }

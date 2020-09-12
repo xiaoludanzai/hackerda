@@ -1,5 +1,6 @@
 package com.hackerda.platform.application;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.domain.user.AppStudentUserBO;
@@ -12,7 +13,6 @@ import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 
@@ -42,50 +42,73 @@ public class StudentBindApp {
     }
 
     public WechatStudentUserBO bindByOpenId(@Nonnull StudentAccount account, @Nonnull String password, WechatUser wechatUser) {
-        WechatStudentUserBO wechatStudentUserBO = getStudentUserBO(account, password, wechatUser);
 
+        try {
+            WechatStudentUserBO wechatStudentUserBO = getStudentUserBO(account, password);
+            WechatStudentUserBO userBO = bindByOpenId(wechatStudentUserBO, wechatUser);
+            wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.Login, wechatStudentUserBO.getAccount()));
+            return userBO;
+        } catch (BusinessException e) {
+            Action action = null;
+            if(e.getErrorCode() == ErrorCode.UNCOMMON_WECHAT) {
+                action = Action.UnCommonWechat;
+            } else if(e.getErrorCode() == ErrorCode.ACCOUNT_OR_PASSWORD_INVALID){
+                action = Action.PasswordUnCorrect;
+            }else if(e.getErrorCode() == ErrorCode.ACCOUNT_HAS_BIND) {
+                action = Action.AccountHasBind;
+            }
+            if(action != null) {
+                wechatActionRecordRepository.save(new ActionRecord(wechatUser, action, account));
+            }
+
+            throw e;
+        }
+
+    }
+
+    @VisibleForTesting
+    WechatStudentUserBO bindByOpenId(WechatStudentUserBO wechatStudentUserBO, WechatUser wechatUser) {
         if(!wechatStudentUserBO.hasBindApp(wechatUser.getAppId())) {
 
             if(studentInfoAssist.needToCheckWechatCommentUser()
-                    && wechatStudentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(account, wechatUser)) {
+                    && wechatStudentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(wechatStudentUserBO.getAccount(),
+                    wechatUser)) {
                 studentRepository.save(wechatStudentUserBO);
-                wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.UnCommonWechat, account));
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
             }
 
             wechatStudentUserBO.bindWechatUser(wechatUser);
 
             studentRepository.save(wechatStudentUserBO);
-            wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.Login, account));
+
             return wechatStudentUserBO;
 
         }else if(wechatStudentUserBO.hasBindWechatUser(wechatUser)){
             return wechatStudentUserBO;
         } else {
-            wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.AccountHasBind, account));
-            throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, account + "该学号已经被绑定");
+            throw new BusinessException(ErrorCode.ACCOUNT_HAS_BIND, wechatStudentUserBO.getAccount() + "该学号已经被绑定");
         }
+
     }
 
 
     public WechatStudentUserBO bindCommonWechatUser(@Nonnull StudentAccount account,
                                                     @Nonnull PhoneNumber phoneNumber,
                                                     WechatUser wechatUser) {
-
-        if(studentInfoService.checkCanBind(account, wechatUser)) {
+        WechatStudentUserBO studentUserBO = studentRepository.findWetChatUser(account);
+        if(!studentUserBO.hasBindApp(wechatUser.getAppId())) {
             AppStudentUserBO user = userRepository.findByStudentAccount(account);
 
             if(user == null) {
                 throw new BusinessException(ErrorCode.ACCOUNT_MISS, "用户信息不存在");
             }
             if(user.getPhoneNumber().equals(phoneNumber)) {
-                StudentUserBO studentUserBO = studentRepository.find(account);
-                WechatStudentUserBO wechatStudentUserBO = transfer(studentUserBO);
-                wechatStudentUserBO.bindWechatUser(wechatUser);
 
-                studentRepository.save(wechatStudentUserBO);
+                studentUserBO.bindWechatUser(wechatUser);
 
-                return wechatStudentUserBO;
+                studentRepository.save(studentUserBO);
+
+                return studentUserBO;
             }
 
             throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
@@ -98,17 +121,15 @@ public class StudentBindApp {
 
     public void unbindByPlatform(@Nonnull WechatStudentUserBO wechatStudentUserBO, @Nonnull String appId) {
 
-        WechatUser wechatUser = wechatStudentUserBO.revokeWechatUser(appId);
+        wechatStudentUserBO.revokeWechatUser(appId);
 
         studentRepository.save(wechatStudentUserBO);
 
-        wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.AccountHasBind, wechatStudentUserBO.getAccount()));
     }
 
-    private WechatStudentUserBO getStudentUserBO(@Nonnull StudentAccount account, @Nonnull String password,
-                                                 WechatUser wechatUser) {
+    @VisibleForTesting
+    WechatStudentUserBO getStudentUserBO(@Nonnull StudentAccount account, @Nonnull String password) {
         if(!studentInfoService.checkPasswordValid(account.getAccount(), password)){
-            wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.Login, account));
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, account + "账号或密码错误");
         }
 
@@ -125,27 +146,5 @@ public class StudentBindApp {
         }
 
         return studentUserBO;
-    }
-
-    private WechatStudentUserBO transfer(StudentUserBO studentUser) {
-
-        WechatStudentUserBO bo = new WechatStudentUserBO();
-
-        bo.setAcademyName(studentUser.getAcademyName());
-        bo.setAccount(studentUser.getAccount());
-        bo.setClassName(studentUser.getClassName());
-        bo.setEthnic(studentUser.getEthnic());
-        bo.setIsCorrect(studentUser.getIsCorrect());
-
-        bo.setSex(studentUser.getSex());
-        bo.setSubjectName(studentUser.getSubjectName());
-        bo.setUrpClassNum(studentUser.getUrpClassNum());
-        bo.setPassword(studentUser.getPassword());
-        bo.setName(studentUser.getName());
-
-        bo.setKey(studentUser.getKey());
-        bo.setSaveOrUpdate(studentUser.isSaveOrUpdate());
-
-        return bo;
     }
 }

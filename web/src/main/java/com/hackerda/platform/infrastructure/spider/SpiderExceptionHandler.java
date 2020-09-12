@@ -28,7 +28,7 @@ public class SpiderExceptionHandler implements IExceptionHandler {
             studentUserDao.updatePasswordUnCorrect(Integer.parseInt(account));
 
             WechatOpenidStudentRelativeExample example = new WechatOpenidStudentRelativeExample();
-            example.createCriteria().andAppidEqualTo(account);
+            example.createCriteria().andAccountEqualTo(Integer.parseInt(account));
 
             wechatOpenidStudentRelativeMapper.deleteByExample(example);
         }

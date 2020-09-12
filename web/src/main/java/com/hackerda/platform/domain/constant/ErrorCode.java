@@ -5,6 +5,8 @@ package com.hackerda.platform.domain.constant;
  * @date 2018/10/10
  */
 public enum  ErrorCode {
+
+	SUCCESS(200),
 	/**
 	 * 客户端错误
 	 */

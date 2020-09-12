@@ -1,13 +1,16 @@
 package com.hackerda.platform.infrastructure.repository.student;
 
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
+import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.StudentUserDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.infrastructure.database.mapper.WechatOpenidStudentRelativeMapper;
 import com.hackerda.platform.infrastructure.database.model.*;
 import com.hackerda.platform.domain.constant.SubscribeScene;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -75,11 +78,31 @@ public class StudentRepositoryImpl implements StudentRepository {
         }
 
         for (WechatUser wechatUser : studentUser.getNewBindWechatUser()) {
-            WechatOpenidStudentRelative relative = new WechatOpenidStudentRelative();
-            relative.setAccount(studentUser.getAccount().getInt());
-            relative.setAppid(wechatUser.getAppId());
-            relative.setOpenid(wechatUser.getOpenId());
-            wechatOpenidStudentRelativeMapper.insertSelective(relative);
+
+            WechatOpenidStudentRelativeExample example = new WechatOpenidStudentRelativeExample();
+            example.createCriteria()
+                    .andAppidEqualTo(wechatUser.getAppId())
+                    .andOpenidEqualTo(wechatUser.getOpenId());
+
+            WechatOpenidStudentRelative orElse = wechatOpenidStudentRelativeMapper.selectByExample(example).stream().findFirst().orElse(null);
+
+
+            if(orElse != null) {
+                orElse.setAccount(studentUser.getAccount().getInt());
+                wechatOpenidStudentRelativeMapper.updateByPrimaryKeySelective(orElse);
+            } else {
+                WechatOpenidStudentRelative relative = new WechatOpenidStudentRelative();
+                relative.setAccount(studentUser.getAccount().getInt());
+                relative.setAppid(wechatUser.getAppId());
+                relative.setOpenid(wechatUser.getOpenId());
+                try {
+                    wechatOpenidStudentRelativeMapper.insertSelective(relative);
+                }catch (DuplicateKeyException e) {
+                    throw new BusinessException(e, ErrorCode.ACCOUNT_HAS_BIND, "重复插入主键");
+                }
+
+            }
+
         }
 
         for (WechatUser wechatUser : studentUser.getRevokeWechatUser()) {

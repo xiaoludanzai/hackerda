@@ -193,7 +193,8 @@ CREATE TABLE `wechat_openid_student`
     `openid`  varchar(32) NOT NULL,
     `account` int(16)     NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `unique_bind` (`appid`, `account`)
+    UNIQUE KEY `unique_bind` (`appid`, `account`),
+    UNIQUE KEY `unique_bind_wechat` (`appid`, `openid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
