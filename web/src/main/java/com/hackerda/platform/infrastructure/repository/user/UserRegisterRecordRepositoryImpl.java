@@ -1,14 +1,21 @@
 package com.hackerda.platform.infrastructure.repository.user;
 
+import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
+import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
 import com.hackerda.platform.infrastructure.database.mapper.UserLogoutRecordMapper;
 import com.hackerda.platform.infrastructure.database.mapper.UserRegisterRecordMapper;
+import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.UserLogoutRecord;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecord;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecordExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserRegisterRecordRepositoryImpl implements UserRegisterRecordRepository {
@@ -17,6 +24,8 @@ public class UserRegisterRecordRepositoryImpl implements UserRegisterRecordRepos
     private UserRegisterRecordMapper userRegisterRecordMapper;
     @Autowired
     private UserLogoutRecordMapper userLogoutRecordMapper;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public void save(UserRegisterRecordBO userRegisterRecordBO) {
@@ -30,23 +39,30 @@ public class UserRegisterRecordRepositoryImpl implements UserRegisterRecordRepos
     }
 
     @Override
-    public UserRegisterRecordBO findByUserName(String userName) {
+    public List<UserRegisterRecordBO> findByUserName(String userName) {
         UserRegisterRecordExample example = new UserRegisterRecordExample();
         example.createCriteria().andUserNameEqualTo(userName);
 
-        UserRegisterRecord record = userRegisterRecordMapper.selectByExample(example).stream().findFirst().orElse(null);
-        if(record == null) {
-            return null;
+
+        return userRegisterRecordMapper.selectByExample(example).stream().map(record -> {
+            WechatUser wechatUser = new WechatUser(record.getAppid(), record.getOpenid());
+            PhoneNumber phoneNumber = new PhoneNumber(record.getPhoneNumber());
+            LifeCycleStatus lifeCycleStatus = LifeCycleStatus.getByCode(record.getLifeCycleStatus());
+
+            UserRegisterRecordBO bo = new UserRegisterRecordBO(record.getUserName(), wechatUser, phoneNumber, lifeCycleStatus);
+            bo.setId(record.getId());
+            return bo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserRegisterRecordBO> findByStudentAccount(StudentAccount studentAccount) {
+        User user = userDao.selectByStudentAccount(studentAccount.getAccount());
+        if(user == null) {
+            return Collections.emptyList();
         }
 
-        WechatUser wechatUser = new WechatUser(record.getAppid(), record.getOpenid());
-        PhoneNumber phoneNumber = new PhoneNumber(record.getPhoneNumber());
-        LifeCycleStatus lifeCycleStatus = LifeCycleStatus.getByCode(record.getLifeCycleStatus());
-
-        UserRegisterRecordBO bo = new UserRegisterRecordBO(record.getUserName(),  wechatUser, phoneNumber, lifeCycleStatus);
-        bo.setId(record.getId());
-
-        return bo;
+        return findByUserName(user.getUserName());
     }
 
     @Override

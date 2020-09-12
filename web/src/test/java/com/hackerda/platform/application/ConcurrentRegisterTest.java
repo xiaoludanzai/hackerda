@@ -6,7 +6,6 @@ import com.hackerda.platform.domain.user.Gender;
 import com.hackerda.platform.domain.user.PhoneNumber;
 import com.hackerda.platform.domain.user.UserRegisterAssist;
 import com.hackerda.platform.domain.wechat.WechatUser;
-import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -43,8 +42,8 @@ public class ConcurrentRegisterTest {
          */
 
         before();
-        when(userRegisterAssist.userCanRegister(any())).thenReturn(true);
-        when(userRegisterAssist.wechatCanRegister(any())).thenReturn(true);
+        when(userRegisterAssist.userHasRegister(any())).thenReturn(true);
+        when(userRegisterAssist.wechatHasRegister(any())).thenReturn(true);
 
         StudentAccount studentAccount = new StudentAccount("2014025838");
         PhoneNumber phoneNumber1 = new PhoneNumber("17301086276");
@@ -60,9 +59,6 @@ public class ConcurrentRegisterTest {
 
         assertThatThrownBy(() -> userRegisterApp.register(appStudentUserBO2, new WechatUser("test_appId", "test_openid2")))
                 .isInstanceOf(DuplicateKeyException.class);
-
-
-
 
     }
 

@@ -34,6 +34,10 @@ public class StudentRepositoryImpl implements StudentRepository {
     public WechatStudentUserBO findWetChatUser(StudentAccount account){
 
         StudentUser studentUser = studentUserDao.selectStudentByAccount(account.getInt());
+
+        if(studentUser == null) {
+            return null;
+        }
         WechatStudentUserBO wechatStudentUserBO = studentUserAdapter.toBO(studentUser);
 
         WechatOpenidStudentRelativeExample example = new WechatOpenidStudentRelativeExample();

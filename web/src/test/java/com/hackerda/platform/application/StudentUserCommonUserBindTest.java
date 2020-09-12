@@ -16,18 +16,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @Slf4j
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext
 public class StudentUserCommonUserBindTest {
 
     @Autowired
@@ -38,14 +38,27 @@ public class StudentUserCommonUserBindTest {
     private StudentRepository studentRepository;
     @Autowired
     private TruncateMapper truncateMapper;
-
-    @MockBean
+    @Autowired
     private StudentInfoAssist studentInfoAssist;
 
+
     @Before
-    public void init(){
-        when(studentInfoAssist.needToCheckWechatCommentUser()).thenReturn(true);
+    public void init() {
+
+        StudentInfoAssist infoAssist = new StudentInfoAssist() {
+            @Override
+            public boolean needToCheckWechatCommentUser() {
+                return true;
+            }
+
+            @Override
+            public boolean isCommonWechat(StudentAccount account, WechatUser wechatUser) {
+                return StudentUserCommonUserBindTest.this.studentInfoAssist.isCommonWechat(account, wechatUser);
+            }
+        };
+        studentBindApp.setStudentInfoAssist(infoAssist);
     }
+
 
     @Test
     public void commonUserCheckInNormal() {
@@ -70,7 +83,6 @@ public class StudentUserCommonUserBindTest {
 
         studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
     }
-
 
     @Test
     public void commonUserCheckInUnBindFail() {
@@ -120,7 +132,7 @@ public class StudentUserCommonUserBindTest {
     }
 
     @Test
-    public void unCommonUserCheckInUnbind() {
+    public void unCommonUserSameAccount() {
         /*
         对常用微信用户的测试，一个用户绑定后再注册科大圈，然后解绑
         未绑定过该学号用户登录，需要检查是否是常用微信用户
@@ -130,6 +142,7 @@ public class StudentUserCommonUserBindTest {
         StudentAccount studentAccount = new StudentAccount("2014025838");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 
+        // 2014025838先绑定后注册
         studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
@@ -138,13 +151,47 @@ public class StudentUserCommonUserBindTest {
 
         userRegisterApp.register(appStudentUserBO, wechatUser);
 
+        // 注册完成后2014025838解绑  新的微信账号账号授权后可登录
         WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
         studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
-
-        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",
-                "uncommon_user_openid")))
+        WechatUser unCommonUser = new WechatUser("test_appId", "uncommon_user_openid");
+        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", unCommonUser))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageEndingWith("非常用微信号登录");
+
+        // 微信2授权绑定 2014025838
+        studentBindApp.bindCommonWechatUser(studentAccount, phoneNumber, unCommonUser);
+        studentBindApp.bindByOpenId(studentAccount, "1", unCommonUser);
+
+        assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser(unCommonUser)).isTrue();
+        assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser(wechatUser)).isFalse();
+
+
+        // 微信2当前绑定了 2014025838 所以无法注册成功
+        PhoneNumber phoneNumber2 = new PhoneNumber("17301086277");
+        StudentAccount studentAccount2 = new StudentAccount("2017025838");
+        AppStudentUserBO appStudentUserBO2 = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
+                phoneNumber2, Gender.Woman, "test_introduction");
+
+        // 微信2当前绑定了2014025838  2014025838已经注册了科大圈,微信2无法注册
+        assertThatThrownBy(() -> userRegisterApp.register(appStudentUserBO2, unCommonUser))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageEndingWith("用户手机号或者学号已经被注册");
+
+
+        // 微信2 切换绑定到 2017025838 注册一个新的科大圈身份
+        studentBindApp.bindByOpenId(studentAccount2, "1", unCommonUser);
+        AppStudentUserBO appStudentUserBO3 = new AppStudentUserBO(studentAccount2, "test2", "1", "test_avatarPath",
+                phoneNumber2, Gender.Woman, "test_introduction");
+        userRegisterApp.register(appStudentUserBO3, unCommonUser);
+
+        assertThat(userRegisterApp.getUserByStudentAccount(studentAccount2)).isEqualTo(appStudentUserBO3);
+
+
+        // 注册完后又重新绑定 2014025838 已经是常用用户 无需授权
+        studentBindApp.bindByOpenId(studentAccount, "1", unCommonUser);
+        assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser(unCommonUser)).isTrue();
+        assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser(wechatUser)).isFalse();
     }
 
     @Test
@@ -173,37 +220,10 @@ public class StudentUserCommonUserBindTest {
 
         studentBindApp.bindByOpenId(otherAccount, "1", wechatUser);
 
-        assertThatThrownBy(() -> studentBindApp.bindByOpenId(studentAccount, "1", wechatUser))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageEndingWith("非常用微信号登录");
-    }
-
-    @Test
-    public void testWhiteList() {
-        /*
-        对常用微信用户的测试，一个用户绑定后再注册科大圈，然后解绑后绑定其它用户
-        需要检查是否是常用微信用户
-         */
-        before();
-
-        StudentAccount studentAccount = new StudentAccount("2014025838");
-        WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
-
         studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
-        PhoneNumber phoneNumber = new PhoneNumber("17301086276");
-        AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
-                phoneNumber, Gender.Woman, "test_introduction");
-
-        userRegisterApp.register(appStudentUserBO, wechatUser);
-
-        WechatStudentUserBO wechatStudentUserBO = studentRepository.findWetChatUser(studentAccount);
-        studentBindApp.unbindByPlatform(wechatStudentUserBO, "test_appId");
-
-        studentBindApp.bindByOpenId(studentAccount, "1", new WechatUser("test_appId",
-                "uncommon_user_openid"));
-
     }
+
 
 
     private void before(){
@@ -211,5 +231,6 @@ public class StudentUserCommonUserBindTest {
         truncateMapper.userRole();
         truncateMapper.userStudent();
         truncateMapper.wechatOpenId();
+        truncateMapper.user_register_record();
     }
 }

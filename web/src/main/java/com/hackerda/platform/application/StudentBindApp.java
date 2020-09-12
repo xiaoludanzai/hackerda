@@ -5,6 +5,7 @@ import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
 import com.hackerda.platform.domain.user.AppStudentUserBO;
 import com.hackerda.platform.domain.user.PhoneNumber;
+import com.hackerda.platform.domain.user.UserRegisterAssist;
 import com.hackerda.platform.domain.user.UserRepository;
 import com.hackerda.platform.domain.wechat.ActionRecord;
 import com.hackerda.platform.domain.wechat.WechatActionRecordRepository;
@@ -27,10 +28,19 @@ public class StudentBindApp {
     private StudentInfoService studentInfoService;
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
+    public void setStudentInfoAssist(StudentInfoAssist studentInfoAssist) {
+        this.studentInfoAssist = studentInfoAssist;
+    }
+
     private StudentInfoAssist studentInfoAssist;
+
+
     @Autowired
     private WechatActionRecordRepository wechatActionRecordRepository;
+    @Autowired
+    private UserRegisterAssist userRegisterAssist;
 
 
     public WechatStudentUserBO bindByCode(@Nonnull StudentAccount studentAccount, @Nonnull String password, @Nonnull String appId,
@@ -69,9 +79,7 @@ public class StudentBindApp {
     @VisibleForTesting
     WechatStudentUserBO bindByOpenId(WechatStudentUserBO wechatStudentUserBO, WechatUser wechatUser) {
         if(!wechatStudentUserBO.hasBindApp(wechatUser.getAppId())) {
-
-            if(studentInfoAssist.needToCheckWechatCommentUser()
-                    && wechatStudentUserBO.isUsingDefaultPassword() && !studentInfoService.isCommonWechat(wechatStudentUserBO.getAccount(),
+            if(needToCheckCommonWechat(wechatStudentUserBO) && !studentInfoAssist.isCommonWechat(wechatStudentUserBO.getAccount(),
                     wechatUser)) {
                 studentRepository.save(wechatStudentUserBO);
                 throw new BusinessException(ErrorCode.UNCOMMON_WECHAT, "非常用微信号登录");
@@ -82,7 +90,6 @@ public class StudentBindApp {
             studentRepository.save(wechatStudentUserBO);
 
             return wechatStudentUserBO;
-
         }else if(wechatStudentUserBO.hasBindWechatUser(wechatUser)){
             return wechatStudentUserBO;
         } else {
@@ -90,6 +97,15 @@ public class StudentBindApp {
         }
 
     }
+
+    private boolean needToCheckCommonWechat(WechatStudentUserBO wechatStudentUserBO) {
+        return studentInfoAssist.needToCheckWechatCommentUser() &&
+                userRegisterAssist.studentHasRegister(wechatStudentUserBO.getAccount()) &&
+                wechatStudentUserBO.isUsingDefaultPassword();
+    }
+
+
+
 
 
     public WechatStudentUserBO bindCommonWechatUser(@Nonnull StudentAccount account,
@@ -107,7 +123,7 @@ public class StudentBindApp {
                 studentUserBO.bindWechatUser(wechatUser);
 
                 studentRepository.save(studentUserBO);
-
+                wechatActionRecordRepository.save(new ActionRecord(wechatUser, Action.AuthLogin, account));
                 return studentUserBO;
             }
 

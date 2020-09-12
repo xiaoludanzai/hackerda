@@ -2,13 +2,22 @@ package com.hackerda.platform.infrastructure.spider;
 
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.*;
+import com.hackerda.platform.domain.user.LifeCycleStatus;
+import com.hackerda.platform.domain.user.UserRegisterAssist;
+import com.hackerda.platform.domain.user.UserRegisterRecordBO;
+import com.hackerda.platform.domain.user.UserRegisterRecordRepository;
+import com.hackerda.platform.domain.wechat.ActionRecord;
+import com.hackerda.platform.domain.wechat.WechatActionRecordRepository;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.dao.UrpClassDao;
 import com.hackerda.platform.infrastructure.database.dao.WechatOpenIdDao;
 import com.hackerda.platform.infrastructure.database.dao.user.UserDao;
+import com.hackerda.platform.infrastructure.database.mapper.UserRegisterRecordMapper;
 import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.UrpClass;
+import com.hackerda.platform.infrastructure.database.model.User;
+import com.hackerda.platform.infrastructure.database.model.UserRegisterRecord;
 import com.hackerda.platform.service.NewUrpSpiderService;
 
 
@@ -33,19 +42,13 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     @Autowired
     private NewUrpSpiderService newUrpSpiderService;
     @Autowired
-    private WechatOpenIdDao wechatOpenIdDao;
-    @Autowired
     private UrpClassDao urpClassDao;
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
     private UrpSearchSpider urpSearchSpider;
     @Autowired
-    private UserDao userDao;
-    @Autowired
     private SpiderExceptionTransfer exceptionTransfer;
-    @Autowired
-    private StudentInfoAssist studentInfoAssist;
 
 
     @Override
@@ -68,19 +71,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }
     }
 
-    @Override
-    public boolean checkCanBind(StudentAccount account, WechatUser wechatUser) {
-        return true;
-//        if(studentInfoAssist.inLoginWhiteList(account)) {
-//            return true;
-//        }
-//
-//        WechatOpenid wechatOpenid = wechatOpenIdDao.selectBindUser(account.getInt(), appId);
-//
-//        if(wechatOpenid == null) {
-//            return true;
-//        }else return wechatOpenid.getOpenid().equals(openid);
-    }
 
     @Override
     public WechatStudentUserBO getStudentInfo(StudentAccount account, String enablePassword) {
@@ -105,45 +95,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         return user;
     }
 
-    /**
-     * 检查openid是否是学号的常用openid
-     * @param account 教务网账号
-     * @param wechatUser 微信用户
-     * @return 是常用微信则返回true
-     */
-    @Override
-    public boolean isCommonWechat(StudentAccount account, WechatUser wechatUser) {
-
-//        User user = userDao.selectByStudentAccount(account.getAccount());
-//        if(user == null || user.getLifeCycleStatus() == LifeCycleStatus.Normal.getCode()) {
-//            return true;
-//        }
-//
-//        // TODO 这个逻辑应该移到领域对象中
-//        WechatOpenid wechatOpenid = new WechatOpenid()
-//                .setAccount(account.getInt())
-//                .setAppid(appId);
-//
-//        List<WechatOpenid> wechatOpenidList = wechatOpenIdDao.selectByPojo(wechatOpenid);
-//
-//        if(CollectionUtils.isEmpty(wechatOpenidList)) {
-//            return false;
-//        }
-//
-//        Map<String, WechatOpenid> openidMap = wechatOpenidList.stream().collect(Collectors.toMap(WechatOpenid::getOpenid, x -> x));
-//        WechatOpenid commonWechat = openidMap.get(openid);
-//
-//        if(commonWechat != null) {
-//            if(commonWechat.getIsBind()) {
-//                return true;
-//            }
-//
-//            Date gmtModified = commonWechat.getGmtModified();
-//            return user.getGmtCreate().before(gmtModified) || user.getGmtCreate().equals(gmtModified);
-//        }
-
-        return false;
-    }
 
     public UrpClass getClassByName(String className, String account){
 

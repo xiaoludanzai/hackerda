@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -51,9 +53,9 @@ public class UserRegisterAppTest {
 
         assertThat(account).isEqualTo(appStudentUserBO);
 
-        UserRegisterRecordBO userName = userRegisterRecordRepository.findByUserName(appStudentUserBO.getUserName());
+        List<UserRegisterRecordBO> recordBOList = userRegisterRecordRepository.findByUserName(appStudentUserBO.getUserName());
 
-        assertThat(userName).isNotNull();
+        assertThat(recordBOList).isNotEmpty();
 
     }
 

@@ -4,6 +4,7 @@ import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import com.hackerda.platform.exception.BusinessException;
@@ -33,20 +34,25 @@ public class UserRegisterApp {
     @Transactional
     public void register(AppStudentUserBO appUserBO, WechatUser wechatUser) {
 
-        StudentUserBO student = studentRepository.find(appUserBO.getAccount());
+        WechatStudentUserBO student = studentRepository.findWetChatUser(appUserBO.getAccount());
 
         if (student == null) {
             throw new BusinessException(ErrorCode.ACCOUNT_MISS, "学生信息不存在");
+        }
+        if(!student.hasBindWechatUser(wechatUser)) {
+            throw new BusinessException(ErrorCode.USER_UNAUTHORIZED, "注册用户的学号与当前微信未绑定");
         }
         if (!student.getIsCorrect()) {
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, "教务网密码错误");
         }
 
-        if (!userRegisterAssist.wechatCanRegister(wechatUser)) {
-            throw new BusinessException(ErrorCode.WECHAT_HAS_USED, "该微信号不能注册");
+
+
+        if (userRegisterAssist.wechatHasRegister(wechatUser)) {
+            throw new BusinessException(ErrorCode.WECHAT_HAS_USED, "该微信号已经被注册");
         }
 
-        if (!userRegisterAssist.userCanRegister(appUserBO)) {
+        if (userRegisterAssist.userHasRegister(appUserBO)) {
             throw new BusinessException(ErrorCode.USER_ACCOUNT_EXIST, "用户手机号或者学号已经被注册");
         }
 
@@ -77,12 +83,12 @@ public class UserRegisterApp {
 
     @Transactional
     public void logout(String operator, AppStudentUserBO appUserBO, LogoutType logoutType, String logoutReason) {
-        UserRegisterRecordBO record = userRegisterRecordRepository.findByUserName(appUserBO.getUserName());
+        List<UserRegisterRecordBO> registerRecordList = userRegisterRecordRepository.findByUserName(appUserBO.getUserName());
 
-        if(record != null) {
+        if(registerRecordList.isEmpty() || registerRecordList.size() % 2 != 0) {
             appUserBO.logout();
             userRepository.update(appUserBO);
-
+            UserRegisterRecordBO record = registerRecordList.get(registerRecordList.size() - 1);
             record.setLifeCycleStatus(LifeCycleStatus.Logout);
 
             userRegisterRecordRepository.save(record);
@@ -93,6 +99,7 @@ public class UserRegisterApp {
 
         } else {
             log.error("user {} can`t find register record", operator);
+            throw new RuntimeException("该用户无法注销");
         }
     }
 }
