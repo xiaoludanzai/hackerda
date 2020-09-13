@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EventListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class CommunityCommentApp {
 
 
             for (PostDetailBO detailBO : showPost) {
-                List<CommentDetailBO> detailBOList = commentRepository.find(RecordStatus.Release, detailBO.getId());
+                List<CommentDetailBO> detailBOList = commentRepository.findByPost(RecordStatus.Release, detailBO.getId());
                 commentCountService.setCount(detailBO.getId(), detailBOList.size());
 
                 List<LikeBO> show = likeRepository.findShow(LikeType.Post, detailBO.getId());

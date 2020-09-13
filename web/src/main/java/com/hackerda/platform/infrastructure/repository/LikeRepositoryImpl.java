@@ -76,6 +76,15 @@ public class LikeRepositoryImpl implements LikeRepository {
         return null;
     }
 
+    @Override
+    public List<LikeBO> findByReplyUserName(String userName) {
+        AppreciateExample example = new AppreciateExample();
+        example.createCriteria()
+                .andReplyUserNameEqualTo(userName);
+        return appreciateMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
+
+    }
+
     private LikeBO toBO(Appreciate like) {
         LikeBO likeBO = new LikeBO();
         likeBO.setUserName(like.getUserName());

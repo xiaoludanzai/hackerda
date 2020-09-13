@@ -55,7 +55,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<CommentDetailBO> find(RecordStatus status, long postId) {
+    public List<CommentDetailBO> findByPost(RecordStatus status, long postId) {
         CommentExample example = new CommentExample();
         example.createCriteria()
                 .andPostIdEqualTo(postId)
@@ -64,6 +64,29 @@ public class CommentRepositoryImpl implements CommentRepository {
         List<Comment> commentList = commentMapper.selectByExample(example);
         return toDetailBO(commentList);
 
+    }
+
+    @Override
+    public List<CommentDetailBO> findByPostUserName(RecordStatus status, String userName) {
+        CommentExample example = new CommentExample();
+        example.createCriteria()
+                .andUserNameEqualTo(userName)
+                .andRecordStatusEqualTo(status.getCode());
+
+        List<Comment> commentList = commentMapper.selectByExample(example);
+        return toDetailBO(commentList);
+
+    }
+
+    @Override
+    public List<CommentDetailBO> findByReplyUserName(RecordStatus status, String userName) {
+        CommentExample example = new CommentExample();
+        example.createCriteria()
+                .andReplyUserNameEqualTo(userName)
+                .andRecordStatusEqualTo(status.getCode());
+
+        List<Comment> commentList = commentMapper.selectByExample(example);
+        return toDetailBO(commentList);
     }
 
     @Override

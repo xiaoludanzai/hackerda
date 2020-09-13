@@ -10,6 +10,8 @@ public interface LikeRepository {
 
     LikeBO find(String userName, LikeType likeType, long typeId);
 
+    List<LikeBO> findByReplyUserName(String userName);
+
     List<LikeBO> findAll(LikeType likeType, long typeId);
 
     List<LikeBO> findShow(LikeType likeType, long typeId);

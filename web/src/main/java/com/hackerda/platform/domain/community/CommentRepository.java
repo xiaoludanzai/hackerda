@@ -10,7 +10,11 @@ public interface CommentRepository {
 
     void update(CommentBO commentBO);
 
-    List<CommentDetailBO> find(RecordStatus recordStatus, long postId);
+    List<CommentDetailBO> findByPost(RecordStatus recordStatus, long postId);
+
+    List<CommentDetailBO> findByPostUserName(RecordStatus recordStatus, String userName);
+
+    List<CommentDetailBO> findByReplyUserName(RecordStatus recordStatus, String userName);
 
     long count(RecordStatus recordStatus);
 }
