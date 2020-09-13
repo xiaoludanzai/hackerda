@@ -14,6 +14,8 @@ public class LikeBO {
 
     private String userName;
 
+    private String replyUserName;
+
     private long typeContentId;
 
     private LikeType likeType;

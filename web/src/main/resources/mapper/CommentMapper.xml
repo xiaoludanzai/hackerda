@@ -9,6 +9,7 @@
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="reply_comment_id" jdbcType="BIGINT" property="replyCommentId" />
+    <result column="reply_user_name" jdbcType="VARCHAR" property="replyUserName" />
     <result column="root_comment_id" jdbcType="BIGINT" property="rootCommentId" />
     <result column="identity_code" jdbcType="INTEGER" property="identityCode" />
     <result column="record_status" jdbcType="INTEGER" property="recordStatus" />
@@ -75,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, post_id, post_user_name, user_name, content, like_count, reply_comment_id, root_comment_id, 
-    identity_code, record_status, post_time, gmt_create, gmt_modify
+    id, post_id, post_user_name, user_name, content, like_count, reply_comment_id, reply_user_name, 
+    root_comment_id, identity_code, record_status, post_time, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.CommentExample" resultMap="BaseResultMap">
     select
@@ -111,14 +112,14 @@
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Comment" useGeneratedKeys="true">
     insert into comment (post_id, post_user_name, user_name, 
       content, like_count, reply_comment_id, 
-      root_comment_id, identity_code, record_status, 
-      post_time, gmt_create, gmt_modify
-      )
+      reply_user_name, root_comment_id, identity_code, 
+      record_status, post_time, gmt_create, 
+      gmt_modify)
     values (#{postId,jdbcType=BIGINT}, #{postUserName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{likeCount,jdbcType=INTEGER}, #{replyCommentId,jdbcType=BIGINT}, 
-      #{rootCommentId,jdbcType=BIGINT}, #{identityCode,jdbcType=INTEGER}, #{recordStatus,jdbcType=INTEGER}, 
-      #{postTime,jdbcType=TIMESTAMP}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP}
-      )
+      #{replyUserName,jdbcType=VARCHAR}, #{rootCommentId,jdbcType=BIGINT}, #{identityCode,jdbcType=INTEGER}, 
+      #{recordStatus,jdbcType=INTEGER}, #{postTime,jdbcType=TIMESTAMP}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Comment" useGeneratedKeys="true">
     insert into comment
@@ -140,6 +141,9 @@
       </if>
       <if test="replyCommentId != null">
         reply_comment_id,
+      </if>
+      <if test="replyUserName != null">
+        reply_user_name,
       </if>
       <if test="rootCommentId != null">
         root_comment_id,
@@ -178,6 +182,9 @@
       </if>
       <if test="replyCommentId != null">
         #{replyCommentId,jdbcType=BIGINT},
+      </if>
+      <if test="replyUserName != null">
+        #{replyUserName,jdbcType=VARCHAR},
       </if>
       <if test="rootCommentId != null">
         #{rootCommentId,jdbcType=BIGINT},
@@ -229,6 +236,9 @@
       <if test="record.replyCommentId != null">
         reply_comment_id = #{record.replyCommentId,jdbcType=BIGINT},
       </if>
+      <if test="record.replyUserName != null">
+        reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
+      </if>
       <if test="record.rootCommentId != null">
         root_comment_id = #{record.rootCommentId,jdbcType=BIGINT},
       </if>
@@ -261,6 +271,7 @@
       content = #{record.content,jdbcType=VARCHAR},
       like_count = #{record.likeCount,jdbcType=INTEGER},
       reply_comment_id = #{record.replyCommentId,jdbcType=BIGINT},
+      reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
       root_comment_id = #{record.rootCommentId,jdbcType=BIGINT},
       identity_code = #{record.identityCode,jdbcType=INTEGER},
       record_status = #{record.recordStatus,jdbcType=INTEGER},
@@ -292,6 +303,9 @@
       <if test="replyCommentId != null">
         reply_comment_id = #{replyCommentId,jdbcType=BIGINT},
       </if>
+      <if test="replyUserName != null">
+        reply_user_name = #{replyUserName,jdbcType=VARCHAR},
+      </if>
       <if test="rootCommentId != null">
         root_comment_id = #{rootCommentId,jdbcType=BIGINT},
       </if>
@@ -321,6 +335,7 @@
       content = #{content,jdbcType=VARCHAR},
       like_count = #{likeCount,jdbcType=INTEGER},
       reply_comment_id = #{replyCommentId,jdbcType=BIGINT},
+      reply_user_name = #{replyUserName,jdbcType=VARCHAR},
       root_comment_id = #{rootCommentId,jdbcType=BIGINT},
       identity_code = #{identityCode,jdbcType=INTEGER},
       record_status = #{recordStatus,jdbcType=INTEGER},

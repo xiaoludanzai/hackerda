@@ -32,6 +32,7 @@ public class CommentRepositoryImpl implements CommentRepository {
         comment.setRecordStatus(commentBO.getStatus().getCode());
         comment.setRootCommentId(commentBO.getRootCommentId());
         comment.setReplyCommentId(commentBO.getReplyCommentId());
+        comment.setReplyUserName(commentBO.getReplyUserName());
 
         commentMapper.insertSelective(comment);
     }
@@ -83,7 +84,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
             return new CommentDetailBO(x.getId(), x.getPostId(), x.getPostUserName(), poster, x.getContent(),
                     x.getReplyCommentId(),
-                    x.getRootCommentId(), x.getPostTime(), recordStatus, identity, x.getLikeCount());
+                    x.getRootCommentId(), x.getPostTime(), recordStatus, identity, x.getLikeCount(), x.getReplyUserName());
 
 
         }).collect(Collectors.toList());

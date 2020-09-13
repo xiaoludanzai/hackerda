@@ -38,6 +38,12 @@ public class WechatStudentUserBO extends StudentUserBO{
     }
 
 
+    public String getOpenid(String appId) {
+
+        return wechatUserMap.get(appId).getOpenId();
+    }
+
+
     public boolean hasBindApp(String appId) {
         return wechatUserMap.containsKey(appId);
     }

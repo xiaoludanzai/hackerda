@@ -19,4 +19,6 @@ public class LikeRequest {
      * true为添加  false为删除
      */
     private boolean isAdd;
+
+    private String replyUserName;
 }

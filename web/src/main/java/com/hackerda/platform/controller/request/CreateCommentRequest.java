@@ -9,6 +9,8 @@ public class CreateCommentRequest {
 
     private String postUserName;
 
+    private String replyUserName;
+
     private Long replyCommentId;
 
     private Long rootCommentId;

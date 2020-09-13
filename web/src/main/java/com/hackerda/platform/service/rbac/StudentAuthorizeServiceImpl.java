@@ -38,7 +38,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
         WechatStudentUserBO studentUser = studentBindApp.bindByOpenId(studentAccount, password, wechatUser);
 
-        return getVO(studentUser);
+        return getVO(studentUser, appId);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         StudentAccount studentAccount = new StudentAccount(account);
         WechatStudentUserBO studentUser = studentBindApp.bindByCode(studentAccount, password, appId, code);
 
-        return getVO(studentUser);
+        return getVO(studentUser, appId);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
         WechatUser wechatUser = new WechatUser(appId, openId);
         WechatStudentUserBO studentUser = studentBindApp.bindCommonWechatUser(studentAccount, number, wechatUser);
 
-        return getVO(studentUser);
+        return getVO(studentUser, appId);
     }
 
     @Override
@@ -83,9 +83,9 @@ public class StudentAuthorizeServiceImpl implements UserAuthorizeService{
 
     }
 
-    private StudentUserDetailVO getVO(WechatStudentUserBO studentUser){
+    private StudentUserDetailVO getVO(WechatStudentUserBO studentUser, String appId){
         String account = studentUser.getAccount().toString();
-        String token = JwtUtils.signForUserDetail(account, new String[0], new String[0], account);
+        String token = JwtUtils.signForWechatStudent(account, appId, studentUser.getOpenid(appId));
 
         StudentUserDetailVO vo = new StudentUserDetailVO();
 

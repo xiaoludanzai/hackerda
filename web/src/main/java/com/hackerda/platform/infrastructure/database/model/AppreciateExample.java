@@ -355,6 +355,76 @@ public class AppreciateExample {
             return (Criteria) this;
         }
 
+        public Criteria andReplyUserNameIsNull() {
+            addCriterion("reply_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameIsNotNull() {
+            addCriterion("reply_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameEqualTo(String value) {
+            addCriterion("reply_user_name =", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameNotEqualTo(String value) {
+            addCriterion("reply_user_name <>", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameGreaterThan(String value) {
+            addCriterion("reply_user_name >", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("reply_user_name >=", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameLessThan(String value) {
+            addCriterion("reply_user_name <", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameLessThanOrEqualTo(String value) {
+            addCriterion("reply_user_name <=", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameLike(String value) {
+            addCriterion("reply_user_name like", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameNotLike(String value) {
+            addCriterion("reply_user_name not like", value, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameIn(List<String> values) {
+            addCriterion("reply_user_name in", values, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameNotIn(List<String> values) {
+            addCriterion("reply_user_name not in", values, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameBetween(String value1, String value2) {
+            addCriterion("reply_user_name between", value1, value2, "replyUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReplyUserNameNotBetween(String value1, String value2) {
+            addCriterion("reply_user_name not between", value1, value2, "replyUserName");
+            return (Criteria) this;
+        }
+
         public Criteria andLikeTimeIsNull() {
             addCriterion("like_time is null");
             return (Criteria) this;

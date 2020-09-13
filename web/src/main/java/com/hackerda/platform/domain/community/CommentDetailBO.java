@@ -23,9 +23,9 @@ public class CommentDetailBO extends CommentBO {
 
     public CommentDetailBO(long id, long postId, String postUserName, Poster poster, String content,
                            long replyCommentId, long rootCommentId, Date postTime, RecordStatus status,
-                           IdentityCategory identityCategory, int likeCount) {
+                           IdentityCategory identityCategory, int likeCount, String replyUserName) {
         super(postId, postUserName, poster.getUserName(), content, replyCommentId, rootCommentId, postTime, status,
-                identityCategory);
+                identityCategory, replyUserName);
 
         this.id = id;
         this.likeCount = likeCount;

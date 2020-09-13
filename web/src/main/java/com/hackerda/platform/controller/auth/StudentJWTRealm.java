@@ -3,6 +3,7 @@ package com.hackerda.platform.controller.auth;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.student.StudentRepository;
 import com.hackerda.platform.domain.student.StudentUserBO;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
 import com.hackerda.platform.infrastructure.database.model.Permission;
 import com.hackerda.platform.infrastructure.database.model.Role;
 import com.hackerda.platform.infrastructure.database.model.UserDetail;
@@ -73,18 +74,19 @@ public class StudentJWTRealm extends AuthorizingRealm {
             return null;
         }
         String username = JwtUtils.getClaim(token, JwtUtils.USERNAME_KEY);
-        if (username == null) {
+        String appId = JwtUtils.getClaim(token, "appId");
+        if (username == null || appId == null) {
             throw new AuthenticationException("token invalid");
         }
         try {
-            JwtUtils.verify(token, username, username);
-            StudentUserBO account = studentRepository.find(new StudentAccount(username));
+            WechatStudentUserBO user = studentRepository.findWetChatUser(new StudentAccount(username));
 
-            if(account == null || !account.getIsCorrect()) {
-                log.error("student account {} verify error {}", username, account);
+            if(user == null || !user.getIsCorrect()) {
+                log.error("student account {} verify error {}", username, user);
                 return null;
             }
-            return new SimpleAuthenticationInfo(account, token, "JWTRealm");
+            JwtUtils.verify(token, username, user.getOpenid(appId));
+            return new SimpleAuthenticationInfo(user, token, "JWTRealm");
         }catch (JWTVerificationException e){
             throw new AuthenticationException(e);
         }catch (Exception e){

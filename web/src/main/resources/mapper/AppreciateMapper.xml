@@ -6,6 +6,7 @@
     <result column="like_type" jdbcType="INTEGER" property="likeType" />
     <result column="type_content_id" jdbcType="BIGINT" property="typeContentId" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="reply_user_name" jdbcType="VARCHAR" property="replyUserName" />
     <result column="like_time" jdbcType="TIMESTAMP" property="likeTime" />
     <result column="show" jdbcType="TINYINT" property="show" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, like_type, type_content_id, user_name, like_time, `show`, gmt_create, gmt_modify
+    id, like_type, type_content_id, user_name, reply_user_name, like_time, `show`, gmt_create, 
+    gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.AppreciateExample" resultMap="BaseResultMap">
     select
@@ -104,11 +106,11 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
     insert into appreciate (like_type, type_content_id, user_name, 
-      like_time, `show`, gmt_create, 
-      gmt_modify)
+      reply_user_name, like_time, `show`, 
+      gmt_create, gmt_modify)
     values (#{likeType,jdbcType=INTEGER}, #{typeContentId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
-      #{likeTime,jdbcType=TIMESTAMP}, #{show,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModify,jdbcType=TIMESTAMP})
+      #{replyUserName,jdbcType=VARCHAR}, #{likeTime,jdbcType=TIMESTAMP}, #{show,jdbcType=TINYINT}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
     insert into appreciate
@@ -121,6 +123,9 @@
       </if>
       <if test="userName != null">
         user_name,
+      </if>
+      <if test="replyUserName != null">
+        reply_user_name,
       </if>
       <if test="likeTime != null">
         like_time,
@@ -144,6 +149,9 @@
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="replyUserName != null">
+        #{replyUserName,jdbcType=VARCHAR},
       </if>
       <if test="likeTime != null">
         #{likeTime,jdbcType=TIMESTAMP},
@@ -180,6 +188,9 @@
       <if test="record.userName != null">
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
+      <if test="record.replyUserName != null">
+        reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
+      </if>
       <if test="record.likeTime != null">
         like_time = #{record.likeTime,jdbcType=TIMESTAMP},
       </if>
@@ -203,6 +214,7 @@
       like_type = #{record.likeType,jdbcType=INTEGER},
       type_content_id = #{record.typeContentId,jdbcType=BIGINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
+      reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
       like_time = #{record.likeTime,jdbcType=TIMESTAMP},
       `show` = #{record.show,jdbcType=TINYINT},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -222,6 +234,9 @@
       </if>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="replyUserName != null">
+        reply_user_name = #{replyUserName,jdbcType=VARCHAR},
       </if>
       <if test="likeTime != null">
         like_time = #{likeTime,jdbcType=TIMESTAMP},
@@ -243,6 +258,7 @@
     set like_type = #{likeType,jdbcType=INTEGER},
       type_content_id = #{typeContentId,jdbcType=BIGINT},
       user_name = #{userName,jdbcType=VARCHAR},
+      reply_user_name = #{replyUserName,jdbcType=VARCHAR},
       like_time = #{likeTime,jdbcType=TIMESTAMP},
       `show` = #{show,jdbcType=TINYINT},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},

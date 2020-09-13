@@ -45,9 +45,11 @@ public class CommentBO {
     /** 评论时间 **/
     private final Date postTime;
 
+    private final String replyUserName;
+
     public CommentBO(long postId, String postUserName, String userName, String content, long replyCommentId,
                      long rootCommentId,
-                     IdentityCategory identityCategory) {
+                     IdentityCategory identityCategory, String replyUserName) {
         this.postId = postId;
         this.postUserName = postUserName;
         this.userName = userName;
@@ -57,13 +59,14 @@ public class CommentBO {
         this.postTime = new Date();
         this.status = RecordStatus.Create;
         this.replyCommentId = replyCommentId;
+        this.replyUserName = replyUserName;
 
     }
 
 
     public CommentBO(long postId, String postUserName, String userName, String content, long replyCommentId,
                      long rootCommentId, Date postTime, RecordStatus status,
-                     IdentityCategory identityCategory) {
+                     IdentityCategory identityCategory, String replyUserName) {
         this.postId = postId;
         this.postUserName = postUserName;
         this.userName = userName;
@@ -73,7 +76,7 @@ public class CommentBO {
         this.postTime = postTime;
         this.status = status;
         this.replyCommentId = replyCommentId;
-
+        this.replyUserName = replyUserName;
     }
 
     public boolean isRelease() {

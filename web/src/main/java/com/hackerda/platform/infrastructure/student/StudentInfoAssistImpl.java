@@ -10,6 +10,7 @@ import com.hackerda.platform.domain.wechat.ActionRecord;
 import com.hackerda.platform.domain.wechat.WechatActionRecordRepository;
 import com.hackerda.platform.domain.wechat.WechatUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +25,13 @@ public class StudentInfoAssistImpl implements StudentInfoAssist {
     private UserRegisterRecordRepository userRegisterRecordRepository;
     @Autowired
     private WechatActionRecordRepository wechatActionRecordRepository;
+    @Value("${checkWechatCommentUser: false}")
+    private boolean checkWechatCommentUser;
+
 
     @Override
     public boolean needToCheckWechatCommentUser() {
-        return false;
+        return checkWechatCommentUser;
     }
 
 

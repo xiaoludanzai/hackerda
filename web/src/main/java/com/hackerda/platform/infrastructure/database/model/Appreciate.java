@@ -18,6 +18,8 @@ public class Appreciate implements Serializable {
 
     private String userName;
 
+    private String replyUserName;
+
     private Date likeTime;
 
     private Byte show;

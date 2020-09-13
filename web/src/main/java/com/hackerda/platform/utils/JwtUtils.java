@@ -33,6 +33,14 @@ public class JwtUtils {
 
     }
 
+    public static String signForWechatStudent(String username, String appId,  String secret) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.create()
+                .withClaim(USERNAME_KEY, username)
+                .withClaim("appId", appId)
+                .sign(algorithm);
+    }
+
 
     /**
      * 校验token是否正确

@@ -36,7 +36,7 @@ public class CommunityCommentService {
         CommentBO commentBO = new CommentBO(request.getPostId(), request.getPostUserName(), userName,
                 request.getContent(), Optional.ofNullable(request.getReplyCommentId()).orElse(0L),
                 Optional.ofNullable(request.getRootCommentId()).orElse(0L),
-                IdentityCategory.getByCode(request.getIdentityCode()));
+                IdentityCategory.getByCode(request.getIdentityCode()), request.getReplyUserName());
 
         communityCommentApp.addComment(commentBO);
 
@@ -94,6 +94,7 @@ public class CommunityCommentService {
         likeBO.setLikeType(LikeType.getByCode(likeRequest.getContentType()));
         likeBO.setTypeContentId(likeRequest.getContentId());
         likeBO.setUserName(userName);
+        likeBO.setReplyUserName(likeBO.getReplyUserName());
 
         CreateCommentResultVO vo = new CreateCommentResultVO();
         try {

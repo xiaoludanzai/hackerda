@@ -34,6 +34,7 @@ public class LikeRepositoryImpl implements LikeRepository {
         like.setTypeContentId(likeBO.getTypeContentId());
         like.setShow(likeBO.isShow() ? (byte) 1 : (byte) 0);
         like.setId(likeBO.getId());
+        like.setReplyUserName(likeBO.getReplyUserName());
         return like;
     }
 
@@ -48,6 +49,7 @@ public class LikeRepositoryImpl implements LikeRepository {
             example.createCriteria()
                     .andUserNameEqualTo(likeBO.getUserName())
                     .andLikeTypeEqualTo(likeBO.getLikeType().getCode())
+                    .andReplyUserNameEqualTo(likeBO.getReplyUserName())
                     .andTypeContentIdEqualTo(like.getTypeContentId());
 
             appreciateMapper.updateByExampleSelective(like, example);
@@ -82,6 +84,7 @@ public class LikeRepositoryImpl implements LikeRepository {
         likeBO.setTypeContentId(like.getTypeContentId());
         likeBO.setShow(like.getShow() == (byte) 1);
         likeBO.setId(like.getId());
+        likeBO.setReplyUserName(like.getReplyUserName());
         return likeBO;
     }
 

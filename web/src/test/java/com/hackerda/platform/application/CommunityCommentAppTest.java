@@ -32,9 +32,10 @@ public class CommunityCommentAppTest {
     @Test
     public void addComment() {
 
-        CommentBO commentBO = new CommentBO(1L, "2014025838", "2017025838", "测试评论", 1L, 1L, IdentityCategory.Community);
+        CommentBO commentBO = new CommentBO(1L, "2014025838", "2017025838", "测试评论", 1L, 1L,
+                IdentityCategory.Community, "2014025838");
         CommentBO commentBO2 = new CommentBO(1L, "2014025838", "2017025838", "测试评论1", 2L, 2L,
-                IdentityCategory.Community);
+                IdentityCategory.Community, "2014025838");
         communityCommentApp.addComment(commentBO);
         communityCommentApp.addComment(commentBO2);
         List<CommentDetailBO> postId = commentRepository.findDetailByPostId(1L);

@@ -24,6 +24,8 @@ public class Comment implements Serializable {
 
     private Long replyCommentId;
 
+    private String replyUserName;
+
     private Long rootCommentId;
 
     private Integer identityCode;
