@@ -35,6 +35,8 @@ public class CommentRepositoryImpl implements CommentRepository {
         comment.setReplyUserName(commentBO.getReplyUserName());
 
         commentMapper.insertSelective(comment);
+
+        commentBO.setId(comment.getId());
     }
 
     @Override

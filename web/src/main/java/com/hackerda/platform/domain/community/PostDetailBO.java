@@ -1,17 +1,16 @@
 package com.hackerda.platform.domain.community;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class PostDetailBO extends PostBO {
 
-    private final long id;
 
     /** 发布者信息 **/
     private Poster postUser;
@@ -29,13 +28,13 @@ public class PostDetailBO extends PostBO {
     public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
                         IdentityCategory identityCategory, String equipment) {
         super(userName, content, imageInfoList, identityCategory, equipment);
-        this.id = id;
+        super.setId(id);
     }
 
     public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
                         IdentityCategory identityCategory, Date postTime, String equipment) {
         super(userName, content, imageInfoList, identityCategory, postTime, equipment);
-        this.id = id;
+        super.setId(id);
     }
 
     public String getShowUserName() {

@@ -26,7 +26,7 @@
 
     <select id="selectByPostId" resultMap="com.hackerda.platform.infrastructure.database.mapper.ImageInfoMapper.BaseResultMap">
         select
-            i.id, i.url, i.file_id, i.gmt_create, i.gmt_modify
+            i.id, i.url, i.file_id, i.record_status, i.gmt_create, i.gmt_modify
 
         from image_info i
 

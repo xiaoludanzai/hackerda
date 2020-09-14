@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CommunityPostApp {
 
-    @Autowired
     private ContentSecurityCheckService contentSecurityCheckService;
     @Autowired
     private PosterRepository posterRepository;
@@ -75,6 +74,11 @@ public class CommunityPostApp {
         }
 
 
+    }
+
+    @Autowired
+    public void setContentSecurityCheckService(ContentSecurityCheckService contentSecurityCheckService) {
+        this.contentSecurityCheckService = contentSecurityCheckService;
     }
 
 }

@@ -1,7 +1,9 @@
 package com.hackerda.platform.domain.community;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -10,6 +12,8 @@ import java.io.Serializable;
  *
  */
 @Getter
+@EqualsAndHashCode
+@ToString
 public class ImageInfo implements Serializable {
 	private static final long serialVersionUID = 5884756296465895791L;
 	/** 图片路径 **/

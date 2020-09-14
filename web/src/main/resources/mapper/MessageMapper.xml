@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.MessageMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.Message">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sender_user_name" jdbcType="VARCHAR" property="senderUserName" />
+    <result column="sender_identity_category_code" jdbcType="INTEGER" property="senderIdentityCategoryCode" />
+    <result column="receiver_user_name" jdbcType="VARCHAR" property="receiverUserName" />
+    <result column="receiver_identity_category_code" jdbcType="INTEGER" property="receiverIdentityCategoryCode" />
+    <result column="message_trigger_source_code" jdbcType="INTEGER" property="messageTriggerSourceCode" />
+    <result column="message_source_id" jdbcType="BIGINT" property="messageSourceId" />
+    <result column="message_type_code" jdbcType="INTEGER" property="messageTypeCode" />
+    <result column="has_read" jdbcType="TINYINT" property="hasRead" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, sender_user_name, sender_identity_category_code, receiver_user_name, receiver_identity_category_code, 
+    message_trigger_source_code, message_source_id, message_type_code, has_read, gmt_create, 
+    gmt_modify
+  </sql>
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.MessageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.MessageExample">
+    delete from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Message" useGeneratedKeys="true">
+    insert into message (sender_user_name, sender_identity_category_code, 
+      receiver_user_name, receiver_identity_category_code, 
+      message_trigger_source_code, message_source_id, 
+      message_type_code, has_read, gmt_create, 
+      gmt_modify)
+    values (#{senderUserName,jdbcType=VARCHAR}, #{senderIdentityCategoryCode,jdbcType=INTEGER}, 
+      #{receiverUserName,jdbcType=VARCHAR}, #{receiverIdentityCategoryCode,jdbcType=INTEGER}, 
+      #{messageTriggerSourceCode,jdbcType=INTEGER}, #{messageSourceId,jdbcType=BIGINT}, 
+      #{messageTypeCode,jdbcType=INTEGER}, #{hasRead,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModify,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Message" useGeneratedKeys="true">
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="senderUserName != null">
+        sender_user_name,
+      </if>
+      <if test="senderIdentityCategoryCode != null">
+        sender_identity_category_code,
+      </if>
+      <if test="receiverUserName != null">
+        receiver_user_name,
+      </if>
+      <if test="receiverIdentityCategoryCode != null">
+        receiver_identity_category_code,
+      </if>
+      <if test="messageTriggerSourceCode != null">
+        message_trigger_source_code,
+      </if>
+      <if test="messageSourceId != null">
+        message_source_id,
+      </if>
+      <if test="messageTypeCode != null">
+        message_type_code,
+      </if>
+      <if test="hasRead != null">
+        has_read,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="senderUserName != null">
+        #{senderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderIdentityCategoryCode != null">
+        #{senderIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="receiverUserName != null">
+        #{receiverUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverIdentityCategoryCode != null">
+        #{receiverIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="messageTriggerSourceCode != null">
+        #{messageTriggerSourceCode,jdbcType=INTEGER},
+      </if>
+      <if test="messageSourceId != null">
+        #{messageSourceId,jdbcType=BIGINT},
+      </if>
+      <if test="messageTypeCode != null">
+        #{messageTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="hasRead != null">
+        #{hasRead,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.MessageExample" resultType="java.lang.Long">
+    select count(*) from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update message
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.senderUserName != null">
+        sender_user_name = #{record.senderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.senderIdentityCategoryCode != null">
+        sender_identity_category_code = #{record.senderIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.receiverUserName != null">
+        receiver_user_name = #{record.receiverUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverIdentityCategoryCode != null">
+        receiver_identity_category_code = #{record.receiverIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.messageTriggerSourceCode != null">
+        message_trigger_source_code = #{record.messageTriggerSourceCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.messageSourceId != null">
+        message_source_id = #{record.messageSourceId,jdbcType=BIGINT},
+      </if>
+      <if test="record.messageTypeCode != null">
+        message_type_code = #{record.messageTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.hasRead != null">
+        has_read = #{record.hasRead,jdbcType=TINYINT},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModify != null">
+        gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update message
+    set id = #{record.id,jdbcType=BIGINT},
+      sender_user_name = #{record.senderUserName,jdbcType=VARCHAR},
+      sender_identity_category_code = #{record.senderIdentityCategoryCode,jdbcType=INTEGER},
+      receiver_user_name = #{record.receiverUserName,jdbcType=VARCHAR},
+      receiver_identity_category_code = #{record.receiverIdentityCategoryCode,jdbcType=INTEGER},
+      message_trigger_source_code = #{record.messageTriggerSourceCode,jdbcType=INTEGER},
+      message_source_id = #{record.messageSourceId,jdbcType=BIGINT},
+      message_type_code = #{record.messageTypeCode,jdbcType=INTEGER},
+      has_read = #{record.hasRead,jdbcType=TINYINT},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.Message">
+    update message
+    <set>
+      <if test="senderUserName != null">
+        sender_user_name = #{senderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderIdentityCategoryCode != null">
+        sender_identity_category_code = #{senderIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="receiverUserName != null">
+        receiver_user_name = #{receiverUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverIdentityCategoryCode != null">
+        receiver_identity_category_code = #{receiverIdentityCategoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="messageTriggerSourceCode != null">
+        message_trigger_source_code = #{messageTriggerSourceCode,jdbcType=INTEGER},
+      </if>
+      <if test="messageSourceId != null">
+        message_source_id = #{messageSourceId,jdbcType=BIGINT},
+      </if>
+      <if test="messageTypeCode != null">
+        message_type_code = #{messageTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="hasRead != null">
+        has_read = #{hasRead,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.Message">
+    update message
+    set sender_user_name = #{senderUserName,jdbcType=VARCHAR},
+      sender_identity_category_code = #{senderIdentityCategoryCode,jdbcType=INTEGER},
+      receiver_user_name = #{receiverUserName,jdbcType=VARCHAR},
+      receiver_identity_category_code = #{receiverIdentityCategoryCode,jdbcType=INTEGER},
+      message_trigger_source_code = #{messageTriggerSourceCode,jdbcType=INTEGER},
+      message_source_id = #{messageSourceId,jdbcType=BIGINT},
+      message_type_code = #{messageTypeCode,jdbcType=INTEGER},
+      has_read = #{hasRead,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -15,6 +15,9 @@ import java.util.Date;
 @ToString
 public class CommentBO {
 
+    @Setter
+    private Long id;
+
     private final String userName;
 
     private final long postId;

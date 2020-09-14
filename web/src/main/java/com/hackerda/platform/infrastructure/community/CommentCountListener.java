@@ -16,9 +16,9 @@ public class CommentCountListener implements ApplicationListener<CommentEvent> {
     public void onApplicationEvent(CommentEvent event) {
 
         if (event.isAdd()) {
-            commentCountService.increment(event.getPostId());
+            commentCountService.increment(event.getCommentBO().getPostId());
         }else {
-            commentCountService.decrement(event.getPostId());
+            commentCountService.decrement(event.getCommentBO().getPostId());
         }
     }
 }

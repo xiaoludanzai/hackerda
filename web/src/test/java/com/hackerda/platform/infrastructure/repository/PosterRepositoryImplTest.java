@@ -35,10 +35,16 @@ public class PosterRepositoryImplTest {
 
     @Test
     public void save() {
-        List<ImageInfo> imageInfos = Lists.newArrayList(new ImageInfo("test1", "test1"), new ImageInfo("test2", "test2"));
+        List<ImageInfo> imageInfos = Lists.newArrayList(new ImageInfo("test1", "test1"), new ImageInfo("test2",
+                "test2", RecordStatus.Release));
         PostBO postBO = new PostBO("2014025838", "测试内容", imageInfos, IdentityCategory.Community, "IPhone X");
         postBO.setStatus(RecordStatus.Release);
         posterRepository.save(postBO);
+
+        CommentBO commentBO = new CommentBO(postBO.getId(), postBO.getUserName(), "2017025838", "测试评论", 1L, 1L,
+                IdentityCategory.Community, "2014025838");
+        CommentBO commentBO2 = new CommentBO(postBO.getId(), postBO.getUserName(), "2017025838", "测试评论1", 2L, 2L,
+                IdentityCategory.Community, "2014025838");
 
 
     }

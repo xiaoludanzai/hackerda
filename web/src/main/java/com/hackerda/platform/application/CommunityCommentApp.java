@@ -35,10 +35,14 @@ public class CommunityCommentApp {
             commentBO.setStatus(RecordStatus.UnderReview);
         } else {
             commentBO.setStatus(RecordStatus.Release);
-            eventPublisher.addCommentEvent(commentBO, true);
         }
 
         commentRepository.save(commentBO);
+
+        if(commentBO.isRelease()) {
+            eventPublisher.addCommentEvent(commentBO, true);
+        }
+
     }
 
     public void addLike(LikeBO likeBO) {

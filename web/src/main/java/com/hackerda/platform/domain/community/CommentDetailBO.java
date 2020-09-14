@@ -10,7 +10,6 @@ import java.util.Date;
 @ToString(callSuper = true)
 public class CommentDetailBO extends CommentBO {
 
-    private final long id;
 
     private final Poster poster;
 
@@ -27,7 +26,7 @@ public class CommentDetailBO extends CommentBO {
         super(postId, postUserName, poster.getUserName(), content, replyCommentId, rootCommentId, postTime, status,
                 identityCategory, replyUserName);
 
-        this.id = id;
+        super.setId(id);
         this.likeCount = likeCount;
         this.poster = poster;
     }
@@ -47,7 +46,7 @@ public class CommentDetailBO extends CommentBO {
      * @return
      */
     public long getRootCommentId() {
-        return isRoot() ? this.id : super.getRootCommentId();
+        return isRoot() ? super.getId() : super.getRootCommentId();
     }
 
     /**

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.ext.MessageExtMapper">
+
+    <select id="selectByReceiverUser" resultMap="com.hackerda.platform.infrastructure.database.mapper.MessageMapper.BaseResultMap">
+
+        select
+        <include refid="com.hackerda.platform.infrastructure.database.mapper.MessageMapper.Base_Column_List" />
+        from message
+        <where>
+            <if test="startId != null">
+                and id  &lt; #{startId,jdbcType=INTEGER}
+            </if>
+
+            and receiver_user_name = #{receiverUserName, jdbcType=VARCHAR}
+
+        </where>
+        order by id desc limit  #{count,jdbcType=INTEGER}
+    </select>
+</mapper>

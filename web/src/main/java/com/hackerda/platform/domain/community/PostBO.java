@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.community;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,8 +15,11 @@ import java.util.List;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public class PostBO {
 
+    @Setter
+    private Long id;
     /**
      * 用户id
      */

@@ -19,7 +19,7 @@ public class EventPublisher {
 
 
     public void addCommentEvent(CommentBO commentBO, boolean add) {
-        applicationContext.publishEvent(new CommentEvent(this, commentBO.getPostId(), add));
+        applicationContext.publishEvent(new CommentEvent(this, commentBO, add));
     }
 
     public void addLikeEvent(LikeBO likeBO) {

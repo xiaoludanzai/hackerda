@@ -63,6 +63,7 @@ public class PosterRepositoryImpl implements PosterRepository {
 
         Post post = adapter(postBO);
         postExtMapper.insertSelective(post);
+        postBO.setId(post.getId());
 
         List<ImageInfoDO> imageInfoDOList = postBO.getImageInfoList().stream().map(x -> {
             ImageInfoDO imageInfoDO = new ImageInfoDO();
@@ -127,7 +128,8 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     private PostDetailBO getPostDetailBO(Post post) {
         List<ImageInfo> imageInfoList = imageDao.selectByPostId(post.getId()).stream()
-                .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId())).collect(Collectors.toList());
+                .map(imageInfoDO -> new ImageInfo(imageInfoDO.getUrl(), imageInfoDO.getFileId(),
+                        RecordStatus.getByCode(imageInfoDO.getRecordStatus()))).collect(Collectors.toList());
 
         PostDetailBO postDetailBO = new PostDetailBO(post.getId(), post.getUserName(), post.getContent(), imageInfoList,
                 IdentityCategory.getByCode(post.getIdentityCode()), post.getPostTime(), post.getEquipment());

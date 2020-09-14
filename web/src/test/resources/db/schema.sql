@@ -119,7 +119,6 @@ CREATE TABLE `role`
     `code` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `role_permission`
@@ -129,7 +128,6 @@ CREATE TABLE `role_permission`
     `permission_id` int(11) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `permission`
@@ -139,7 +137,6 @@ CREATE TABLE `permission`
     `permission_code` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4;
 
 
@@ -209,5 +206,105 @@ CREATE TABLE `wechat_action_record`
     `gmt_create` timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
     `gmt_modify` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `post`
+(
+    `id`            bigint(20)   NOT NULL AUTO_INCREMENT,
+    `user_name`     varchar(128) NOT NULL,
+    `content`       varchar(255) NOT NULL,
+    `allow_comment` tinyint(255) NOT NULL,
+    `identity_code` int(255)     NOT NULL,
+    `post_time`     datetime     NOT NULL,
+    `record_status` int(255)     NOT NULL,
+    `comment_count` int(255)     NOT NULL DEFAULT '0',
+    `like_count`    int(255)     NOT NULL DEFAULT '0',
+    `view_count`    int(255)     NOT NULL DEFAULT '0',
+    `equipment`     varchar(255) NOT NULL DEFAULT '',
+    `gmt_create`    timestamp    NULL     DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`    timestamp    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+
+CREATE TABLE `post_image`
+(
+    `id`       bigint(20) NOT NULL AUTO_INCREMENT,
+    `post_id`  bigint(20) NOT NULL,
+    `image_id` bigint(20) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `image_info`
+(
+    `id`            bigint(20)   NOT NULL AUTO_INCREMENT,
+    `url`           varchar(512) NOT NULL,
+    `file_id`       varchar(512) NOT NULL,
+    `record_status` int(20)      NOT NULL,
+    `gmt_create`    timestamp    NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`    timestamp    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+
+CREATE TABLE `message`
+(
+    `id`                              bigint(20)  NOT NULL AUTO_INCREMENT,
+    `sender_user_name`                varchar(64) NOT NULL,
+    `sender_identity_category_code`   int(16)     NOT NULL,
+    `receiver_user_name`              varchar(64) NOT NULL,
+    `receiver_identity_category_code` int(16)     NOT NULL,
+    `message_trigger_source_code`     int(16)     NOT NULL,
+    `message_source_id`               bigint(20)  NOT NULL,
+    `message_type_code`               int(16)     NOT NULL,
+    `has_read`                        tinyint(4)  NOT NULL,
+    `gmt_create`                      timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`                      timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE `comment`
+(
+    `id`               bigint(20)   NOT NULL AUTO_INCREMENT,
+    `post_id`          bigint(20)   NOT NULL,
+    `post_user_name`   varchar(64)  NOT NULL,
+    `user_name`        varchar(255) NOT NULL,
+    `content`          varchar(255) NOT NULL,
+    `like_count`       int(255)     NOT NULL DEFAULT '0',
+    `reply_comment_id` bigint(20)   NOT NULL,
+    `reply_user_name`  varchar(64)  NOT NULL,
+    `root_comment_id`  bigint(20)   NOT NULL,
+    `identity_code`    int(255)     NOT NULL,
+    `record_status`    int(255)     NOT NULL,
+    `post_time`        datetime(6)  NOT NULL,
+    `gmt_create`       timestamp    NULL     DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`       timestamp    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `appreciate`
+(
+    `id`              bigint(20)  NOT NULL AUTO_INCREMENT,
+    `like_type`       int(16)     NOT NULL,
+    `type_content_id` bigint(20)  NOT NULL,
+    `user_name`       varchar(64) NOT NULL,
+    `reply_user_name` varchar(64) NOT NULL,
+    `like_time`       datetime(6) NOT NULL,
+    `show`            tinyint(4)  NOT NULL,
+    `gmt_create`      timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
+    `gmt_modify`      timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unq_like` (`type_content_id`, `user_name`, `like_type`, `show`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
