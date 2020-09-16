@@ -53,6 +53,22 @@ public class MessageRepositoryImpl implements MessageRepository {
         return messageExtMapper.selectByReceiverUser(userName, startId, count).stream().map(this::toBO).collect(Collectors.toList());
     }
 
+    @Override
+    public void updateHasRead(String receiveUserName) {
+        MessageExample example = new MessageExample();
+        example.createCriteria().andReceiverUserNameEqualTo(receiveUserName);
+        Message record = new Message();
+        record.setHasRead((byte) 1);
+        messageExtMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public long countHasNotRead(String receiveUserName) {
+        MessageExample example = new MessageExample();
+        example.createCriteria().andReceiverUserNameEqualTo(receiveUserName).andHasReadEqualTo((byte) 0);
+        return messageExtMapper.countByExample(example);
+    }
+
     private Message toDO(MessageBO messageBO) {
         Message record = new Message();
 

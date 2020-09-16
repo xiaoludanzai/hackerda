@@ -77,6 +77,7 @@ public class MessageFactory {
                     .senderUser(studentPosterMap.get(x.getSenderUserName()))
                     .messageType(x.getMessageType())
                     .messageTriggerSource(x.getMessageTriggerSource())
+                    .hasRead(x.isHasRead())
                     .createTime(x.getCreateTime());
 
             if (x.getMessageTriggerSource() == MessageTriggerSource.Like) {

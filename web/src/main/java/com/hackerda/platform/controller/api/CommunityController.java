@@ -72,10 +72,19 @@ public class CommunityController {
         return WebResponse.success(communityCommentService.addLike(likeRequest, username));
     }
 
+    @RequiresAuthentication
     @GetMapping("/getNotice")
     public WebResponse<AppMessageOverviewVO> getNotice(@RequestParam(value = "startId", required = false) Integer startId,
-                                                    @RequestParam(value = "count") int count){
+                                                    @RequestParam(value = "count") int count, @RequestParam(value =
+            "markAsRead") boolean markAsRead){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
-        return WebResponse.success(appMessageService.getAppNotice(username, startId, count));
+        return WebResponse.success(appMessageService.getAppNotice(username, startId, count, markAsRead));
+    }
+
+    @RequiresAuthentication
+    @GetMapping("/getMessageCount")
+    public WebResponse<MessageCountVO> getMessageCount(){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(appMessageService.messageCount(username));
     }
 }

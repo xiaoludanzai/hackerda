@@ -44,6 +44,7 @@ public class AppNoticeMessageBO {
 
 
     public String getContent() {
+
         if(messageTriggerSource == MessageTriggerSource.Comment) {
             return sourceComment.getContent();
         }
@@ -67,6 +68,10 @@ public class AppNoticeMessageBO {
     }
 
     public String getTagName() {
+        if(hasRead) {
+            return "朕已阅";
+        }
+
         if(messageTriggerSource == MessageTriggerSource.Comment) {
             if(sourceComment.isRoot()) {
                 return "评论了你";
