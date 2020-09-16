@@ -4,16 +4,16 @@ import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.controller.request.CreateCommentRequest;
 import com.hackerda.platform.controller.request.CreatePostRequest;
 import com.hackerda.platform.controller.request.LikeRequest;
-import com.hackerda.platform.controller.vo.CommentDetailVO;
-import com.hackerda.platform.controller.vo.CreateCommentResultVO;
-import com.hackerda.platform.controller.vo.PostDetailVO;
-import com.hackerda.platform.controller.vo.PostVO;
+import com.hackerda.platform.controller.vo.*;
+import com.hackerda.platform.service.AppMessageService;
 import com.hackerda.platform.service.CommunityCommentService;
 import com.hackerda.platform.service.CommunityPostService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/community")
@@ -23,6 +23,8 @@ public class CommunityController {
     private CommunityPostService communityPostService;
     @Autowired
     private CommunityCommentService communityCommentService;
+    @Autowired
+    private AppMessageService appMessageService;
 
     @RequiresAuthentication
     @GetMapping("/getPostIdentityByStudent")
@@ -68,5 +70,12 @@ public class CommunityController {
     public WebResponse<CreateCommentResultVO> addLike(LikeRequest likeRequest){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         return WebResponse.success(communityCommentService.addLike(likeRequest, username));
+    }
+
+    @GetMapping("/getNotice")
+    public WebResponse<AppMessageOverviewVO> getNotice(@RequestParam(value = "startId", required = false) Integer startId,
+                                                    @RequestParam(value = "count") int count){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(appMessageService.getAppNotice(username, startId, count));
     }
 }

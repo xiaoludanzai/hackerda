@@ -57,7 +57,12 @@
                  join user_student us on u.user_name = us.user_name
                  join student st on us.student_account = st.account
 
-        where us.user_name = #{userName}
+        where us.user_name in (
+            <foreach collection="collection" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+            )
+
     </select>
     <select id="selectRelativeUserNameByStudentAccount" resultType="java.lang.String">
         select user_name from user_student where student_account = #{studentAccount}

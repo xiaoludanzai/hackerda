@@ -93,7 +93,7 @@ public class CommunityCommentService {
         likeBO.setLikeType(LikeType.getByCode(likeRequest.getContentType()));
         likeBO.setTypeContentId(likeRequest.getContentId());
         likeBO.setUserName(userName);
-        likeBO.setReplyUserName(likeBO.getReplyUserName());
+        likeBO.setReplyUserName(likeRequest.getReplyUserName());
 
         CreateCommentResultVO vo = new CreateCommentResultVO();
         try {

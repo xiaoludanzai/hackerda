@@ -74,22 +74,18 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     private MessageBO toBO(Message message) {
-        MessageBO record = new MessageBO();
 
-        record.setHasRead(message.getHasRead() == (byte) 1);
-
-        record.setMessageSourceId(message.getMessageSourceId());
-        record.setMessageType(MessageType.getByCode(message.getMessageTypeCode()));
-
-        record.setMessageTriggerSource(MessageTriggerSource.getByCode(message.getMessageTriggerSourceCode()));
-
-        record.setSenderUserName(message.getSenderUserName());
-        record.setSenderIdentityCategory(IdentityCategory.getByCode(message.getSenderIdentityCategoryCode()));
-
-        record.setReceiverUserName(message.getReceiverUserName());
-        record.setReceiverIdentityCategory(IdentityCategory.getByCode(message.getReceiverIdentityCategoryCode()));
-
-        return record;
-
+        return MessageBO.builder()
+                .id(message.getId())
+                .hasRead(message.getHasRead() == (byte) 1)
+                .messageSourceId(message.getMessageSourceId())
+                .messageType(MessageType.getByCode(message.getMessageTypeCode()))
+                .messageTriggerSource(MessageTriggerSource.getByCode(message.getMessageTriggerSourceCode()))
+                .senderUserName(message.getSenderUserName())
+                .senderIdentityCategory(IdentityCategory.getByCode(message.getSenderIdentityCategoryCode()))
+                .receiverUserName(message.getReceiverUserName())
+                .receiverIdentityCategory(IdentityCategory.getByCode(message.getReceiverIdentityCategoryCode()))
+                .createTime(message.getGmtCreate())
+                .build();
     }
 }

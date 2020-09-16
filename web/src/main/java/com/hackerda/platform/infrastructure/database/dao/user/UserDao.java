@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 @Slf4j
 @Service
 public class UserDao {
@@ -54,7 +57,7 @@ public class UserDao {
         return userExtMapper.selectByStudentPoster(studentAccount);
     }
 
-    public StudentPosterDO selectStudentPosterByUserName(String userName) {
+    public List<StudentPosterDO> selectStudentPosterByUserName(Collection<String> userName) {
         return userExtMapper.selectStudentPosterByUserName(userName);
     }
 

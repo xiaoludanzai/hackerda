@@ -9,6 +9,8 @@ import com.hackerda.platform.infrastructure.database.model.AppreciateExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,8 +24,9 @@ public class LikeRepositoryImpl implements LikeRepository {
     public void save(LikeBO likeBO) {
         Appreciate like = toDO(likeBO);
 
-
         appreciateMapper.insertSelective(like);
+
+        likeBO.setId(like.getId());
     }
 
     private Appreciate toDO(LikeBO likeBO) {
@@ -83,6 +86,19 @@ public class LikeRepositoryImpl implements LikeRepository {
                 .andReplyUserNameEqualTo(userName);
         return appreciateMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<LikeBO> findByIdList(List<Long> idList) {
+        if(idList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        AppreciateExample example = new AppreciateExample();
+        example.createCriteria()
+                .andIdIn(idList);
+
+        return appreciateMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
     }
 
     private LikeBO toBO(Appreciate like) {

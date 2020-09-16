@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,9 +39,17 @@ public class PosterRepositoryImpl implements PosterRepository {
 
     @Override
     public StudentPoster findStudentPosterByUserName(String userName) {
-        StudentPosterDO studentPosterDO = userDao.selectStudentPosterByUserName(userName);
-        StudentAccount studentAccount = new StudentAccount(studentPosterDO.getAccount());
-        return getStudentPoster(studentPosterDO, studentAccount);
+
+
+        return findStudentPosterByUserName(Collections.singletonList(userName)).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public List<StudentPoster> findStudentPosterByUserName(Collection<String> userName) {
+
+        return userDao.selectStudentPosterByUserName(userName).stream()
+                .map(x-> getStudentPoster(x, new StudentAccount(x.getAccount())))
+                .collect(Collectors.toList());
     }
 
     private StudentPoster getStudentPoster(StudentPosterDO studentPosterDO, StudentAccount studentAccount) {
@@ -110,6 +120,18 @@ public class PosterRepositoryImpl implements PosterRepository {
         return getPostDetailBO(post);
     }
 
+    @Override
+    public List<PostDetailBO> findByIdList(List<Long> idList) {
+
+        if(idList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        PostExample example = new PostExample();
+
+        example.createCriteria().andIdIn(idList);
+
+        return postExtMapper.selectByExample(example).stream().map(this::getPostDetailBO).collect(Collectors.toList());
+    }
 
 
     @Override

@@ -52,6 +52,28 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
+    public List<CommentBO> findByIdList(List<Long> idList) {
+        if(idList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        CommentExample example = new CommentExample();
+        example.createCriteria().andIdIn(idList);
+
+        return commentMapper.selectByExample(example).stream().map(x-> {
+
+            IdentityCategory identity = IdentityCategory.getByCode(x.getIdentityCode());
+            RecordStatus recordStatus = RecordStatus.getByCode(x.getRecordStatus());
+            CommentBO commentBO = new CommentBO(x.getPostId(), x.getPostUserName(), x.getUserName(), x.getContent(),
+                    x.getReplyCommentId(), x.getRootCommentId(), x.getPostTime(), recordStatus, identity, x.getReplyUserName());
+
+            commentBO.setId(x.getId());
+            return commentBO;
+        }).collect(Collectors.toList());
+
+    }
+
+    @Override
     public void update(CommentBO commentBO) {
 
     }

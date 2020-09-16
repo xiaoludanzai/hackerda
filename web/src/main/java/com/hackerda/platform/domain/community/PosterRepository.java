@@ -2,6 +2,7 @@ package com.hackerda.platform.domain.community;
 
 import com.hackerda.platform.domain.student.StudentAccount;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PosterRepository {
@@ -10,11 +11,15 @@ public interface PosterRepository {
 
     StudentPoster findStudentPosterByUserName(String userName);
 
+    List<StudentPoster> findStudentPosterByUserName(Collection<String> userName);
+
     void save(PostBO postBO);
 
     void update(PostBO postBO, long id);
 
     PostDetailBO findByPostById(long id);
+
+    List<PostDetailBO> findByIdList(List<Long> idList);
 
     List<PostDetailBO> findShowPost(Integer start, int count);
 

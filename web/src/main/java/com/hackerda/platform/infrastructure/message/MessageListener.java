@@ -23,18 +23,21 @@ public class MessageListener {
     public void recordCommentMessage(CommentEvent event) {
         CommentBO commentBO = event.getCommentBO();
 
-        MessageBO message = new MessageBO();
-        message.setMessageSourceId(commentBO.getId());
-        message.setMessageTriggerSource(MessageTriggerSource.Comment);
-        message.setMessageType(MessageType.Notice);
-        message.setReceiverUserName(commentBO.getReplyUserName());
-        message.setSenderUserName(commentBO.getUserName());
         IdentityCategory category = commentBO.getIdentityCategory();
+        MessageBO messageBO = MessageBO.builder()
+                .messageSourceId(commentBO.getId())
+                .messageTriggerSource(MessageTriggerSource.Comment)
+                .messageType(MessageType.Notice)
+                .receiverUserName(commentBO.getReplyUserName())
+                .receiverIdentityCategory(category)
+                .senderUserName(commentBO.getUserName())
+                .senderIdentityCategory(category)
+                .hasRead(false)
+                .build();
 
-        message.setSenderIdentityCategory(category);
-        message.setReceiverIdentityCategory(category);
-
-        messageRepository.save(message);
+        if(!messageBO.isTriggerBySelf()) {
+            messageRepository.save(messageBO);
+        }
 
     }
 
@@ -43,17 +46,22 @@ public class MessageListener {
     public void recordLikeMessage(AddLikeEvent event) {
         LikeBO likeBO = event.getLikeBO();
 
-        MessageBO message = new MessageBO();
-        message.setMessageSourceId(likeBO.getId());
-        message.setMessageTriggerSource(MessageTriggerSource.Like);
-        message.setMessageType(MessageType.Notice);
-        message.setReceiverUserName(likeBO.getReplyUserName());
-        message.setSenderUserName(likeBO.getUserName());
+        IdentityCategory category = IdentityCategory.Community;
 
-        message.setSenderIdentityCategory(IdentityCategory.Community);
-        message.setReceiverIdentityCategory(IdentityCategory.Community);
+        MessageBO messageBO = MessageBO.builder()
+                .messageSourceId(likeBO.getId())
+                .messageTriggerSource(MessageTriggerSource.Like)
+                .messageType(MessageType.Notice)
+                .receiverUserName(likeBO.getReplyUserName())
+                .receiverIdentityCategory(category)
+                .senderUserName(likeBO.getUserName())
+                .senderIdentityCategory(category)
+                .hasRead(false)
+                .build();
 
-        messageRepository.save(message);
+        if(!messageBO.isTriggerBySelf()) {
+            messageRepository.save(messageBO);
+        }
 
     }
 

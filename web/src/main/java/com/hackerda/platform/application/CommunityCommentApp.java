@@ -54,9 +54,8 @@ public class CommunityCommentApp {
             likeRepository.update(like);
         } else if (likeBO.isShow()) {
             likeRepository.save(likeBO);
+            eventPublisher.addLikeEvent(likeBO);
         }
-
-        eventPublisher.addLikeEvent(likeBO);
     }
 
     public void countSynchronize() {

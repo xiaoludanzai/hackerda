@@ -1,5 +1,6 @@
 package com.hackerda.platform.domain.community;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface LikeRepository {
@@ -11,6 +12,8 @@ public interface LikeRepository {
     LikeBO find(String userName, LikeType likeType, long typeId);
 
     List<LikeBO> findByReplyUserName(String userName);
+
+    List<LikeBO> findByIdList(List<Long> idList);
 
     List<LikeBO> findAll(LikeType likeType, long typeId);
 

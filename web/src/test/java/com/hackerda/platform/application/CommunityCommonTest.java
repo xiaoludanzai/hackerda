@@ -1,6 +1,7 @@
 package com.hackerda.platform.application;
 
 import com.hackerda.platform.domain.community.*;
+import com.hackerda.platform.domain.message.MessageFactory;
 import com.hackerda.platform.domain.message.MessageRepository;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.AppStudentUserBO;
@@ -39,6 +40,8 @@ public class CommunityCommonTest {
     private CommunityCommentApp communityCommentApp;
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private MessageFactory messageFactory;
 
 
 
@@ -98,9 +101,13 @@ public class CommunityCommonTest {
                 IdentityCategory.Community, appStudentUserBO.getUserName());
         CommentBO commentBO2 = new CommentBO(postBO.getId(), postBO.getUserName(), appStudentUserBO2.getUserName(), "测试评论1", 2L, 2L,
                 IdentityCategory.Community, appStudentUserBO.getUserName());
+        CommentBO commentBO3 = new CommentBO(postBO.getId(), postBO.getUserName(), appStudentUserBO.getUserName(),
+                "测试评论1", 0L, 0L,
+                IdentityCategory.Community, appStudentUserBO.getUserName());
 
         communityCommentApp.addComment(commentBO);
         communityCommentApp.addComment(commentBO2);
+        communityCommentApp.addComment(commentBO3);
 
 
 
@@ -113,10 +120,20 @@ public class CommunityCommonTest {
         likeBO.setTypeContentId(commentBO2.getId());
         likeBO.setLikeTime(new Date());
 
-        communityCommentApp.addLike(likeBO);
+        LikeBO likeBO2 = new LikeBO();
 
-        assertThat(messageRepository.findByUserName(appStudentUserBO2.getUserName(), null, 20).size()).isEqualTo(1);
-        assertThat(messageRepository.findByUserName(appStudentUserBO.getUserName(), null, 20).size()).isEqualTo(2);
+        likeBO2.setReplyUserName(commentBO3.getUserName());
+        likeBO2.setUserName(appStudentUserBO.getUserName());
+        likeBO2.setLikeType(LikeType.Comment);
+        likeBO2.setShow(true);
+        likeBO2.setTypeContentId(commentBO3.getId());
+        likeBO2.setLikeTime(new Date());
+
+        communityCommentApp.addLike(likeBO);
+        communityCommentApp.addLike(likeBO2);
+
+        assertThat(messageFactory.createAppNoticeByReceiver(appStudentUserBO2.getUserName(), null, 20).size()).isEqualTo(1);
+        assertThat(messageFactory.createAppNoticeByReceiver(appStudentUserBO.getUserName(), null, 20).size()).isEqualTo(2);
 
     }
 }

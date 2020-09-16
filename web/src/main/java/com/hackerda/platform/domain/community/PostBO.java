@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -75,5 +76,9 @@ public class PostBO {
         }else {
             return "";
         }
+    }
+
+    public boolean hasContent() {
+        return !StringUtils.isEmpty(content);
     }
 }

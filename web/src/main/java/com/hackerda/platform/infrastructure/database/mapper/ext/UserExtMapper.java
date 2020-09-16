@@ -6,6 +6,7 @@ import com.hackerda.platform.infrastructure.database.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -19,7 +20,7 @@ public interface UserExtMapper extends UserMapper {
 
     StudentPosterDO selectByStudentPoster(String studentAccount);
 
-    StudentPosterDO selectStudentPosterByUserName(String userName);
+    List<StudentPosterDO> selectStudentPosterByUserName(Collection<String> userNameList);
 
     String selectRelativeUserNameByStudentAccount(String studentAccount);
 
