@@ -9,13 +9,11 @@ import com.hackerda.platform.controller.vo.CreateCommentResultVO;
 import com.hackerda.platform.controller.vo.PostUserVO;
 import com.hackerda.platform.domain.community.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,14 +26,28 @@ public class CommunityCommentService {
     private CommunityCommentApp communityCommentApp;
     @Autowired
     private LikeCountService likeCountService;
+    @Autowired
+    private PosterRepository posterRepository;
 
 
     public CreateCommentResultVO addComment(String userName, CreateCommentRequest request){
+
+
 
         CommentBO commentBO = new CommentBO(request.getPostId(), request.getPostUserName(), userName,
                 request.getContent(), Optional.ofNullable(request.getReplyCommentId()).orElse(0L),
                 Optional.ofNullable(request.getRootCommentId()).orElse(0L),
                 IdentityCategory.getByCode(request.getIdentityCode()), request.getReplyUserName());
+
+        if(commentBO.isRoot()) {
+            posterRepository.findByIdList(Collections.singletonList(commentBO.getPostId()))
+                    .stream().findFirst().ifPresent(postDetailBO -> commentBO.setReplyUserName(postDetailBO.getUserName()));
+
+        } else {
+            commentRepository.findByIdList(Collections.singletonList(commentBO.getReplyCommentId()))
+                    .stream().findFirst().ifPresent(commentBO1 -> commentBO.setReplyUserName(commentBO1.getUserName()));
+
+        }
 
         communityCommentApp.addComment(commentBO);
 
@@ -87,13 +99,31 @@ public class CommunityCommentService {
 
 
     public CreateCommentResultVO addLike(LikeRequest likeRequest, String userName) {
+        String replyUserName = likeRequest.getReplyUserName();
+
         LikeBO likeBO = new LikeBO();
         likeBO.setShow(likeRequest.isAdd());
         likeBO.setLikeTime(new Date());
         likeBO.setLikeType(LikeType.getByCode(likeRequest.getContentType()));
         likeBO.setTypeContentId(likeRequest.getContentId());
         likeBO.setUserName(userName);
-        likeBO.setReplyUserName(likeRequest.getReplyUserName());
+        likeBO.setReplyUserName(replyUserName);
+
+        if(StringUtils.isEmpty(replyUserName)) {
+            if(likeBO.getLikeType()== LikeType.Comment) {
+
+                commentRepository.findByIdList(Collections.singletonList(likeBO.getTypeContentId()))
+                        .stream().findFirst()
+                        .ifPresent(commentBO -> likeBO.setReplyUserName(commentBO.getUserName()));
+
+            }
+
+            if(likeBO.getLikeType()== LikeType.Post) {
+                posterRepository.findByIdList(Collections.singletonList(likeBO.getTypeContentId()))
+                        .stream().findFirst()
+                        .ifPresent(postDetailBO -> likeBO.setReplyUserName(postDetailBO.getUserName()));
+            }
+        }
 
         CreateCommentResultVO vo = new CreateCommentResultVO();
         try {

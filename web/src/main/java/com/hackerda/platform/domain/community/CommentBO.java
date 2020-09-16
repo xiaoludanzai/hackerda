@@ -48,7 +48,8 @@ public class CommentBO {
     /** 评论时间 **/
     private final Date postTime;
 
-    private final String replyUserName;
+    @Setter
+    private String replyUserName;
 
     public CommentBO(long postId, String postUserName, String userName, String content, long replyCommentId,
                      long rootCommentId,
