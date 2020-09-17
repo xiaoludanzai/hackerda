@@ -206,7 +206,8 @@ public class UrpSearchSpiderImpl extends UrpBaseSpider implements UrpSearchSpide
     }
 
     @Override
-    public List<SearchResultWrapper<EmptyRoomRecord>> searchEmptyRoom(SearchEmptyRoomPost searchEmptyRoomPost) {
+    public List<SearchResult<EmptyRoomRecord>> searchEmptyRoom(SearchEmptyRoomPost searchEmptyRoomPost) {
+        login();
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("weeks", searchEmptyRoomPost.getWeeks());
         map.add("executiveEducationPlanNumber", searchEmptyRoomPost.getExecutiveEducationPlanNumber());
@@ -220,7 +221,7 @@ public class UrpSearchSpiderImpl extends UrpBaseSpider implements UrpSearchSpide
         map.add("pageNum", searchEmptyRoomPost.getPageNum());
 
 
-        TypeReference<List<SearchResultWrapper<EmptyRoomRecord>>> reference = new TypeReference<List<SearchResultWrapper<EmptyRoomRecord>>>() {
+        TypeReference<List<SearchResult<EmptyRoomRecord>>> reference = new TypeReference<List<SearchResult<EmptyRoomRecord>>>() {
         };
 
         ResponseEntity<String> entity = postFormData(map, EMPTY_ROOM,  String.class);

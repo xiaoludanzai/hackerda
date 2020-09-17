@@ -1,6 +1,7 @@
 package com.hackerda.platform.infrastructure.database.dao;
 
 import com.hackerda.spider.UrpSearchSpider;
+import com.hackerda.spider.support.search.SearchResult;
 import com.hackerda.spider.support.search.classroom.SearchResultWrapper;
 import com.hackerda.spider.support.search.emptyroom.EmptyRoomRecord;
 import com.hackerda.spider.support.search.emptyroom.SearchEmptyRoomPost;
@@ -35,29 +36,37 @@ public class EmptyRoomDao {
      */
     @Cacheable(key = "#p0+#p1+#p2", unless = "#result == null")
     public List<String> getEmptyRoomReply(String week, String teaNum, String wSection) {
-        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, "1", "50");
-        List<SearchResultWrapper<EmptyRoomRecord>> searchEmptyRoom = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
-//        log.info("爬取空教室缓存{} {} {}", week, teaNum, wSection);
-//        NewUrpSpider spider = new NewUrpSpider("2016024254", "1");
-//
-//        EmptyRoomPost emptyRoomPost = new EmptyRoomPost(week, teaNum, wSection, "1", "50");
-//        EmptyRoomPojo emptyRoomPojo = spider.getEmptyRoom(emptyRoomPost);
-//        List<String> records = new ArrayList<>();
-//        for (EmptyRoomRecord emptyRoomRecord : emptyRoomPojo.getRecords()) {
-//            records.add(emptyRoomRecord.getClassroomName());
-//        }
-//
-//        //times是还需爬取数据的次数，教务网只能一页显示50个数据，需要循环爬取直到爬完
-//        int times = emptyRoomPojo.getPageContext().getTotalCount() / 50;
-//        //获取剩余的数据
-//        for (int i = 2; i <= times + 1; i++) {
-//            emptyRoomPost = new EmptyRoomPost(week, teaNum, wSection, String.valueOf(times), "50");
-//            emptyRoomPojo = spider.getEmptyRoom(emptyRoomPost);
-//            for (EmptyRoomRecord emptyRoomRecord : emptyRoomPojo.getRecords()) {
-//                records.add(emptyRoomRecord.getClassroomName());
-//            }
-//        }
 
-        return Collections.emptyList();
+        log.info("爬取空教室缓存{} {} {}", week, teaNum, wSection);
+
+        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, "1", "50");
+        List<SearchResult<EmptyRoomRecord>> resultList = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
+        SearchResult<EmptyRoomRecord> result = resultList.stream().findFirst().orElse(null);
+
+        if(result == null) {
+            return Collections.emptyList();
+        }
+
+        List<String> records = new ArrayList<>();
+        for (EmptyRoomRecord emptyRoomRecord : result.getRecords()) {
+            records.add(emptyRoomRecord.getClassroomName());
+        }
+
+        //times是还需爬取数据的次数，教务网只能一页显示50个数据，需要循环爬取直到爬完
+        int times = result.getPageContext().getTotalCount() / 50;
+        //获取剩余的数据
+        for (int i = 2; i <= times + 1; i++) {
+            emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, String.valueOf(times), "50");
+            resultList = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
+            result = resultList.stream().findFirst().orElse(null);
+            if(result != null) {
+                for (EmptyRoomRecord emptyRoomRecord : result.getRecords()) {
+                    records.add(emptyRoomRecord.getClassroomName());
+                }
+            }
+
+        }
+
+        return records;
     }
 }

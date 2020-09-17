@@ -35,5 +35,5 @@ public interface UrpSearchSpider {
 
     SearchResult<SearchCourseResult> searchCourseInfo(SearchCoursePost searchCoursePost);
 
-    List<SearchResultWrapper<EmptyRoomRecord>>  searchEmptyRoom(SearchEmptyRoomPost searchEmptyRoomPost);
+    List<SearchResult<EmptyRoomRecord>>  searchEmptyRoom(SearchEmptyRoomPost searchEmptyRoomPost);
 }

@@ -8,7 +8,7 @@ import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,7 +28,7 @@ public class    EmptyRoomService {
     @Autowired
     private EmptyRoomDao emptyRoomDao;
     @Autowired
-    RedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
     @Resource
     private RoomService roomService;
 
@@ -51,7 +51,7 @@ public class    EmptyRoomService {
         List<String> emptyRoomList = emptyRoomDao.getEmptyRoomReply(week, teaNum, wSection);
         String key = "empty_Room_data::" + week + teaNum + wSection;
         //对数据缓存24小时，重复查询会更新这个数据的过期时间
-        redisTemplate.expire(key, 24L, TimeUnit.HOURS);
+        stringRedisTemplate.expire(key, 24L, TimeUnit.HOURS);
         List<EmptyRoom> result = new ArrayList<>();
         for (String s : Sets.newHashSet(emptyRoomList)) {
             if (checkFloor(s, floor, teaNum)) {
@@ -120,11 +120,7 @@ public class    EmptyRoomService {
             floorTemp = (chars[0] - '0');
         }
 
-        if (floorTemp == floor) {
-            return true;
-        } else {
-            return false;
-        }
+        return floorTemp == floor;
     }
 }
 
