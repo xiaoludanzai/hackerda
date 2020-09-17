@@ -53,4 +53,21 @@ public class UrpSearchSpiderImplTest {
         }
 
     }
+
+
+//    @Test
+//    public void searchClassInfo() {
+//
+//        SearchClassInfoPost post = new SearchClassInfoPost();
+//        String start = "2018025143".substring(0, 4);
+//        int end = Integer.parseInt(start) + 1;
+//        post.setYearNum(start);
+//        post.setExecutiveEducationPlanNum(start + "-"+ end + "-1-1");
+//        List<SearchResult<ClassInfoSearchResult>> results = urpSearchSpider.searchClassInfo(post);
+//        System.out.println(results.size());
+//        for (SearchResult<ClassInfoSearchResult> result : results) {
+//            System.out.println(result);
+//        }
+//
+//    }
 }

@@ -1,10 +1,16 @@
 package com.hackerda.platform.infrastructure.database.dao;
 
+import com.hackerda.spider.UrpSearchSpider;
+import com.hackerda.spider.support.search.classroom.SearchResultWrapper;
+import com.hackerda.spider.support.search.emptyroom.EmptyRoomRecord;
+import com.hackerda.spider.support.search.emptyroom.SearchEmptyRoomPost;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +22,9 @@ import java.util.List;
 @Slf4j
 public class EmptyRoomDao {
 
+    @Autowired
+    private UrpSearchSpider urpSearchSpider;
+
     /**
      * 从缓存中获取空教室信息，若redis中没有相关缓存，则爬取
      *
@@ -26,6 +35,8 @@ public class EmptyRoomDao {
      */
     @Cacheable(key = "#p0+#p1+#p2", unless = "#result == null")
     public List<String> getEmptyRoomReply(String week, String teaNum, String wSection) {
+        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, "1", "50");
+        List<SearchResultWrapper<EmptyRoomRecord>> searchEmptyRoom = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
 //        log.info("爬取空教室缓存{} {} {}", week, teaNum, wSection);
 //        NewUrpSpider spider = new NewUrpSpider("2016024254", "1");
 //
