@@ -71,6 +71,11 @@ public enum RedisKeys {
      * 评论情况
      */
     LIKE_STATUS("LIKE_STATUS"),
+
+    /**
+     * 评论情况
+     */
+    Identity_Category_Filter("Identity_Category_Filter"),
     ;
     private String name;
 

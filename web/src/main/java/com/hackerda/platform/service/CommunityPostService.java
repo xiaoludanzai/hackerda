@@ -23,6 +23,8 @@ public class CommunityPostService {
     private LikeCountService likeCountService;
     @Autowired
     private CommentCountService commentCountService;
+    @Autowired
+    private IdentityCategoryFilter identityCategoryFilter;
 
     public PostIdentityVO getPostIdentityByStudent(String account) {
 
@@ -34,8 +36,10 @@ public class CommunityPostService {
 
         if(studentPoster != null) {
             for (IdentityCategory value : IdentityCategory.values()) {
-
-                boolean checked =  value == IdentityCategory.Community;
+                if(identityCategoryFilter.userChooseFilter(value)) {
+                    continue;
+                }
+                boolean checked = value == IdentityCategory.Community;
                 vo.add(value.getCode(), studentPoster.getShowName(value), studentPoster.getShowAvatarUrl(value), checked);
             }
         }
