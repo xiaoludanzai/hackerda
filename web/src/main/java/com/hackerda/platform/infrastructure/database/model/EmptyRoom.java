@@ -10,13 +10,13 @@ import java.util.List;
  */
 @Data
 public class EmptyRoom {
-    private String name;
+    private UrpClassroom room;
 
     // orderList存储该教室的空课节次
     private List<Integer> orderList = Lists.newArrayList(0,0,0,0,0);
 
-    public EmptyRoom(String name) {
-        this.name = name;
+    public EmptyRoom(UrpClassroom room) {
+        this.room = room;
     }
 
     public void addOrder(Integer order) {

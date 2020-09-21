@@ -1,5 +1,8 @@
 package com.hackerda.platform.infrastructure.database.dao;
 
+import com.hackerda.platform.infrastructure.database.model.UrpClassroom;
+import com.hackerda.platform.utils.DateUtils;
+import com.hackerda.platform.utils.Term;
 import com.hackerda.spider.UrpSearchSpider;
 import com.hackerda.spider.support.search.SearchResult;
 import com.hackerda.spider.support.search.classroom.SearchResultWrapper;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author JR Chan
@@ -35,11 +39,12 @@ public class EmptyRoomDao {
      * @return 返回包含空教室数据的list
      */
     @Cacheable(key = "#p0+#p1+#p2", unless = "#result == null")
-    public List<String> getEmptyRoomReply(String week, String teaNum, String wSection) {
+    public List<UrpClassroom> getEmptyRoomReply(String week, String teaNum, String wSection) {
 
         log.info("爬取空教室缓存{} {} {}", week, teaNum, wSection);
-
-        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, "1", "50");
+        Term term = DateUtils.getCurrentSchoolTime().getTerm();
+        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, "1", "200");
+        emptyRoomPost.setExecutiveEducationPlanNumber(term.getExecutiveEducationPlanNum());
         List<SearchResult<EmptyRoomRecord>> resultList = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
         SearchResult<EmptyRoomRecord> result = resultList.stream().findFirst().orElse(null);
 
@@ -52,21 +57,13 @@ public class EmptyRoomDao {
             records.add(emptyRoomRecord.getClassroomName());
         }
 
-        //times是还需爬取数据的次数，教务网只能一页显示50个数据，需要循环爬取直到爬完
-        int times = result.getPageContext().getTotalCount() / 50;
-        //获取剩余的数据
-        for (int i = 2; i <= times + 1; i++) {
-            emptyRoomPost = new SearchEmptyRoomPost(week, teaNum, wSection, String.valueOf(times), "50");
-            resultList = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
-            result = resultList.stream().findFirst().orElse(null);
-            if(result != null) {
-                for (EmptyRoomRecord emptyRoomRecord : result.getRecords()) {
-                    records.add(emptyRoomRecord.getClassroomName());
-                }
-            }
+        return result.getRecords().stream().map(x -> {
+            UrpClassroom urpClassroom = new UrpClassroom();
+            urpClassroom.setName(x.getClassroomName());
+            urpClassroom.setNumber(x.getId().getClassroomNumber());
+            return urpClassroom;
 
-        }
+        }).collect(Collectors.toList());
 
-        return records;
     }
 }

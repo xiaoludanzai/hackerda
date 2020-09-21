@@ -29,7 +29,7 @@ public class GpaRankerTest {
     public void test(){
 
         ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
-        String key = RedisKeys.GPA_RANK.genKey("2017", "电气工程及其自动化");
+        String key = RedisKeys.GPA_RANK.genKey("2017", "土木工程");
         Set<String> set = zSet.reverseRange(key, 0, 10);
 
         int x = 1;

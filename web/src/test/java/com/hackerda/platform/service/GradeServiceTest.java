@@ -19,7 +19,7 @@ public class GradeServiceTest {
     @Test
     public void getGrade() {
 
-        GradeResultVo grade = gradeService.getGrade(2017021339);
+        GradeResultVo grade = gradeService.getGrade(2017025937);
 
         System.out.println(grade);
     }

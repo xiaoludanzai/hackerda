@@ -33,6 +33,11 @@ public enum RecordStatus {
      * 审核不通过
      */
     Create(4),
+
+    /**
+     * 隐藏
+     */
+    Hide(5),
     ;
 
     private final int code;

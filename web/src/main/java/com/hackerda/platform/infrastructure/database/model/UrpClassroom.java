@@ -3,9 +3,11 @@ package com.hackerda.platform.infrastructure.database.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 @Data
 @Accessors(chain = true)
-public class UrpClassroom {
+public class UrpClassroom implements Serializable {
     private Integer id;
 
     private String number;

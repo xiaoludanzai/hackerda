@@ -21,4 +21,12 @@ public class WechatMaterialServiceTest {
 
         System.out.println(showArticle);
     }
+
+
+    @Test
+    public void update() {
+
+        wechatMaterialService.save();
+
+    }
 }

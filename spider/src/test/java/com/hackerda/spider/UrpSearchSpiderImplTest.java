@@ -61,9 +61,17 @@ public class UrpSearchSpiderImplTest {
     @Test
     public void searchEmptyClassRoom() {
 
-        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost("5", "01", "5/1", "1", "50");
+        SearchEmptyRoomPost emptyRoomPost = new SearchEmptyRoomPost("5", "01", "2/5", "1", "200");
         List<SearchResult<EmptyRoomRecord>> resultList = urpSearchSpider.searchEmptyRoom(emptyRoomPost);
-        System.out.println(resultList);
+        for (SearchResult<EmptyRoomRecord> result : resultList) {
+
+//            for (EmptyRoomRecord record : result.getRecords()) {
+//                System.out.println(record);
+//            }
+            System.out.println(result.getRecords().size());
+        }
+
+
 
 
 

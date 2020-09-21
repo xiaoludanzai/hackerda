@@ -23,20 +23,6 @@ public class EmptyRoomController {
     @Resource(name = "emptyRoomService")
     private EmptyRoomService emptyRoomService;
 
-    @RequestMapping(value = "/emptyRoom", method = RequestMethod.POST)
-    public WebResponse getEmptyRoom(@RequestParam("schoolWeek") int schoolWeek,
-                                    @RequestParam("dayOfWeek") int dayOfWeek,
-                                    @RequestParam("order") int order,
-                                    @RequestParam("building") String buildingName,
-                                    @RequestParam("floor") int floor) {
-
-        try {
-            return WebResponse.success(emptyRoomService.getEmptyRoomReply(String.valueOf(schoolWeek), buildingName, dayOfWeek, order, floor));
-        } catch (Exception e) {
-            log.error("fail to get emptyRoom data {},{},{},{},{}", schoolWeek, dayOfWeek, order, buildingName, floor, e);
-        }
-        return WebResponse.fail(ErrorCode.NO_DATA.getErrorCode(), "fail to get emptyRoom Data");
-    }
 
     /**
      * 对order为0的请求进行不分节次的查询
@@ -62,18 +48,10 @@ public class EmptyRoomController {
             floor = 0;
         }
 
-        if (order != 0) {
-            try {
-                return WebResponse.success(emptyRoomService.getEmptyRoomReply(String.valueOf(schoolWeek), buildingName, dayOfWeek, order, floor));
-            } catch (Exception e) {
-                log.error("fail to get emptyRoom data {},{},{},{},{}", schoolWeek, dayOfWeek, order, buildingName, floor, e);
-            }
-        } else {
-            try {
-                return WebResponse.success(emptyRoomService.getFullEmptyRoomReply(String.valueOf(schoolWeek), buildingName, dayOfWeek, floor));
-            } catch (Exception e) {
-                log.error("fail to get emptyRoom data {},{},{},{},{}", schoolWeek, dayOfWeek, order, buildingName, floor, e);
-            }
+        try {
+            return WebResponse.success(emptyRoomService.getFullEmptyRoomReply(String.valueOf(schoolWeek), buildingName, dayOfWeek, floor));
+        } catch (Exception e) {
+            log.error("fail to get emptyRoom data {},{},{},{},{}", schoolWeek, dayOfWeek, order, buildingName, floor, e);
         }
 
         return WebResponse.fail(ErrorCode.NO_DATA.getErrorCode(), "fail to get emptyRoom Data");

@@ -22,9 +22,20 @@ public class IdentityCategoryRedisFilterScript {
 
 
     @Test
-    public void test() {
+    public void add() {
 
         identityCategoryRedisFilter.add(IdentityCategory.Anonymous);
+        identityCategoryRedisFilter.add(IdentityCategory.College);
+        identityCategoryRedisFilter.add(IdentityCategory.Grade);
+        System.out.println(identityCategoryRedisFilter.userChooseFilter(IdentityCategory.Anonymous));
+    }
+
+    @Test
+    public void remove() {
+
+        identityCategoryRedisFilter.remove(IdentityCategory.Anonymous);
+        identityCategoryRedisFilter.remove(IdentityCategory.College);
+        identityCategoryRedisFilter.remove(IdentityCategory.Grade);
         System.out.println(identityCategoryRedisFilter.userChooseFilter(IdentityCategory.Anonymous));
     }
 
