@@ -45,6 +45,13 @@ public class CommunityController {
         return WebResponse.success(communityPostService.getPostById(username, postId));
     }
 
+    @RequiresAuthentication
+    @GetMapping("/deletePostById")
+    public WebResponse<CreateCommentResultVO> deletePostById(@RequestParam(value = "postId") int postId){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(communityPostService.deletePostById(username, postId));
+    }
+
     @GetMapping("/getPost")
     public WebResponse<PostDetailVO> getPost(@RequestParam(value = "startId", required = false) Integer startId,
                                                 @RequestParam(value = "count") int count){
@@ -57,6 +64,13 @@ public class CommunityController {
     public WebResponse<CreateCommentResultVO> createComment(@RequestBody CreateCommentRequest createCommentRequest){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         return WebResponse.success(communityCommentService.addComment(username, createCommentRequest));
+    }
+
+    @RequiresAuthentication
+    @PostMapping("/deleteCommentById")
+    public WebResponse<CreateCommentResultVO> deleteCommentById(@RequestParam(value = "commentId") int commentId){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(communityCommentService.deleteCommentById(username, commentId));
     }
 
     @GetMapping("/getCommentByPostId")

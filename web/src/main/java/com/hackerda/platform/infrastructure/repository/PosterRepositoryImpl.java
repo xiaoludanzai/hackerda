@@ -92,10 +92,10 @@ public class PosterRepositoryImpl implements PosterRepository {
     }
 
     @Override
-    public void update(PostBO postBO, long id) {
+    public void update(PostBO postBO) {
         Post post = adapter(postBO);
 
-        post.setId(id);
+        post.setId(postBO.getId());
 
         postExtMapper.updateByPrimaryKeySelective(post);
     }

@@ -3,6 +3,7 @@ package com.hackerda.platform.application;
 import com.hackerda.platform.MDCThreadPool;
 import com.hackerda.platform.domain.community.*;
 import com.hackerda.platform.infrastructure.database.model.ImageInfoDO;
+import com.hackerda.platform.infrastructure.database.model.User;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,17 @@ public class CommunityPostApp {
             }
         }
         posterRepository.save(postBO);
+    }
+
+    public boolean deletePost(PostBO postBO, String userName) {
+        if(postBO.canDeleteByUser(userName)) {
+            postBO.delete();
+            posterRepository.update(postBO);
+            return true;
+        } else {
+            log.warn("user {} no access to delete post {}", userName, postBO);
+            return false;
+        }
     }
 
     private boolean imageSecCheck(ImageInfo imageInfo) {

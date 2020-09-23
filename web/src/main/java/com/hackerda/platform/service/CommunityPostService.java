@@ -72,6 +72,7 @@ public class CommunityPostService {
 
         PostDetailBO post = posterRepository.findByPostById(postId);
         PostVO postVO = getPostVO(post);
+        postVO.setAuthor(userName.equals(postVO.getUserName()));
         setLikeCount(userName, postVO);
         return postVO;
     }
@@ -98,7 +99,9 @@ public class CommunityPostService {
                 .setLikeCount(post.getLikeCount())
                 .setShowUserName(post.getShowUserName())
                 .setPostTime(post.getPostTime())
-                .setIdentityCode(post.getIdentityCategory().getCode());
+                .setIdentityCode(post.getIdentityCategory().getCode())
+                .setHasDelete(post.isDelete())
+        ;
 
         List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
             ImageInfoVO infoVO = new ImageInfoVO();
@@ -122,6 +125,7 @@ public class CommunityPostService {
 
         for (PostVO postVO : postVOList) {
             setLikeCount(userName, postVO);
+            postVO.setAuthor(userName.equals(postVO.getUserName()));
         }
 
         PostDetailVO postDetailVO = new PostDetailVO();
@@ -138,6 +142,14 @@ public class CommunityPostService {
         postDetailVO.setNextMaxId(nextMaxId);
 
         return postDetailVO;
+
+    }
+
+    public CreateCommentResultVO deletePostById(String userName, int postId) {
+        PostDetailBO post = posterRepository.findByPostById(postId);
+        CreateCommentResultVO resultVO = new CreateCommentResultVO();
+        resultVO.setRelease(communityPostApp.deletePost(post, userName));
+        return resultVO;
 
     }
 }

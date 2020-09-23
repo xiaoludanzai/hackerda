@@ -50,4 +50,14 @@ public class PostVO {
     private boolean allowComment = true;
 
     private boolean hasLike;
+
+    /**
+     * 是否是圈子作者
+     */
+    private boolean isAuthor;
+
+    /**
+     * 是否已经删除
+     */
+    private boolean hasDelete;
 }

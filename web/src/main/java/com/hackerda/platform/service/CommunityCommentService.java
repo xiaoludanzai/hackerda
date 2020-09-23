@@ -58,6 +58,15 @@ public class CommunityCommentService {
         return vo;
     }
 
+    public CreateCommentResultVO deleteCommentById(String userName, long commentId) {
+        CommentBO commentBO = commentRepository.findByIdList(Collections.singletonList(commentId)).stream().findFirst().orElse(null);
+        CreateCommentResultVO vo = new CreateCommentResultVO();
+
+        vo.setRelease(communityCommentApp.deleteComment(userName, commentBO));
+
+        return vo;
+    }
+
     public CommentDetailVO findByPostId(String userName, long postId) {
 
         List<CommentDetailBO> detailByPostId = commentRepository.findByPost(RecordStatus.Release, postId);
@@ -96,7 +105,6 @@ public class CommunityCommentService {
         return new CommentDetailVO(commentList);
 
     }
-
 
     public CreateCommentResultVO addLike(LikeRequest likeRequest, String userName) {
         String replyUserName = likeRequest.getReplyUserName();

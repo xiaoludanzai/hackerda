@@ -58,6 +58,16 @@ public class CommunityCommentApp {
         }
     }
 
+    public boolean deleteComment(String userName, CommentBO commentBO) {
+
+        if(commentBO.canDeleteByUser(userName)) {
+            commentBO.delete();
+            commentRepository.update(commentBO);
+            return true;
+        }
+        return false;
+    }
+
     public void countSynchronize() {
 
         long maxId = posterRepository.findShowPost(null, 1).stream().findFirst().get().getId() + 1;
@@ -86,7 +96,7 @@ public class CommunityCommentApp {
                 detailBO.setLikeCount(show.size());
                 detailBO.setCommentCount(detailBOList.size());
 
-                posterRepository.update(detailBO, detailBO.getId());
+                posterRepository.update(detailBO);
 
                 for (CommentDetailBO commentDetailBO : detailBOList) {
                     List<LikeBO> commentLike = likeRepository.findShow(LikeType.Comment, commentDetailBO.getId());

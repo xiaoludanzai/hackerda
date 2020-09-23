@@ -28,7 +28,7 @@ public class AppMessageService {
 
         List<AppNoticeMessageBO> noticeList = messageApp.createAppNoticeByReceiver(userName, startId, count, markAsRead);
 
-        List<AppMessageVO> voList = noticeList.stream().map(x -> {
+        List<AppMessageVO> voList = noticeList.stream().filter(x-> !x.contentHasDelete()).map(x -> {
             AppMessageVO messageVO = new AppMessageVO();
 
             messageVO.setContent(x.getContent());

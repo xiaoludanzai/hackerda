@@ -98,4 +98,17 @@ public class CommentBO {
     public boolean isRoot() {
         return rootCommentId == 0L;
     }
+
+    public boolean hasDelete() {
+        return this.status == RecordStatus.Delete;
+    }
+
+    public boolean canDeleteByUser(String userName) {
+        return this.userName.equals(userName);
+    }
+
+    public void delete() {
+        this.status = RecordStatus.Delete;
+    }
+
 }

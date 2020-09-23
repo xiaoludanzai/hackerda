@@ -15,7 +15,7 @@ public interface PosterRepository {
 
     void save(PostBO postBO);
 
-    void update(PostBO postBO, long id);
+    void update(PostBO postBO);
 
     PostDetailBO findByPostById(long id);
 

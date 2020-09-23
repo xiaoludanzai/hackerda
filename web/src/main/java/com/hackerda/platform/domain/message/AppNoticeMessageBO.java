@@ -98,4 +98,22 @@ public class AppNoticeMessageBO {
         return senderUser.getShowName(senderIdentityCategory);
     }
 
+    public boolean contentHasDelete() {
+        if(messageTriggerSource == MessageTriggerSource.Comment) {
+            return sourceComment.hasDelete();
+        }
+
+        if(messageTriggerSource == MessageTriggerSource.Like) {
+
+            if(sourceLike.getLikeType() == LikeType.Comment) {
+                return sourceComment.hasDelete();
+            }
+
+            if(sourceLike.getLikeType() == LikeType.Post) {
+                return sourcePost.isDelete();
+            }
+        }
+        throw new RuntimeException("unSupport type");
+    }
+
 }

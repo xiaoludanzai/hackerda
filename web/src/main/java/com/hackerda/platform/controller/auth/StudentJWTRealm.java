@@ -81,8 +81,7 @@ public class StudentJWTRealm extends AuthorizingRealm {
         try {
             WechatStudentUserBO user = studentRepository.findWetChatUser(new StudentAccount(username));
 
-            if(user == null || !user.getIsCorrect()) {
-                log.error("student account {} verify error {}", username, user);
+            if(user == null || !user.getIsCorrect() || !user.hasBindApp(appId)) {
                 return null;
             }
             JwtUtils.verify(token, username, user.getOpenid(appId));
@@ -93,8 +92,5 @@ public class StudentJWTRealm extends AuthorizingRealm {
             log.error("verify token error", e);
             throw new AuthenticationException(e);
         }
-
-
-
     }
 }

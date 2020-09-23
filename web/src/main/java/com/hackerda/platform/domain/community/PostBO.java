@@ -66,6 +66,14 @@ public class PostBO {
         return status == RecordStatus.Release;
     }
 
+    public boolean isDelete() {
+        return status == RecordStatus.Delete;
+    }
+
+    public void delete(){
+        this.status = RecordStatus.Delete;
+    }
+
     public boolean hasImage(){
         return !CollectionUtils.isEmpty(imageInfoList);
     }
@@ -80,5 +88,9 @@ public class PostBO {
 
     public boolean hasContent() {
         return !StringUtils.isEmpty(content);
+    }
+
+    public boolean canDeleteByUser(String userName) {
+        return this.getUserName().equals(userName);
     }
 }

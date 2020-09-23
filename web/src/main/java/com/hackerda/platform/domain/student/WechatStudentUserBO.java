@@ -39,7 +39,9 @@ public class WechatStudentUserBO extends StudentUserBO{
 
 
     public String getOpenid(String appId) {
-
+        if(wechatUserMap.isEmpty()) {
+            return "";
+        }
         return wechatUserMap.get(appId).getOpenId();
     }
 
