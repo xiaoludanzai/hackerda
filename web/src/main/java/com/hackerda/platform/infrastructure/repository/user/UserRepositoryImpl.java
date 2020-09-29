@@ -70,6 +70,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     }
 
+    @Override
+    public void update(AppUserBO appUserBO) {
+        User user = userAdapter.toDO(appUserBO);
+
+        userDao.updateByUserNameSelective(user);
+    }
+
     private void saveOrUpdateStudentRelative(AppStudentUserBO appStudentUserBO, User user) {
         if(appStudentUserBO.isNormalStatus()) {
             userDao.insertStudentRelative(user.getUserName(), appStudentUserBO.getAccount().getAccount());

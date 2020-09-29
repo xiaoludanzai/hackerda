@@ -17,6 +17,8 @@ public class UserService {
 
     @Autowired
     private UserRegisterApp userRegisterApp;
+    @Autowired
+    private UserRepository userRepository;
 
     public AppUserVO registerByStudent (CreateUserByStudentRequest request) {
 
@@ -40,6 +42,26 @@ public class UserService {
 
 
     }
+
+
+    public AppUserVO modifyUserData(String userName, CreateUserByStudentRequest request) {
+        AppUserBO userBO = userRepository.findByUserName(userName);
+
+        userBO.setNickname(request.getNickName());
+        userBO.setAvatarPath(request.getAvatarUrl());
+        userBO.setIntroduction(request.getSignature());
+
+        PhoneNumber phoneNumber = new PhoneNumber(request.getPhoneNumber());
+        userBO.setPhoneNumber(phoneNumber);
+
+        Gender gender = Gender.formCode(request.getGender());
+        userBO.setGender(gender);
+
+        userRepository.update(userBO);
+
+        return null;
+    }
+
 
 
     public AppUserVO getUserByStudentAccount (String account) {

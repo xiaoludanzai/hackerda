@@ -11,4 +11,6 @@ public interface UserRepository {
     void store(AppStudentUserBO appStudentUserBO);
 
     void update(AppStudentUserBO appStudentUserBO);
+
+    void update(AppUserBO appUserBO);
 }
