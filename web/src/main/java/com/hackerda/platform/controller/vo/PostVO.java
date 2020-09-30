@@ -60,4 +60,9 @@ public class PostVO {
      * 是否已经删除
      */
     private boolean hasDelete;
+
+    /**
+     * 是否是匿名贴
+     */
+    private boolean isAnonymous;
 }

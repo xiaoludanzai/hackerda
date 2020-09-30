@@ -23,5 +23,7 @@ public interface PosterRepository {
 
     List<PostDetailBO> findShowPost(Integer start, int count);
 
+    List<PostDetailBO> findPostByUser(String userName, Integer start, int count);
+
     long count();
 }

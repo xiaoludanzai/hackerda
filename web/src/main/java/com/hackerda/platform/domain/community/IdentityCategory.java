@@ -24,6 +24,11 @@ public enum IdentityCategory {
         public String getAvatarUrl(Poster poster) {
             return poster.getAvatarUrl();
         }
+
+        @Override
+        public boolean isAnonymous() {
+            return false;
+        }
     },
 
     /**
@@ -50,6 +55,11 @@ public enum IdentityCategory {
                 return  female_avatar;
             }
             return anon;
+        }
+
+        @Override
+        public boolean isAnonymous() {
+            return true;
         }
     },
 
@@ -78,6 +88,11 @@ public enum IdentityCategory {
             }
             return anon;
         }
+
+        @Override
+        public boolean isAnonymous() {
+            return true;
+        }
     },
 
     /**
@@ -98,6 +113,11 @@ public enum IdentityCategory {
                 return  female_avatar;
             }
             return anon;
+        }
+
+        @Override
+        public boolean isAnonymous() {
+            return true;
         }
     },
 
@@ -126,6 +146,11 @@ public enum IdentityCategory {
             }
             return anon;
         }
+
+        @Override
+        public boolean isAnonymous() {
+            return false;
+        }
     };
 
     private final int code;
@@ -147,6 +172,8 @@ public enum IdentityCategory {
     public abstract String getShowName(Poster poster);
 
     public abstract String getAvatarUrl(Poster poster);
+
+    public abstract boolean isAnonymous();
 
     public int getCode(){
         return code;

@@ -59,6 +59,14 @@ public class CommunityController {
         return WebResponse.success(communityPostService.getPostDetail(username, startId, count));
     }
 
+    @GetMapping("/getPostByUserName")
+    public WebResponse<PostDetailVO> getPostByUserName(@RequestParam(value = "userName") String postUserName,
+                                                       @RequestParam(value = "startId", required = false) Integer startId,
+                                                       @RequestParam(value = "count") int count){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(communityPostService.getPostByUserName(username, postUserName, startId, count));
+    }
+
     @RequiresAuthentication
     @PostMapping("/createComment")
     public WebResponse<CreateCommentResultVO> createComment(@RequestBody CreateCommentRequest createCommentRequest){

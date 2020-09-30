@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.database.mapper;
 
+import com.github.pagehelper.PageHelper;
 import com.hackerda.platform.domain.community.IdentityCategory;
 import com.hackerda.platform.domain.community.RecordStatus;
 import com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper;
@@ -65,5 +66,17 @@ public class PostMapperTest {
 
         System.out.println(posts.size());
 
+    }
+
+
+    @Test
+    public void pageHelper() {
+        PostExample postExample = new PostExample();
+        postExample.setOrderByClause("id desc");
+
+        PageHelper.startPage(0, 5);
+        for (Post post : postExtMapper.selectByExample(postExample)) {
+            System.out.println(post);
+        }
     }
 }

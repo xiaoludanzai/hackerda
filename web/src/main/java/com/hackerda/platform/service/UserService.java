@@ -74,6 +74,13 @@ public class UserService {
 
     }
 
+    public AppUserVO getByUserName (String userName) {
+
+        AppUserBO user = userRepository.findByUserName(userName);
+
+        return toVO(user);
+    }
+
     public void logout (String operator, String account, int logoutTypeCode, String logoutReason) {
 
         StudentAccount studentAccount = new StudentAccount(account);
@@ -96,6 +103,7 @@ public class UserService {
         appUserVO.setIntroduction(appUserBO.getIntroduction());
         appUserVO.setUseDefaultPassword(appUserBO.isUseDefaultPassword());
         appUserVO.setNickname(appUserBO.getNickname());
+        appUserVO.setUserName(appUserBO.getUserName());
 
         String token = JwtUtils.signForUserDetail(appUserBO.getUserName(), new String[0], new String[0], appUserBO.getSalt());
 

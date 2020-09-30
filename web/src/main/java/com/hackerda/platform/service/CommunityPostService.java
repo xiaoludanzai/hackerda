@@ -100,6 +100,7 @@ public class CommunityPostService {
                 .setShowUserName(post.getShowUserName())
                 .setPostTime(post.getPostTime())
                 .setIdentityCode(post.getIdentityCategory().getCode())
+                .setAnonymous(post.getIdentityCategory().isAnonymous())
                 .setHasDelete(post.isDelete())
         ;
 
@@ -118,6 +119,26 @@ public class CommunityPostService {
     public PostDetailVO getPostDetail(String userName, Integer startId, int count) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
 
+        return getPostDetailVO(userName, detailBOList);
+
+    }
+
+    /**
+     *
+     * @param userName 贴子所属的用户名
+     * @param postUserName 帖子所属的用户名
+     * @param startId 帖子开始id
+     * @param count 请求的数量
+     * @return
+     */
+    public PostDetailVO getPostByUserName(String userName, String postUserName, Integer startId, int count) {
+        List<PostDetailBO> detailBOList = posterRepository.findPostByUser(postUserName, startId, count);
+
+        return getPostDetailVO(userName, detailBOList);
+
+    }
+
+    private PostDetailVO getPostDetailVO(String userName, List<PostDetailBO> detailBOList) {
         List<PostVO> postVOList = detailBOList.stream()
                 .map(this::getPostVO)
                 .sorted(Comparator.comparing(PostVO :: getPostTime).reversed())
@@ -142,7 +163,6 @@ public class CommunityPostService {
         postDetailVO.setNextMaxId(nextMaxId);
 
         return postDetailVO;
-
     }
 
     public CreateCommentResultVO deletePostById(String userName, int postId) {

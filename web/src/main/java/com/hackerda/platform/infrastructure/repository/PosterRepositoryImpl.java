@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.repository;
 
+import com.github.pagehelper.PageHelper;
 import com.hackerda.platform.domain.community.*;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.Gender;
@@ -137,10 +138,36 @@ public class PosterRepositoryImpl implements PosterRepository {
     @Override
     public List<PostDetailBO> findShowPost(Integer startId, int limit) {
 
-        List<Post> postList = postExtMapper.selectShowPost(startId, limit);
+        PostExample example = new PostExample();
+        example.setOrderByClause("id desc");
+        PostExample.Criteria criteria = example.createCriteria();
+        if(startId != null) {
+            criteria.andIdLessThan(startId.longValue());
+        }
+        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        PageHelper.startPage(0, limit);
+        List<Post> postList = postExtMapper.selectByExample(example);
 
         return postList.stream().map(this::getPostDetailBO).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<PostDetailBO> findPostByUser(String userName, Integer startId, int count) {
+        PostExample example = new PostExample();
+        example.setOrderByClause("id desc");
+        PostExample.Criteria criteria = example.createCriteria();
+
+        if(startId != null) {
+            criteria.andIdLessThan(startId.longValue());
+        }
+        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        criteria.andUserNameEqualTo(userName);
+        criteria.andIdentityCodeEqualTo(IdentityCategory.Community.getCode());
+        PageHelper.startPage(0, count);
+        List<Post> postList = postExtMapper.selectByExample(example);
+
+        return postList.stream().map(this::getPostDetailBO).collect(Collectors.toList());
     }
 
     @Override

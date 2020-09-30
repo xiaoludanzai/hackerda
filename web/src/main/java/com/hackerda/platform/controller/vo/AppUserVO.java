@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class AppUserVO {
 
+    /** userName **/
+    private String userName;
 
     /** 呢称 **/
     private String nickname;
