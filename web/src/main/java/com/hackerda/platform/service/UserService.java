@@ -2,6 +2,7 @@ package com.hackerda.platform.service;
 
 import com.hackerda.platform.application.UserRegisterApp;
 import com.hackerda.platform.controller.request.CreateUserByStudentRequest;
+import com.hackerda.platform.controller.request.ModifyUserInfoRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.*;
@@ -44,22 +45,22 @@ public class UserService {
     }
 
 
-    public AppUserVO modifyUserData(String userName, CreateUserByStudentRequest request) {
+    public AppUserVO modifyUserData(String userName, ModifyUserInfoRequest request) {
         AppUserBO userBO = userRepository.findByUserName(userName);
 
         userBO.setNickname(request.getNickName());
         userBO.setAvatarPath(request.getAvatarUrl());
         userBO.setIntroduction(request.getSignature());
 
-        PhoneNumber phoneNumber = new PhoneNumber(request.getPhoneNumber());
-        userBO.setPhoneNumber(phoneNumber);
+//        PhoneNumber phoneNumber = new PhoneNumber(request.getPhoneNumber());
+//        userBO.setPhoneNumber(phoneNumber);
 
         Gender gender = Gender.formCode(request.getGender());
         userBO.setGender(gender);
 
         userRepository.update(userBO);
 
-        return null;
+        return toVO(userBO);
     }
 
 

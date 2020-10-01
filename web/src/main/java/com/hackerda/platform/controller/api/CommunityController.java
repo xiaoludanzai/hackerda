@@ -4,16 +4,22 @@ import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.controller.request.CreateCommentRequest;
 import com.hackerda.platform.controller.request.CreatePostRequest;
 import com.hackerda.platform.controller.request.LikeRequest;
+import com.hackerda.platform.controller.request.ModifyUserInfoRequest;
 import com.hackerda.platform.controller.vo.*;
+import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.service.AppMessageService;
 import com.hackerda.platform.service.CommunityCommentService;
 import com.hackerda.platform.service.CommunityPostService;
+import com.hackerda.platform.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/community")
@@ -25,6 +31,8 @@ public class CommunityController {
     private CommunityCommentService communityCommentService;
     @Autowired
     private AppMessageService appMessageService;
+    @Autowired
+    private UserService userService;
 
     @RequiresAuthentication
     @GetMapping("/getPostIdentityByStudent")
@@ -108,5 +116,22 @@ public class CommunityController {
     public WebResponse<MessageCountVO> getMessageCount(){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         return WebResponse.success(appMessageService.messageCount(username));
+    }
+
+    @PostMapping("/modifyUserInfo")
+    @RequiresAuthentication
+    public WebResponse<?> modifyUserInfo(@Valid ModifyUserInfoRequest request, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+
+            List<String> list = bindingResult.getFieldErrors().stream()
+                    .map(x -> x.getField() + x.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            return WebResponse.fail(ErrorCode.DATA_NOT_VALID.getErrorCode(), String.join(",", list));
+        }
+
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(userService.modifyUserData(username, request));
+
     }
 }

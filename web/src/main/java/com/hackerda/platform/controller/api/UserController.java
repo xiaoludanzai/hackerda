@@ -2,9 +2,12 @@ package com.hackerda.platform.controller.api;
 
 import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.controller.request.CreateUserByStudentRequest;
+import com.hackerda.platform.controller.request.ModifyUserInfoRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
