@@ -93,4 +93,8 @@ public class PostBO {
     public boolean canDeleteByUser(String userName) {
         return this.getUserName().equals(userName);
     }
+
+    public boolean isAnonymous() {
+        return identityCategory.isAnonymous();
+    }
 }

@@ -5,6 +5,7 @@ import com.hackerda.platform.controller.request.CreatePostRequest;
 import com.hackerda.platform.controller.vo.*;
 import com.hackerda.platform.domain.community.*;
 import com.hackerda.platform.domain.student.StudentAccount;
+import com.hackerda.platform.domain.wechat.WechatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,8 @@ public class CommunityPostService {
     private CommentCountService commentCountService;
     @Autowired
     private IdentityCategoryFilter identityCategoryFilter;
+    @Autowired
+    private PostViewCounter postViewCounter;
 
     public PostIdentityVO getPostIdentityByStudent(String account) {
 
@@ -68,10 +71,16 @@ public class CommunityPostService {
     }
 
 
-    public PostVO getPostById(String userName, int postId) {
+    public PostVO getPostById(String userName, int postId, String appId, String openid) {
 
         PostDetailBO post = posterRepository.findByPostById(postId);
+        long viewCount = postViewCounter.increment(post.getId(), post.getUserName(), post.isAnonymous(),
+                appId == null ? null :
+                new WechatUser(appId, openid));
+
+        post.setViewCount(Long.valueOf(viewCount).intValue());
         PostVO postVO = getPostVO(post);
+
         postVO.setAuthor(userName.equals(postVO.getUserName()));
         setLikeCount(userName, postVO);
         return postVO;
@@ -116,8 +125,15 @@ public class CommunityPostService {
         return postVO;
     }
 
-    public PostDetailVO getPostDetail(String userName, Integer startId, int count) {
+    public PostDetailVO getPostDetail(String userName, Integer startId, int count, String appId, String openid) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
+        for (PostDetailBO postDetailBO : detailBOList) {
+
+            long viewCount = postViewCounter.increment(postDetailBO.getId(), postDetailBO.getUserName(),
+             postDetailBO.isAnonymous(), appId == null ? null : new WechatUser(appId, openid));
+
+            postDetailBO.setViewCount(Long.valueOf(viewCount).intValue());
+        }
 
         return getPostDetailVO(userName, detailBOList);
 

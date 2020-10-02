@@ -113,14 +113,6 @@ public class LikeRepositoryImpl implements LikeRepository {
         return likeBO;
     }
 
-    @Override
-    public List<LikeBO> findAll(LikeType likeType, long typeId) {
-        AppreciateExample example = new AppreciateExample();
-        example.createCriteria()
-                .andLikeTypeEqualTo(likeType.getCode())
-                .andTypeContentIdEqualTo(typeId);
-        return appreciateMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
-    }
 
     @Override
     public List<LikeBO> findShow(LikeType likeType, long typeId) {
@@ -130,5 +122,13 @@ public class LikeRepositoryImpl implements LikeRepository {
                 .andShowEqualTo((byte) 1)
                 .andTypeContentIdEqualTo(typeId);
         return appreciateMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
+    }
+
+    @Override
+    public long countByReceiver(String userName) {
+        AppreciateExample example = new AppreciateExample();
+        example.createCriteria().andReplyUserNameEqualTo(userName)
+                .andShowEqualTo((byte) 1);
+        return appreciateMapper.countByExample(example);
     }
 }

@@ -171,9 +171,13 @@ public class PosterRepositoryImpl implements PosterRepository {
     }
 
     @Override
-    public long count() {
-        return postExtMapper.countByExample(new PostExample());
+    public long countShowPost(String userName) {
+        PostExample example = new PostExample();
+        example.createCriteria().andUserNameEqualTo(userName)
+                .andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        return postExtMapper.countByExample(example);
     }
+
 
     private PostDetailBO getPostDetailBO(Post post) {
         List<ImageInfo> imageInfoList = imageDao.selectByPostId(post.getId()).stream()

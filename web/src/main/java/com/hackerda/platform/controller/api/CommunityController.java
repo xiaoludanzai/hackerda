@@ -48,9 +48,11 @@ public class CommunityController {
     }
 
     @GetMapping("/getPostById")
-    public WebResponse<PostVO> getPost(@RequestParam(value = "postId") int postId){
+    public WebResponse<PostVO> getPost(@RequestParam(value = "postId") int postId,
+                                       @RequestParam(value = "appId", required = false) String appId,
+                                       @RequestParam(value = "openid", required = false) String openid){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
-        return WebResponse.success(communityPostService.getPostById(username, postId));
+        return WebResponse.success(communityPostService.getPostById(username, postId, appId, openid));
     }
 
     @RequiresAuthentication
@@ -62,9 +64,11 @@ public class CommunityController {
 
     @GetMapping("/getPost")
     public WebResponse<PostDetailVO> getPost(@RequestParam(value = "startId", required = false) Integer startId,
-                                                @RequestParam(value = "count") int count){
+                                             @RequestParam(value = "count") int count,
+                                             @RequestParam(value = "appId", required = false) String appId,
+                                             @RequestParam(value = "openid", required = false) String openid){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
-        return WebResponse.success(communityPostService.getPostDetail(username, startId, count));
+        return WebResponse.success(communityPostService.getPostDetail(username, startId, count, appId, openid));
     }
 
     @GetMapping("/getPostByUserName")

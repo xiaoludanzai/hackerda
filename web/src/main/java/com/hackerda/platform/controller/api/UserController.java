@@ -4,6 +4,7 @@ import com.hackerda.platform.controller.WebResponse;
 import com.hackerda.platform.controller.request.CreateUserByStudentRequest;
 import com.hackerda.platform.controller.request.ModifyUserInfoRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
+import com.hackerda.platform.controller.vo.UserInfoOverviewVO;
 import com.hackerda.platform.domain.constant.ErrorCode;
 import com.hackerda.platform.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/getByUserName")
-    public WebResponse<AppUserVO> getByUserName(@RequestParam(value = "userName") String userName) {
+    public WebResponse<UserInfoOverviewVO> getByUserName(@RequestParam(value = "userName") String userName) {
 
         return WebResponse.success(userService.getByUserName(userName));
 

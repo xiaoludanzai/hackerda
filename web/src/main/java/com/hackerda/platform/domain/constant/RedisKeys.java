@@ -73,11 +73,20 @@ public enum RedisKeys {
     LIKE_STATUS("LIKE_STATUS"),
 
     /**
-     * 评论情况
+     * 被屏蔽的身份选择
      */
     Identity_Category_Filter("Identity_Category_Filter"),
+
+    POST_UV("post_uv"),
+
+    POST_PV("post_pv"),
+
+    USER_POST_UV("user_post_uv"),
+
+    USER_POST_PV("user_post_pv")
+
     ;
-    private String name;
+    private final String name;
 
     RedisKeys(String name){
         this.name=name;
