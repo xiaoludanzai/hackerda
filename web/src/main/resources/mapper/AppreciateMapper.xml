@@ -6,6 +6,7 @@
     <result column="like_type" jdbcType="INTEGER" property="likeType" />
     <result column="type_content_id" jdbcType="BIGINT" property="typeContentId" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="identity_code" jdbcType="INTEGER" property="identityCode" />
     <result column="reply_user_name" jdbcType="VARCHAR" property="replyUserName" />
     <result column="like_time" jdbcType="TIMESTAMP" property="likeTime" />
     <result column="show" jdbcType="TINYINT" property="show" />
@@ -71,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, like_type, type_content_id, user_name, reply_user_name, like_time, `show`, gmt_create, 
-    gmt_modify
+    id, like_type, type_content_id, user_name, identity_code, reply_user_name, like_time, 
+    `show`, gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.AppreciateExample" resultMap="BaseResultMap">
     select
@@ -106,11 +107,13 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
     insert into appreciate (like_type, type_content_id, user_name, 
-      reply_user_name, like_time, `show`, 
-      gmt_create, gmt_modify)
+      identity_code, reply_user_name, like_time, 
+      `show`, gmt_create, gmt_modify
+      )
     values (#{likeType,jdbcType=INTEGER}, #{typeContentId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
-      #{replyUserName,jdbcType=VARCHAR}, #{likeTime,jdbcType=TIMESTAMP}, #{show,jdbcType=TINYINT}, 
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
+      #{identityCode,jdbcType=INTEGER}, #{replyUserName,jdbcType=VARCHAR}, #{likeTime,jdbcType=TIMESTAMP}, 
+      #{show,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Appreciate" useGeneratedKeys="true">
     insert into appreciate
@@ -123,6 +126,9 @@
       </if>
       <if test="userName != null">
         user_name,
+      </if>
+      <if test="identityCode != null">
+        identity_code,
       </if>
       <if test="replyUserName != null">
         reply_user_name,
@@ -149,6 +155,9 @@
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityCode != null">
+        #{identityCode,jdbcType=INTEGER},
       </if>
       <if test="replyUserName != null">
         #{replyUserName,jdbcType=VARCHAR},
@@ -188,6 +197,9 @@
       <if test="record.userName != null">
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
+      <if test="record.identityCode != null">
+        identity_code = #{record.identityCode,jdbcType=INTEGER},
+      </if>
       <if test="record.replyUserName != null">
         reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
       </if>
@@ -214,6 +226,7 @@
       like_type = #{record.likeType,jdbcType=INTEGER},
       type_content_id = #{record.typeContentId,jdbcType=BIGINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
+      identity_code = #{record.identityCode,jdbcType=INTEGER},
       reply_user_name = #{record.replyUserName,jdbcType=VARCHAR},
       like_time = #{record.likeTime,jdbcType=TIMESTAMP},
       `show` = #{record.show,jdbcType=TINYINT},
@@ -234,6 +247,9 @@
       </if>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityCode != null">
+        identity_code = #{identityCode,jdbcType=INTEGER},
       </if>
       <if test="replyUserName != null">
         reply_user_name = #{replyUserName,jdbcType=VARCHAR},
@@ -258,6 +274,7 @@
     set like_type = #{likeType,jdbcType=INTEGER},
       type_content_id = #{typeContentId,jdbcType=BIGINT},
       user_name = #{userName,jdbcType=VARCHAR},
+      identity_code = #{identityCode,jdbcType=INTEGER},
       reply_user_name = #{replyUserName,jdbcType=VARCHAR},
       like_time = #{likeTime,jdbcType=TIMESTAMP},
       `show` = #{show,jdbcType=TINYINT},

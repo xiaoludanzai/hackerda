@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.repository;
 
+import com.hackerda.platform.domain.community.IdentityCategory;
 import com.hackerda.platform.domain.community.LikeBO;
 import com.hackerda.platform.domain.community.LikeRepository;
 import com.hackerda.platform.domain.community.LikeType;
@@ -37,6 +38,7 @@ public class LikeRepositoryImpl implements LikeRepository {
         like.setTypeContentId(likeBO.getTypeContentId());
         like.setShow(likeBO.isShow() ? (byte) 1 : (byte) 0);
         like.setId(likeBO.getId());
+        like.setIdentityCode(likeBO.getIdentityCategory().getCode());
         like.setReplyUserName(likeBO.getReplyUserName());
         return like;
     }
@@ -110,6 +112,7 @@ public class LikeRepositoryImpl implements LikeRepository {
         likeBO.setShow(like.getShow() == (byte) 1);
         likeBO.setId(like.getId());
         likeBO.setReplyUserName(like.getReplyUserName());
+        likeBO.setIdentityCategory(IdentityCategory.getByCode(like.getIdentityCode()));
         return likeBO;
     }
 
@@ -125,9 +128,10 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public long countByReceiver(String userName) {
+    public long countByReceiver(String userName, List<IdentityCategory> identityCategoryList) {
         AppreciateExample example = new AppreciateExample();
         example.createCriteria().andReplyUserNameEqualTo(userName)
+                .andIdentityCodeIn(identityCategoryList.stream().map(IdentityCategory::getCode).collect(Collectors.toList()))
                 .andShowEqualTo((byte) 1);
         return appreciateMapper.countByExample(example);
     }

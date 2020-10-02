@@ -17,5 +17,5 @@ public interface LikeRepository {
 
     List<LikeBO> findShow(LikeType likeType, long typeId);
 
-    long countByReceiver(String userName);
+    long countByReceiver(String userName, List<IdentityCategory> identityCategoryList);
 }

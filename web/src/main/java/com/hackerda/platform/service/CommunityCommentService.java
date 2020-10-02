@@ -32,8 +32,6 @@ public class CommunityCommentService {
 
     public CreateCommentResultVO addComment(String userName, CreateCommentRequest request){
 
-
-
         CommentBO commentBO = new CommentBO(request.getPostId(), request.getPostUserName(), userName,
                 request.getContent(), Optional.ofNullable(request.getReplyCommentId()).orElse(0L),
                 Optional.ofNullable(request.getRootCommentId()).orElse(0L),
@@ -117,20 +115,22 @@ public class CommunityCommentService {
         likeBO.setUserName(userName);
         likeBO.setReplyUserName(replyUserName);
 
-        if(StringUtils.isEmpty(replyUserName)) {
+        if(likeRequest.getIdentityCategoryCode() == null) {
             if(likeBO.getLikeType()== LikeType.Comment) {
 
                 commentRepository.findByIdList(Collections.singletonList(likeBO.getTypeContentId()))
                         .stream().findFirst()
-                        .ifPresent(commentBO -> likeBO.setReplyUserName(commentBO.getUserName()));
+                        .ifPresent(commentBO -> likeBO.setIdentityCategory(commentBO.getIdentityCategory()));
 
             }
 
             if(likeBO.getLikeType()== LikeType.Post) {
                 posterRepository.findByIdList(Collections.singletonList(likeBO.getTypeContentId()))
                         .stream().findFirst()
-                        .ifPresent(postDetailBO -> likeBO.setReplyUserName(postDetailBO.getUserName()));
+                        .ifPresent(postDetailBO -> likeBO.setIdentityCategory(postDetailBO.getIdentityCategory()));
             }
+        } else {
+            likeBO.setIdentityCategory(IdentityCategory.getByCode(likeRequest.getIdentityCategoryCode()));
         }
 
         CreateCommentResultVO vo = new CreateCommentResultVO();
@@ -138,7 +138,7 @@ public class CommunityCommentService {
             communityCommentApp.addLike(likeBO);
             vo.setRelease(true);
         }catch (Throwable throwable) {
-            log.error("{} add like error {}",userName, likeRequest);
+            log.error("{} add like error {}",userName, likeRequest, throwable);
             vo.setRelease(false);
             vo.setErrMsg(throwable.getMessage());
         }

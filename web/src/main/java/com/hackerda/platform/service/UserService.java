@@ -1,10 +1,12 @@
 package com.hackerda.platform.service;
 
+import com.google.common.collect.Lists;
 import com.hackerda.platform.application.UserRegisterApp;
 import com.hackerda.platform.controller.request.CreateUserByStudentRequest;
 import com.hackerda.platform.controller.request.ModifyUserInfoRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
 import com.hackerda.platform.controller.vo.UserInfoOverviewVO;
+import com.hackerda.platform.domain.community.IdentityCategory;
 import com.hackerda.platform.domain.community.LikeRepository;
 import com.hackerda.platform.domain.community.PostViewCounter;
 import com.hackerda.platform.domain.community.PosterRepository;
@@ -88,7 +90,7 @@ public class UserService {
         AppUserBO user = userRepository.findByUserName(userName);
         AppUserVO userVO = toVO(user);
         overviewVO.setUserInfo(userVO);
-        overviewVO.setLikeCount(likeRepository.countByReceiver(userName));
+        overviewVO.setLikeCount(likeRepository.countByReceiver(userName, Lists.newArrayList(IdentityCategory.Community)));
         overviewVO.setPostCount(posterRepository.countShowPost(userName));
         overviewVO.setViewCount(postViewCounter.countPageViewByUser(userName));
 

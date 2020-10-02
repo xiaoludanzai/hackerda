@@ -14,6 +14,8 @@ public class LikeBO {
 
     private String userName;
 
+    private IdentityCategory identityCategory;
+
     private String replyUserName;
 
     private long typeContentId;

@@ -355,6 +355,66 @@ public class AppreciateExample {
             return (Criteria) this;
         }
 
+        public Criteria andIdentityCodeIsNull() {
+            addCriterion("identity_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeIsNotNull() {
+            addCriterion("identity_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeEqualTo(Integer value) {
+            addCriterion("identity_code =", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeNotEqualTo(Integer value) {
+            addCriterion("identity_code <>", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeGreaterThan(Integer value) {
+            addCriterion("identity_code >", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("identity_code >=", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeLessThan(Integer value) {
+            addCriterion("identity_code <", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeLessThanOrEqualTo(Integer value) {
+            addCriterion("identity_code <=", value, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeIn(List<Integer> values) {
+            addCriterion("identity_code in", values, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeNotIn(List<Integer> values) {
+            addCriterion("identity_code not in", values, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeBetween(Integer value1, Integer value2) {
+            addCriterion("identity_code between", value1, value2, "identityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdentityCodeNotBetween(Integer value1, Integer value2) {
+            addCriterion("identity_code not between", value1, value2, "identityCode");
+            return (Criteria) this;
+        }
+
         public Criteria andReplyUserNameIsNull() {
             addCriterion("reply_user_name is null");
             return (Criteria) this;

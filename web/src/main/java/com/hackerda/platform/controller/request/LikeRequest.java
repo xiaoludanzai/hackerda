@@ -21,4 +21,6 @@ public class LikeRequest {
     private boolean isAdd;
 
     private String replyUserName;
+
+    private Integer identityCategoryCode;
 }
