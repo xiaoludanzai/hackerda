@@ -91,7 +91,7 @@ public class UserService {
         AppUserVO userVO = toVO(user);
         overviewVO.setUserInfo(userVO);
         overviewVO.setLikeCount(likeRepository.countByReceiver(userName, Lists.newArrayList(IdentityCategory.Community)));
-        overviewVO.setPostCount(posterRepository.countShowPost(userName));
+        overviewVO.setPostCount(posterRepository.countShowPost(userName, Lists.newArrayList(IdentityCategory.Community)));
         overviewVO.setViewCount(postViewCounter.countPageViewByUser(userName));
 
         return overviewVO;

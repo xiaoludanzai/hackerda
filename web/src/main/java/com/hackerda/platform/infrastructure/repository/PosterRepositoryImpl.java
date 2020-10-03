@@ -171,9 +171,10 @@ public class PosterRepositoryImpl implements PosterRepository {
     }
 
     @Override
-    public long countShowPost(String userName) {
+    public long countShowPost(String userName, List<IdentityCategory> identityCategoryList) {
         PostExample example = new PostExample();
         example.createCriteria().andUserNameEqualTo(userName)
+                .andRecordStatusIn(identityCategoryList.stream().map(IdentityCategory::getCode).collect(Collectors.toList()))
                 .andRecordStatusEqualTo(RecordStatus.Release.getCode());
         return postExtMapper.countByExample(example);
     }
