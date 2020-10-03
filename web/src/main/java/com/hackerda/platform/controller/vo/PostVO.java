@@ -43,7 +43,7 @@ public class PostVO {
     private int viewCount = 0;
 
     /** 发表时间 **/
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern="yyyy/MM/dd HH:mm:ss",timezone = "GMT+8")
     private Date postTime;
 
     /** 是否允许评论 **/

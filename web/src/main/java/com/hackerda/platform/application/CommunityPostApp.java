@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,6 +28,8 @@ public class CommunityPostApp {
     private ContentSecurityCheckService contentSecurityCheckService;
     @Autowired
     private PosterRepository posterRepository;
+    @Autowired
+    private RecommendPostRecorder recommendPostRecorder;
 
     private final ExecutorService imageSecCheckPool = new MDCThreadPool(8, 8,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> new Thread(r, "imageSecCheck"));
@@ -86,6 +91,13 @@ public class CommunityPostApp {
         }
 
 
+    }
+
+    public List<PostDetailBO> getRecommendPost() {
+        List<Long> idList = recommendPostRecorder.getPostIdList(new Date());
+        List<PostDetailBO> postList = posterRepository.findByIdList(idList);
+        postList.sort(Comparator.comparing(PostBO::getId).reversed());
+        return postList;
     }
 
     @Autowired

@@ -110,8 +110,7 @@ public class CommunityPostService {
                 .setPostTime(post.getPostTime())
                 .setIdentityCode(post.getIdentityCategory().getCode())
                 .setAnonymous(post.getIdentityCategory().isAnonymous())
-                .setHasDelete(post.isDelete())
-        ;
+                .setHasDelete(post.isDelete());
 
         List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
             ImageInfoVO infoVO = new ImageInfoVO();
@@ -127,16 +126,24 @@ public class CommunityPostService {
 
     public PostDetailVO getPostDetail(String userName, Integer startId, int count, String appId, String openid) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
+        return getPostDetailVO(userName, appId, openid, detailBOList);
+    }
+
+    public PostDetailVO getRecommendPost(String userName, String appId, String openid) {
+        List<PostDetailBO> detailBOList = communityPostApp.getRecommendPost();
+        return getPostDetailVO(userName, appId, openid, detailBOList);
+    }
+
+
+    private PostDetailVO getPostDetailVO(String userName, String appId, String openid, List<PostDetailBO> detailBOList) {
         for (PostDetailBO postDetailBO : detailBOList) {
 
             long viewCount = postViewCounter.increment(postDetailBO.getId(), postDetailBO.getUserName(),
-             postDetailBO.isAnonymous(), appId == null ? null : new WechatUser(appId, openid));
+                    postDetailBO.isAnonymous(), appId == null ? null : new WechatUser(appId, openid));
 
             postDetailBO.setViewCount(Long.valueOf(viewCount).intValue());
         }
-
         return getPostDetailVO(userName, detailBOList);
-
     }
 
     /**

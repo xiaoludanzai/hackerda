@@ -71,6 +71,13 @@ public class CommunityController {
         return WebResponse.success(communityPostService.getPostDetail(username, startId, count, appId, openid));
     }
 
+    @GetMapping("/getRecommendPost")
+    public WebResponse<PostDetailVO> getRecommendPost(@RequestParam(value = "appId") String appId,
+                                                      @RequestParam(value = "openid") String openid){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(communityPostService.getRecommendPost(username,  appId, openid));
+    }
+
     @GetMapping("/getPostByUserName")
     public WebResponse<PostDetailVO> getPostByUserName(@RequestParam(value = "userName") String postUserName,
                                                        @RequestParam(value = "startId", required = false) Integer startId,

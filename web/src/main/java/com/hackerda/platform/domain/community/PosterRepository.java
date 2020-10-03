@@ -26,4 +26,5 @@ public interface PosterRepository {
     List<PostDetailBO> findPostByUser(String userName, Integer start, int count);
 
     long countShowPost(String userName, List<IdentityCategory> identityCategoryList);
+
 }

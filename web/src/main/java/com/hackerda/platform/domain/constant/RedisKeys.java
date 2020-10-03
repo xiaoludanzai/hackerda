@@ -83,7 +83,9 @@ public enum RedisKeys {
 
     USER_POST_UV("user_post_uv"),
 
-    USER_POST_PV("user_post_pv")
+    USER_POST_PV("user_post_pv"),
+
+    RECOMMEND_POST_ID("RECOMMEND_POST_ID")
 
     ;
     private final String name;
