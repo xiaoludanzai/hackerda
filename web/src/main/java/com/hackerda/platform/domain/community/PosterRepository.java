@@ -27,4 +27,6 @@ public interface PosterRepository {
 
     long countShowPost(String userName, List<IdentityCategory> identityCategoryList);
 
+    long findMaxReleasePostId();
+
 }

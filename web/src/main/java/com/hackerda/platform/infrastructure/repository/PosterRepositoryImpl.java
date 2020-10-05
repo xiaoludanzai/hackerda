@@ -179,6 +179,18 @@ public class PosterRepositoryImpl implements PosterRepository {
         return postExtMapper.countByExample(example);
     }
 
+    @Override
+    public long findMaxReleasePostId() {
+        PostExample example = new PostExample();
+        example.setOrderByClause("id desc");
+        example.createCriteria()
+                .andRecordStatusEqualTo(RecordStatus.Release.getCode());
+
+        PageHelper.startPage(0, 1);
+
+        return postExtMapper.selectByExample(example).stream().findFirst().get().getId();
+    }
+
 
     private PostDetailBO getPostDetailBO(Post post) {
         List<ImageInfo> imageInfoList = imageDao.selectByPostId(post.getId()).stream()

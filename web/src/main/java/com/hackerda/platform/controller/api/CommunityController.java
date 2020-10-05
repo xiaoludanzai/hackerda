@@ -72,11 +72,18 @@ public class CommunityController {
     }
 
     @GetMapping("/getRecommendPost")
-    public WebResponse<PostDetailVO> getRecommendPost(@RequestParam(value = "appId") String appId,
-                                                      @RequestParam(value = "openid") String openid){
+    public WebResponse<PostDetailVO> getRecommendPost(@RequestParam(value = "appId", required = false) String appId,
+                                                      @RequestParam(value = "openid", required = false) String openid){
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         return WebResponse.success(communityPostService.getRecommendPost(username,  appId, openid));
     }
+
+    @GetMapping("/checkPostUpdate")
+    public WebResponse<CheckPostUpdateVO> checkPostUpdate(@RequestParam(value = "maxPostId") long maxPostId){
+
+        return WebResponse.success(communityPostService.checkUpdate(maxPostId));
+    }
+
 
     @GetMapping("/getPostByUserName")
     public WebResponse<PostDetailVO> getPostByUserName(@RequestParam(value = "userName") String postUserName,
@@ -106,7 +113,7 @@ public class CommunityController {
         return WebResponse.success(communityCommentService.findByPostId(username, postId));
     }
 
-
+    @RequiresAuthentication
     @GetMapping("/addLike")
     public WebResponse<CreateCommentResultVO> addLike(LikeRequest likeRequest){
         String username = SecurityUtils.getSubject().getPrincipal().toString();

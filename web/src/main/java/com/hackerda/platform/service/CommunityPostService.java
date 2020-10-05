@@ -134,6 +134,14 @@ public class CommunityPostService {
         return getPostDetailVO(userName, appId, openid, detailBOList);
     }
 
+    public CheckPostUpdateVO checkUpdate(long maxPostId) {
+        long maxReleasePostId = posterRepository.findMaxReleasePostId();
+
+        CheckPostUpdateVO vo = new CheckPostUpdateVO();
+        vo.setMaxReleasePostId(maxReleasePostId);
+        return vo;
+    }
+
 
     private PostDetailVO getPostDetailVO(String userName, String appId, String openid, List<PostDetailBO> detailBOList) {
         for (PostDetailBO postDetailBO : detailBOList) {
