@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +25,14 @@ public class RecommendPostRedisRecorderScript {
 
     @Test
     public void add() {
-        recommendPostRedisRecorder.add(95, new Date());
+        recommendPostRedisRecorder.add(25, new Date());
+    }
+
+    @Test
+    public void get() {
+        List<Long> postIdList = recommendPostRedisRecorder.getPostIdList(new Date());
+
+        System.out.println(postIdList);
     }
 
 }
