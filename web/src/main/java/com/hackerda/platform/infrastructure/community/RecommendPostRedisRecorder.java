@@ -41,7 +41,7 @@ public class RecommendPostRedisRecorder implements RecommendPostRecorder {
 
     @Override
     public void remove(long postId, Date date) {
-
+        stringRedisTemplate.opsForSet().remove(genKey(date), String.valueOf(postId));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class RecommendPostRedisRecorderScript {
 
     @Test
     public void add() {
-        recommendPostRedisRecorder.add(13, new Date());
+        recommendPostRedisRecorder.add(48, new Date());
     }
 
     @Test
@@ -33,6 +33,12 @@ public class RecommendPostRedisRecorderScript {
         List<Long> postIdList = recommendPostRedisRecorder.getPostIdList(new Date());
 
         System.out.println(postIdList);
+    }
+
+    @Test
+    public void remove() {
+        recommendPostRedisRecorder.remove(13, new Date());
+        
     }
 
 }
