@@ -40,7 +40,7 @@ public class StudentBindAppTest {
 
         truncateMapper.wechatOpenId();
         truncateMapper.wechat_action_record();
-        StudentAccount studentAccount = new StudentAccount("2014025838");
+        StudentAccount studentAccount = new StudentAccount("2017025820");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
         WechatStudentUserBO wechatStudentUserBO = studentBindApp.bindByOpenId(studentAccount, "1", wechatUser);
 
@@ -53,6 +53,9 @@ public class StudentBindAppTest {
         assertThat(studentRepository.findWetChatUser(studentAccount).hasBindWechatUser()).isFalse();
 
         assertThat(wechatActionRecordRepository.find(wechatUser).size()).isEqualTo(1);
+
+
+        assertThat(wechatStudentUserBO.isMsgHasCheck()).isTrue();
 
     }
 

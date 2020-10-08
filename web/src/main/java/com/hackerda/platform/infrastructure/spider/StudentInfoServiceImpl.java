@@ -90,6 +90,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         user.setSubjectName(userInfo.getSubjectName());
         user.setSex(userInfo.getSex());
         user.setName(userInfo.getName());
+        user.setMsgHasCheck(true);
         user.setSaveOrUpdate(true);
 
         return user;

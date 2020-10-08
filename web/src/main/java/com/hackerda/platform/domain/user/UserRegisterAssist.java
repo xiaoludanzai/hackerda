@@ -36,4 +36,6 @@ public interface UserRegisterAssist {
      * @return 可以注册则返回true
      */
     boolean wechatHasRegister(WechatUser wechatUser);
+
+    boolean wechatNeedToCheck(WechatUser wechatUser);
 }

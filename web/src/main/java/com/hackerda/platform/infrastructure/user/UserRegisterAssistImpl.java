@@ -11,6 +11,7 @@ import com.hackerda.platform.infrastructure.database.model.User;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecord;
 import com.hackerda.platform.infrastructure.database.model.UserRegisterRecordExample;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class UserRegisterAssistImpl implements UserRegisterAssist {
     private UserDao userDao;
     @Autowired
     private UserRegisterRecordMapper userRegisterRecordMapper;
-
+    @Value("${user.register.checkWechat:true}")
+    private boolean checkWechat;
 
     @Override
     public boolean userHasRegister(AppStudentUserBO appStudentUserBO) {
@@ -54,6 +56,11 @@ public class UserRegisterAssistImpl implements UserRegisterAssist {
         List<UserRegisterRecord> recordList = userRegisterRecordMapper.selectByExample(example);
 
         return recordList.size() % 2 != 0;
+    }
+
+    @Override
+    public boolean wechatNeedToCheck(WechatUser wechatUser) {
+        return checkWechat;
     }
 
 

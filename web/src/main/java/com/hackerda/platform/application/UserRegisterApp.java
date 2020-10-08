@@ -47,8 +47,7 @@ public class UserRegisterApp {
         }
 
 
-
-        if (userRegisterAssist.wechatHasRegister(wechatUser)) {
+        if (userRegisterAssist.wechatNeedToCheck(wechatUser) && userRegisterAssist.wechatHasRegister(wechatUser)) {
             throw new BusinessException(ErrorCode.WECHAT_HAS_USED, "该微信号已经被注册");
         }
 
