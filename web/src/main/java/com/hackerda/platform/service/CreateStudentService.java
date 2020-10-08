@@ -1,11 +1,19 @@
 package com.hackerda.platform.service;
 
+import com.hackerda.platform.application.CreateStudentApp;
+import com.hackerda.platform.controller.request.CreateStudentRequest;
 import com.hackerda.platform.controller.vo.StudentUserDetailVO;
 import com.hackerda.platform.controller.vo.student.AcademyVO;
 import com.hackerda.platform.controller.vo.student.ClazzInfoVO;
 import com.hackerda.platform.controller.vo.student.ClazzVO;
 import com.hackerda.platform.controller.vo.student.SubjectVO;
 import com.hackerda.platform.domain.student.ClazzInfoRepository;
+import com.hackerda.platform.domain.student.StudentAccount;
+import com.hackerda.platform.domain.student.StudentFactory;
+import com.hackerda.platform.domain.student.WechatStudentUserBO;
+import com.hackerda.platform.domain.user.Gender;
+import com.hackerda.platform.domain.wechat.WechatUser;
+import com.hackerda.platform.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +25,42 @@ public class CreateStudentService {
 
     @Autowired
     private ClazzInfoRepository clazzinforepository;
+    @Autowired
+    private StudentFactory studentFactory;
+    @Autowired
+    private CreateStudentApp createStudentApp;
 
-    public StudentUserDetailVO createStudentUser() {
+    public StudentUserDetailVO createStudentUser(CreateStudentRequest createStudentRequest) {
 
-        return null;
+        Gender gender = createStudentRequest.getGender().equals("男") ? Gender.Man : Gender.Woman;
+
+        WechatStudentUserBO studentUserBO = studentFactory.createByClazzNum(new StudentAccount(createStudentRequest.getAccount()),
+                createStudentRequest.getName(), gender, createStudentRequest.getClazzNum());
+
+
+        createStudentApp.createStudentUser(studentUserBO, new WechatUser(createStudentRequest.getAppId(),
+                createStudentRequest.getOpenid()));
+
+        return getVO(studentUserBO, createStudentRequest.getAppId());
+    }
+
+    private StudentUserDetailVO getVO(WechatStudentUserBO studentUser, String appId){
+        String account = studentUser.getAccount().toString();
+        String token = JwtUtils.signForWechatStudent(account, appId, studentUser.getOpenid(appId));
+
+        StudentUserDetailVO vo = new StudentUserDetailVO();
+
+        vo.setAccount(studentUser.getAccount().getInt());
+        vo.setName(studentUser.getName());
+        vo.setSex(studentUser.getSex());
+        vo.setEthnic(studentUser.getEthnic());
+        vo.setAcademyName(studentUser.getAcademyName());
+        vo.setSubjectName(studentUser.getSubjectName());
+        vo.setClassName(studentUser.getClassName());
+        vo.setToken(token);
+        vo.setUseDefaultPassword(studentUser.isUsingDefaultPassword());
+
+        return vo;
     }
 
     public ClazzInfoVO<AcademyVO> getAcademyByGrade(String grade) {

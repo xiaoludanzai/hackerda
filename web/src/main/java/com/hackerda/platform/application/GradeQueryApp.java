@@ -10,6 +10,7 @@ import com.hackerda.platform.application.event.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +25,10 @@ public class GradeQueryApp {
 
 
     public GradeOverviewBO getGradeOverview(StudentUserBO studentUser) {
+
+        if(!studentUser.isMsgHasCheck()) {
+            return new GradeOverviewBO(Collections.emptyList());
+        }
 
         GradeOverviewBO gradeOverviewBO = factory.create(studentUser);
 

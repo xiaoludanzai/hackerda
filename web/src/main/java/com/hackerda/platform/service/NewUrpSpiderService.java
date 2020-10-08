@@ -81,6 +81,8 @@ public class NewUrpSpiderService {
         studentUser.setAcademyName(urpStudentInfo.getAcademy());
         studentUser.setSubjectName(urpStudentInfo.getMajor());
         studentUser.setClassName(urpStudentInfo.getClassname());
+        studentUser.setHasCheck(true);
+
         return studentUser;
     }
 

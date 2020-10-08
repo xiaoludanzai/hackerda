@@ -81,7 +81,7 @@ public class StudentJWTRealm extends AuthorizingRealm {
         try {
             WechatStudentUserBO user = studentRepository.findWetChatUser(new StudentAccount(username));
 
-            if(user == null || !user.getIsCorrect() || !user.hasBindApp(appId)) {
+            if(user == null || !user.canLogin() || !user.hasBindApp(appId)) {
                 return null;
             }
             JwtUtils.verify(token, username, user.getOpenid(appId));

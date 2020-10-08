@@ -19,10 +19,4 @@ public interface StudentUserExtMapper extends StudentUserMapper {
 
     List<Role> selectRoleByAccount(Integer account);
 
-
-    List<WechatStudentUserDO> getWechatUserByAccount(Integer account);
-
-    List<WechatStudentUserDO> getWechatUserByAccountList(Collection<Integer> accountList);
-
-    int saveOrUpdate(StudentUser record);
 }

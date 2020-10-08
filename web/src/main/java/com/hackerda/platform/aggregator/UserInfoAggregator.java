@@ -1,8 +1,10 @@
 package com.hackerda.platform.aggregator;
 
+import com.hackerda.platform.controller.request.CreateStudentRequest;
 import com.hackerda.platform.controller.vo.AppUserVO;
 import com.hackerda.platform.controller.vo.StudentUserDetailVO;
 import com.hackerda.platform.controller.vo.UserInfoVO;
+import com.hackerda.platform.service.CreateStudentService;
 import com.hackerda.platform.service.UserService;
 import com.hackerda.platform.service.rbac.UserAuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class UserInfoAggregator {
     private UserAuthorizeService userAuthorizeService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CreateStudentService createStudentService;
 
     public UserInfoVO studentAuthorize(@Nonnull String account, @Nonnull String password, @Nonnull String appId,
                                 @Nonnull String openid) {
@@ -42,6 +46,21 @@ public class UserInfoAggregator {
 
         AppUserVO appUserVO = userService.getUserByStudentAccount(detailVO.getAccount().toString());
 
+
+        UserInfoVO infoVO = new UserInfoVO();
+
+        infoVO.setStudentInfo(detailVO);
+        infoVO.setUserInfo(appUserVO);
+
+        return infoVO;
+
+    }
+
+    public UserInfoVO createStudent(CreateStudentRequest createStudentRequest) {
+
+        StudentUserDetailVO detailVO = createStudentService.createStudentUser(createStudentRequest);
+
+        AppUserVO appUserVO = userService.getUserByStudentAccount(detailVO.getAccount().toString());
 
         UserInfoVO infoVO = new UserInfoVO();
 

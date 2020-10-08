@@ -42,7 +42,7 @@ public class UserRegisterApp {
         if(!student.hasBindWechatUser(wechatUser)) {
             throw new BusinessException(ErrorCode.USER_UNAUTHORIZED, "注册用户的学号与当前微信未绑定");
         }
-        if (!student.getIsCorrect()) {
+        if (student.isMsgHasCheck() && !student.getIsCorrect()) {
             throw new BusinessException(ErrorCode.ACCOUNT_OR_PASSWORD_INVALID, "教务网密码错误");
         }
 

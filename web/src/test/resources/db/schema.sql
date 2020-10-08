@@ -28,6 +28,7 @@ CREATE TABLE `student`
     `academy_name` varchar(255)         DEFAULT NULL,
     `subject_name` varchar(255)         DEFAULT NULL,
     `class_name`   varchar(255)         DEFAULT NULL,
+    `has_check`    tinyint(1)  NOT NULL DEFAULT '1',
     `gmt_create`   timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `gmt_modified` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -306,5 +307,69 @@ CREATE TABLE `appreciate`
     `gmt_modify`      timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `unq_like` (`type_content_id`, `user_name`, `like_type`, `show`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `class_course_timetable`
+(
+    `id`                  int(11)      NOT NULL AUTO_INCREMENT,
+    `class_id`            varchar(11)  NOT NULL,
+    `course_timetable_id` int(11)      NOT NULL,
+    `term_year`           varchar(255) NOT NULL,
+    `term_order`          int(255)     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_course` (`class_id`, `term_year`, `term_order`, `course_timetable_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+
+CREATE TABLE `course_timetable`
+(
+    `id`                     int(11)     NOT NULL AUTO_INCREMENT,
+    `room_name`              varchar(20)          DEFAULT NULL COMMENT '关联教室名称',
+    `room_number`            varchar(20)          DEFAULT '',
+    `campus_name`            varchar(16) NOT NULL DEFAULT '""' COMMENT '校区名',
+    `continuing_session`     int(11)     NOT NULL DEFAULT '0' COMMENT '持续节数',
+    `course_id`              varchar(16) NOT NULL DEFAULT '“”' COMMENT '课程号',
+    `attend_class_teacher`   varchar(16) NOT NULL DEFAULT '""' COMMENT '任课教师',
+    `student_count`          int(255)    NOT NULL DEFAULT '0' COMMENT '上课得学生数',
+    `class_day`              int(11)     NOT NULL DEFAULT '0' COMMENT '星期',
+    `class_order`            int(11)     NOT NULL DEFAULT '0' COMMENT '节数',
+    `start_week`             int(11)     NOT NULL DEFAULT '0' COMMENT '开始周',
+    `end_week`               int(11)     NOT NULL DEFAULT '0' COMMENT '结束周',
+    `class_in_school_week`   varchar(24) NOT NULL DEFAULT '""' COMMENT '课程在教学周的上课标识',
+    `course_sequence_number` varchar(24) NOT NULL DEFAULT '1' COMMENT '课序号',
+    `week_description`       varchar(64) NOT NULL DEFAULT '""' COMMENT '周数描述，如1-5周',
+    `class_distinct`         int(4)      NOT NULL DEFAULT '0' COMMENT '单、双周标识，0为正常，1为单周，2为双周',
+    `term_year`              char(9)     NOT NULL DEFAULT '0' COMMENT '学年，如2018-2019',
+    `term_order`             int(11)     NOT NULL DEFAULT '0' COMMENT '学期',
+    `gmt_create`             datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uc_course_timetable` (`course_id`, `course_sequence_number`, `class_day`, `class_order`, `start_week`,
+                                      `end_week`, `term_year`, `term_order`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+
+CREATE TABLE `course`
+(
+    `id`               int(11)      NOT NULL AUTO_INCREMENT,
+    `name`             varchar(255) NOT NULL,
+    `num`              varchar(255) NOT NULL COMMENT '课程号',
+    `course_order`     varchar(255) NOT NULL COMMENT '课序号，课程号相同时作为标识',
+    `term_year`        varchar(255) NOT NULL,
+    `term_order`       int(255)     NOT NULL,
+    `teacher_account`  varchar(255) NOT NULL DEFAULT '',
+    `teacher_name`     varchar(255) NOT NULL DEFAULT '',
+    `exam_type`        varchar(255) NOT NULL DEFAULT '',
+    `exam_type_code`   varchar(255) NOT NULL DEFAULT '',
+    `academy_name`     varchar(255) NOT NULL DEFAULT '',
+    `academy_code`     varchar(255) NOT NULL DEFAULT '',
+    `course_type`      varchar(255) NOT NULL DEFAULT '',
+    `course_type_code` varchar(255) NOT NULL DEFAULT '',
+    `credit`           varchar(255) NOT NULL DEFAULT '' COMMENT '学分',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uc_course` (`num`, `course_order`, `term_year`, `term_order`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;

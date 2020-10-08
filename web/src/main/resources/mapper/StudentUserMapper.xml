@@ -1,40 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.StudentUserMapper" >
-  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="account" property="account" jdbcType="INTEGER" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="VARCHAR" />
-    <result column="ethnic" property="ethnic" jdbcType="VARCHAR" />
-    <result column="urpclass_num" property="urpclassNum" jdbcType="INTEGER" />
-    <result column="is_correct" property="isCorrect" jdbcType="BIT" />
-    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
-    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
-    <result column="academy_name" property="academyName" jdbcType="VARCHAR" />
-    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
-    <result column="class_name" property="className" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hackerda.platform.infrastructure.database.mapper.StudentUserMapper">
+  <resultMap id="BaseResultMap" type="com.hackerda.platform.infrastructure.database.model.StudentUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="INTEGER" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="ethnic" jdbcType="VARCHAR" property="ethnic" />
+    <result column="urpclass_num" jdbcType="INTEGER" property="urpclassNum" />
+    <result column="is_correct" jdbcType="BOOLEAN" property="isCorrect" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="academy_name" jdbcType="VARCHAR" property="academyName" />
+    <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="has_check" jdbcType="BOOLEAN" property="hasCheck" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -45,25 +46,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -74,265 +75,273 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    id, account, password, name, sex, ethnic, urpclass_num, is_correct, gmt_create, gmt_modified, 
-    academy_name, subject_name, class_name
+  <sql id="Base_Column_List">
+    id, account, `password`, `name`, sex, ethnic, urpclass_num, is_correct, gmt_create, 
+    gmt_modified, academy_name, subject_name, class_name, has_check
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" >
+  <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from student
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from student
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from student
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" >
+  <delete id="deleteByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample">
     delete from student
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
-    insert into student (id, account, password,
-      name, sex, ethnic, 
-      urpclass_num, is_correct, gmt_create, 
-      gmt_modified, academy_name, subject_name, 
-      class_name)
-    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{ethnic,jdbcType=VARCHAR}, 
-      #{urpclassNum,jdbcType=INTEGER}, #{isCorrect,jdbcType=BIT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP}, #{academyName,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
-      #{className,jdbcType=VARCHAR})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" useGeneratedKeys="true">
+    insert into student (account, `password`, `name`, 
+      sex, ethnic, urpclass_num, 
+      is_correct, gmt_create, gmt_modified, 
+      academy_name, subject_name, class_name, 
+      has_check)
+    values (#{account,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{ethnic,jdbcType=VARCHAR}, #{urpclassNum,jdbcType=INTEGER}, 
+      #{isCorrect,jdbcType=BOOLEAN}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{academyName,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+      #{hasCheck,jdbcType=BOOLEAN})
   </insert>
-  <insert id="insertSelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" useGeneratedKeys="true">
     insert into student
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="account != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="account != null">
         account,
       </if>
-      <if test="password != null" >
-        password,
+      <if test="password != null">
+        `password`,
       </if>
-      <if test="name != null" >
-        name,
+      <if test="name != null">
+        `name`,
       </if>
-      <if test="sex != null" >
+      <if test="sex != null">
         sex,
       </if>
-      <if test="ethnic != null" >
+      <if test="ethnic != null">
         ethnic,
       </if>
-      <if test="urpclassNum != null" >
+      <if test="urpclassNum != null">
         urpclass_num,
       </if>
-      <if test="isCorrect != null" >
+      <if test="isCorrect != null">
         is_correct,
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         gmt_create,
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         gmt_modified,
       </if>
-      <if test="academyName != null" >
+      <if test="academyName != null">
         academy_name,
       </if>
-      <if test="subjectName != null" >
+      <if test="subjectName != null">
         subject_name,
       </if>
-      <if test="className != null" >
+      <if test="className != null">
         class_name,
       </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="hasCheck != null">
+        has_check,
       </if>
-      <if test="account != null" >
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="account != null">
         #{account,jdbcType=INTEGER},
       </if>
-      <if test="password != null" >
+      <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="name != null" >
+      <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="sex != null" >
+      <if test="sex != null">
         #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="ethnic != null" >
+      <if test="ethnic != null">
         #{ethnic,jdbcType=VARCHAR},
       </if>
-      <if test="urpclassNum != null" >
+      <if test="urpclassNum != null">
         #{urpclassNum,jdbcType=INTEGER},
       </if>
-      <if test="isCorrect != null" >
-        #{isCorrect,jdbcType=BIT},
+      <if test="isCorrect != null">
+        #{isCorrect,jdbcType=BOOLEAN},
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="academyName != null" >
+      <if test="academyName != null">
         #{academyName,jdbcType=VARCHAR},
       </if>
-      <if test="subjectName != null" >
+      <if test="subjectName != null">
         #{subjectName,jdbcType=VARCHAR},
       </if>
-      <if test="className != null" >
+      <if test="className != null">
         #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="hasCheck != null">
+        #{hasCheck,jdbcType=BOOLEAN},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hackerda.platform.infrastructure.database.model.example.StudentUserExample" resultType="java.lang.Long">
     select count(*) from student
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update student
-    <set >
-      <if test="record.id != null" >
+    <set>
+      <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.account != null" >
+      <if test="record.account != null">
         account = #{record.account,jdbcType=INTEGER},
       </if>
-      <if test="record.password != null" >
-        password = #{record.password,jdbcType=VARCHAR},
+      <if test="record.password != null">
+        `password` = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.name != null" >
-        name = #{record.name,jdbcType=VARCHAR},
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.sex != null" >
+      <if test="record.sex != null">
         sex = #{record.sex,jdbcType=VARCHAR},
       </if>
-      <if test="record.ethnic != null" >
+      <if test="record.ethnic != null">
         ethnic = #{record.ethnic,jdbcType=VARCHAR},
       </if>
-      <if test="record.urpclassNum != null" >
+      <if test="record.urpclassNum != null">
         urpclass_num = #{record.urpclassNum,jdbcType=INTEGER},
       </if>
-      <if test="record.isCorrect != null" >
-        is_correct = #{record.isCorrect,jdbcType=BIT},
+      <if test="record.isCorrect != null">
+        is_correct = #{record.isCorrect,jdbcType=BOOLEAN},
       </if>
-      <if test="record.gmtCreate != null" >
+      <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.gmtModified != null" >
+      <if test="record.gmtModified != null">
         gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.academyName != null" >
+      <if test="record.academyName != null">
         academy_name = #{record.academyName,jdbcType=VARCHAR},
       </if>
-      <if test="record.subjectName != null" >
+      <if test="record.subjectName != null">
         subject_name = #{record.subjectName,jdbcType=VARCHAR},
       </if>
-      <if test="record.className != null" >
+      <if test="record.className != null">
         class_name = #{record.className,jdbcType=VARCHAR},
       </if>
+      <if test="record.hasCheck != null">
+        has_check = #{record.hasCheck,jdbcType=BOOLEAN},
+      </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update student
     set id = #{record.id,jdbcType=INTEGER},
       account = #{record.account,jdbcType=INTEGER},
-      password = #{record.password,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
+      `password` = #{record.password,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
       sex = #{record.sex,jdbcType=VARCHAR},
       ethnic = #{record.ethnic,jdbcType=VARCHAR},
       urpclass_num = #{record.urpclassNum,jdbcType=INTEGER},
-      is_correct = #{record.isCorrect,jdbcType=BIT},
+      is_correct = #{record.isCorrect,jdbcType=BOOLEAN},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       academy_name = #{record.academyName,jdbcType=VARCHAR},
       subject_name = #{record.subjectName,jdbcType=VARCHAR},
-      class_name = #{record.className,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
+      class_name = #{record.className,jdbcType=VARCHAR},
+      has_check = #{record.hasCheck,jdbcType=BOOLEAN}
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser">
     update student
-    <set >
-      <if test="account != null" >
+    <set>
+      <if test="account != null">
         account = #{account,jdbcType=INTEGER},
       </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="sex != null" >
+      <if test="sex != null">
         sex = #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="ethnic != null" >
+      <if test="ethnic != null">
         ethnic = #{ethnic,jdbcType=VARCHAR},
       </if>
-      <if test="urpclassNum != null" >
+      <if test="urpclassNum != null">
         urpclass_num = #{urpclassNum,jdbcType=INTEGER},
       </if>
-      <if test="isCorrect != null" >
-        is_correct = #{isCorrect,jdbcType=BIT},
+      <if test="isCorrect != null">
+        is_correct = #{isCorrect,jdbcType=BOOLEAN},
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="academyName != null" >
+      <if test="academyName != null">
         academy_name = #{academyName,jdbcType=VARCHAR},
       </if>
-      <if test="subjectName != null" >
+      <if test="subjectName != null">
         subject_name = #{subjectName,jdbcType=VARCHAR},
       </if>
-      <if test="className != null" >
+      <if test="className != null">
         class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="hasCheck != null">
+        has_check = #{hasCheck,jdbcType=BOOLEAN},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser" >
+  <update id="updateByPrimaryKey" parameterType="com.hackerda.platform.infrastructure.database.model.StudentUser">
     update student
     set account = #{account,jdbcType=INTEGER},
-      password = #{password,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=VARCHAR},
       ethnic = #{ethnic,jdbcType=VARCHAR},
       urpclass_num = #{urpclassNum,jdbcType=INTEGER},
-      is_correct = #{isCorrect,jdbcType=BIT},
+      is_correct = #{isCorrect,jdbcType=BOOLEAN},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       academy_name = #{academyName,jdbcType=VARCHAR},
       subject_name = #{subjectName,jdbcType=VARCHAR},
-      class_name = #{className,jdbcType=VARCHAR}
+      class_name = #{className,jdbcType=VARCHAR},
+      has_check = #{hasCheck,jdbcType=BOOLEAN}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

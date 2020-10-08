@@ -45,4 +45,18 @@ public class WechatActionRecordRepositoryImpl implements WechatActionRecordRepos
                 new StudentAccount(x.getAccount()), x.getGmtCreate(), x.getGmtModify()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ActionRecord> find(WechatUser wechatUser, Action action) {
+        WechatActionRecordExample example = new WechatActionRecordExample();
+        example.createCriteria()
+                .andActionEqualTo(action.getCode())
+                .andAppidEqualTo(wechatUser.getAppId())
+                .andOpenidEqualTo(wechatUser.getOpenId());
+
+        return wechatActionRecordMapper.selectByExample(example).stream()
+                .map(x-> new ActionRecord(new WechatUser(x.getAppid(), x.getOpenid()), Action.getByCode(x.getAction()),
+                        new StudentAccount(x.getAccount()), x.getGmtCreate(), x.getGmtModify()))
+                .collect(Collectors.toList());
+    }
 }

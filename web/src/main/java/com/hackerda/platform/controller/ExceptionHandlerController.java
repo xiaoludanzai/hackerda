@@ -33,6 +33,7 @@ public class ExceptionHandlerController {
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(UnauthenticatedException.class)
 	public WebResponse handle403(UnauthenticatedException e) {
+		log.error("", e);
 		return WebResponse.failWithForbidden("身份认证失败");
 	}
 

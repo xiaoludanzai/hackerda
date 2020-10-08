@@ -22,6 +22,8 @@ public enum Action {
 
     AccountHasBind(5),
 
+    CreateStudent(6),
+
     ;
 
 

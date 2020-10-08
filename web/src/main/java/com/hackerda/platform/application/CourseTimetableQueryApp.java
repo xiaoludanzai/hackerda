@@ -20,10 +20,13 @@ public class CourseTimetableQueryApp {
 
         StudentUserBO studentUserBO = studentRepository.find(new StudentAccount(account));
 
-        CourseTimeTableOverview timeTableOverview;
-        timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+        CourseTimeTableOverview timeTableOverview = null;
 
-        if(timeTableOverview.isEmpty() || !timeTableOverview.isCurrentTerm()){
+        if(studentUserBO.isMsgHasCheck()) {
+            timeTableOverview = courseTimetableRepository.getByAccount(studentUserBO, termYear, termOrder);
+        }
+
+        if(timeTableOverview == null ||timeTableOverview.isEmpty() || !timeTableOverview.isCurrentTerm()){
             timeTableOverview = courseTimetableRepository.getByClassId(studentUserBO.getUrpClassNum().toString(), termYear,
                     termOrder);
         }

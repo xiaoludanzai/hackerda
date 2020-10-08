@@ -1,12 +1,12 @@
 package com.hackerda.platform.infrastructure.database.dao;
 
 import com.hackerda.platform.infrastructure.database.mapper.ext.StudentUserExtMapper;
-import com.hackerda.platform.infrastructure.database.model.*;
+import com.hackerda.platform.infrastructure.database.model.Role;
+import com.hackerda.platform.infrastructure.database.model.StudentUser;
 import com.hackerda.platform.infrastructure.database.model.example.StudentUserExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -57,16 +57,23 @@ public class StudentUserDao {
         return studentUserExtMapper.selectRoleByAccount(Integer.parseInt(account));
     }
 
-    public List<WechatStudentUserDO> getWechatUserByAccount(Integer account){
-        return studentUserExtMapper.getWechatUserByAccount(account);
-    }
-
-    public List<WechatStudentUserDO> getWechatUserByAccountList(Collection<Integer> account){
-        return studentUserExtMapper.getWechatUserByAccountList(account);
-    }
 
     public void saveOrUpdate(StudentUser studentUser){
-        studentUserExtMapper.saveOrUpdate(studentUser);
+        if(isExist(studentUser.getAccount())) {
+            StudentUserExample example = new StudentUserExample();
+            example.createCriteria().andAccountEqualTo(studentUser.getAccount());
+            studentUserExtMapper.updateByExampleSelective(studentUser, example);
+        } else {
+            studentUserExtMapper.insertSelective(studentUser);
+        }
+
+
+    }
+
+    private boolean isExist(int account) {
+        StudentUserExample example = new StudentUserExample();
+        example.createCriteria().andAccountEqualTo(account);
+        return studentUserExtMapper.countByExample(example) == 1L ;
     }
 
 }

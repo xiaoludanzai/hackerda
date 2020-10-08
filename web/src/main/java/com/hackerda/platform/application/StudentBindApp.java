@@ -104,10 +104,6 @@ public class StudentBindApp {
                 wechatStudentUserBO.isUsingDefaultPassword();
     }
 
-
-
-
-
     public WechatStudentUserBO bindCommonWechatUser(@Nonnull StudentAccount account,
                                                     @Nonnull PhoneNumber phoneNumber,
                                                     WechatUser wechatUser) {

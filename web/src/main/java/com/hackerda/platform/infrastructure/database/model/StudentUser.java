@@ -1,12 +1,17 @@
 package com.hackerda.platform.infrastructure.database.model;
 
+import java.io.Serializable;
+import java.util.Date;
 import com.hackerda.platform.utils.DESUtil;
+
 import lombok.Data;
 
-import java.util.Date;
-
+/**
+ * student
+ * @author 
+ */
 @Data
-public class StudentUser {
+public class StudentUser implements Serializable {
     private Integer id;
 
     private Integer account;
@@ -33,19 +38,10 @@ public class StudentUser {
 
     private String className;
 
+    private Boolean hasCheck;
+
     private int count;
 
 
-    public String getEnablePassword(String key) {
-        return DESUtil.decrypt(this.password, key);
-    }
-
-
-    /**
-     * 获取年级
-     * @return 2017级返回2017
-     */
-    public String getGrade(){
-        return account.toString().substring(0, 4);
-    }
+    private static final long serialVersionUID = 1L;
 }

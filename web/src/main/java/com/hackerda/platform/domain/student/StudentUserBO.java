@@ -28,6 +28,8 @@ public class StudentUserBO {
 
     private String className;
 
+    private boolean msgHasCheck;
+
     private String key;
 
     private boolean saveOrUpdate;
@@ -57,8 +59,21 @@ public class StudentUserBO {
     }
 
     public boolean isUsingDefaultPassword() {
-        return "1".equals(getEnablePassword());
+        if(msgHasCheck) {
+            return "1".equals(getEnablePassword());
+        } else {
+            return false;
+        }
     }
+
+    public boolean canLogin() {
+        if(!msgHasCheck) {
+            return true;
+        } else {
+            return isCorrect;
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {

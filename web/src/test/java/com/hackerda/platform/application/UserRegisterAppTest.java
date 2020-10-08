@@ -1,5 +1,6 @@
 package com.hackerda.platform.application;
 
+import com.hackerda.platform.controller.request.CreateStudentRequest;
 import com.hackerda.platform.domain.student.StudentAccount;
 import com.hackerda.platform.domain.user.*;
 import com.hackerda.platform.domain.wechat.WechatUser;
@@ -7,6 +8,7 @@ import com.hackerda.platform.exception.BusinessException;
 import com.hackerda.platform.infrastructure.database.mapper.UserLogoutRecordMapper;
 import com.hackerda.platform.infrastructure.database.mapper.ext.TruncateMapper;
 import com.hackerda.platform.infrastructure.database.model.UserLogoutRecordExample;
+import com.hackerda.platform.service.CreateStudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +36,49 @@ public class UserRegisterAppTest {
     private UserRegisterRecordRepository userRegisterRecordRepository;
     @Autowired
     private UserLogoutRecordMapper userLogoutRecordMapper;
+    @Autowired
+    private CreateStudentService createStudentService;
 
     @Test
     public void registerNormal() {
 
         before();
         StudentAccount studentAccount = new StudentAccount("2014025838");
+        PhoneNumber phoneNumber = new PhoneNumber("17301086276");
+        WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
+
+        AppStudentUserBO appStudentUserBO = new AppStudentUserBO(studentAccount, "test2", "1", "test_avatarPath",
+                phoneNumber, Gender.Woman,
+                "test_introduction");
+
+        userRegisterApp.register(appStudentUserBO, wechatUser);
+
+        AppUserBO account = userRegisterApp.getUserByStudentAccount(studentAccount);
+
+        assertThat(account).isEqualTo(appStudentUserBO);
+
+        List<UserRegisterRecordBO> recordBOList = userRegisterRecordRepository.findByUserName(appStudentUserBO.getUserName());
+
+        assertThat(recordBOList).isNotEmpty();
+
+    }
+
+    @Test
+    public void registerCreateStudent() {
+
+        before();
+        CreateStudentRequest request = new CreateStudentRequest();
+        request.setAccount("2020025838");
+        request.setName("测试");
+        request.setClazzNum("2020150003");
+        request.setAppId("test_appId");
+        request.setOpenid("test_openid");
+        request.setGender("男");
+
+        createStudentService.createStudentUser(request);
+
+
+        StudentAccount studentAccount = new StudentAccount("2020025838");
         PhoneNumber phoneNumber = new PhoneNumber("17301086276");
         WechatUser wechatUser = new WechatUser("test_appId", "test_openid");
 

@@ -43,6 +43,7 @@ public class StudentUserAdapter {
         user.setSex(studentUser.getSex());
         user.setName(studentUser.getName());
         user.setKey(key);
+        user.setMsgHasCheck(studentUser.getHasCheck());
 
         return user;
 
@@ -61,6 +62,7 @@ public class StudentUserAdapter {
         user.setSubjectName(wechatStudentUserBO.getSubjectName());
         user.setSex(wechatStudentUserBO.getSex());
         user.setName(wechatStudentUserBO.getName());
+        user.setHasCheck(wechatStudentUserBO.isMsgHasCheck());
 
         return user;
     }
