@@ -25,7 +25,7 @@ public class RecommendPostRedisRecorderScript {
 
     @Test
     public void add() {
-        recommendPostRedisRecorder.add(84, new Date());
+        recommendPostRedisRecorder.add(105, new Date());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class RecommendPostRedisRecorderScript {
 
     @Test
     public void remove() {
-        recommendPostRedisRecorder.remove(13, new Date());
+        recommendPostRedisRecorder.remove(84, new Date());
         
     }
 

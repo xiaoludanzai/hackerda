@@ -1,6 +1,10 @@
 package com.hackerda.platform.infrastructure.community;
 
 import com.hackerda.platform.domain.community.IdentityCategory;
+import com.hackerda.platform.domain.community.RecordStatus;
+import com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper;
+import com.hackerda.platform.infrastructure.database.model.Post;
+import com.hackerda.platform.infrastructure.database.model.PostExample;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 
 
 @Slf4j
@@ -19,6 +24,8 @@ public class IdentityCategoryRedisFilterScript {
 
     @Autowired
     private IdentityCategoryRedisFilter identityCategoryRedisFilter;
+    @Autowired
+    private PostExtMapper postExtMapper;
 
 
     @Test
@@ -27,6 +34,23 @@ public class IdentityCategoryRedisFilterScript {
         identityCategoryRedisFilter.add(IdentityCategory.Anonymous);
         identityCategoryRedisFilter.add(IdentityCategory.College);
         identityCategoryRedisFilter.add(IdentityCategory.Grade);
+
+
+        PostExample example = new PostExample();
+        example.createCriteria()
+                .andRecordStatusEqualTo(RecordStatus.Release.getCode())
+                .andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
+
+
+        List<Post> posts = postExtMapper.selectByExample(example);
+
+        for (Post post : posts) {
+            post.setRecordStatus(RecordStatus.Hide.getCode());
+            postExtMapper.updateByPrimaryKeySelective(post);
+
+        }
+
+
         System.out.println(identityCategoryRedisFilter.userChooseFilter(IdentityCategory.Anonymous));
     }
 
@@ -37,6 +61,21 @@ public class IdentityCategoryRedisFilterScript {
         identityCategoryRedisFilter.remove(IdentityCategory.College);
         identityCategoryRedisFilter.remove(IdentityCategory.Grade);
         System.out.println(identityCategoryRedisFilter.userChooseFilter(IdentityCategory.Anonymous));
+
+
+        PostExample example = new PostExample();
+        example.createCriteria()
+                .andRecordStatusEqualTo(RecordStatus.Hide.getCode())
+                .andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
+
+
+        List<Post> posts = postExtMapper.selectByExample(example);
+
+        for (Post post : posts) {
+            post.setRecordStatus(RecordStatus.Release.getCode());
+            postExtMapper.updateByPrimaryKeySelective(post);
+
+        }
     }
 
 }

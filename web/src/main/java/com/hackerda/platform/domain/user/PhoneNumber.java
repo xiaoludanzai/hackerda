@@ -9,7 +9,7 @@ public class PhoneNumber {
     /**
      * 手机号格式校验正则
      */
-    public static final String PHONE_REGEX = "^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$";
+    public static final String PHONE_REGEX = "^((13[0-9])|(14[0|5|6|7|9])|(15[0-3])|(15[5-9])|(16[6|7])|(17[2|3|5|6|7|8])|(18[0-9])|(19[1|8|9]))\\d{8}$";
 
     /**
      * 手机号脱敏筛选正则

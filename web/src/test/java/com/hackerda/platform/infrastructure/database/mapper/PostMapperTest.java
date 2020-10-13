@@ -31,7 +31,9 @@ public class PostMapperTest {
     public void hideAll() {
 
         PostExample example = new PostExample();
-        example.createCriteria().andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
+        example.createCriteria()
+                .andRecordStatusEqualTo(RecordStatus.Release.getCode())
+                .andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
 
 
         List<Post> posts = postExtMapper.selectByExample(example);
