@@ -2,6 +2,9 @@ package com.hackerda.platform.application;
 
 import com.hackerda.platform.application.event.EventPublisher;
 import com.hackerda.platform.domain.community.*;
+import com.hackerda.platform.domain.message.MessageBO;
+import com.hackerda.platform.domain.message.MessageRepository;
+import com.hackerda.platform.domain.message.MessageTriggerSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,8 @@ public class CommunityCommentApp {
     private LikeCountService likeCountService;
     @Autowired
     private EventPublisher eventPublisher;
+    @Autowired
+    private MessageRepository messageRepository;
 
 
     public void addComment(CommentBO commentBO) {
@@ -63,8 +68,17 @@ public class CommunityCommentApp {
         if(commentBO.canDeleteByUser(userName)) {
             commentBO.delete();
             commentRepository.update(commentBO);
+
+            List<MessageBO> messageList = messageRepository.find(MessageTriggerSource.Comment, commentBO.getId());
+            messageList.forEach(MessageBO::delete);
+
+            for (MessageBO message : messageList) {
+                messageRepository.update(message);
+            }
+
             return true;
         }
+
         return false;
     }
 

@@ -9,7 +9,9 @@ public interface MessageRepository {
 
     void update(MessageBO messageBO);
 
-    List<MessageBO> findByUserName(String userName, Integer startId, int count);
+    List<MessageBO> findReleaseByUserName(String userName, Integer startId, int count);
+
+    List<MessageBO> find(MessageTriggerSource triggerSource, long messageSourceId);
 
     /**
      * 将接受者的所有消息记录更新为已读

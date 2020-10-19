@@ -28,6 +28,8 @@ public class Message implements Serializable {
 
     private Byte hasRead;
 
+    private Integer recordStatus;
+
     private Date gmtCreate;
 
     private Date gmtModify;

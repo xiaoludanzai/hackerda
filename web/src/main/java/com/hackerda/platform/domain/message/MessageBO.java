@@ -1,6 +1,7 @@
 package com.hackerda.platform.domain.message;
 
 import com.hackerda.platform.domain.community.IdentityCategory;
+import com.hackerda.platform.domain.community.RecordStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,8 @@ public class MessageBO {
     @Setter
     private boolean hasRead;
 
+    private RecordStatus recordStatus;
+
     private final Date createTime;
 
 
@@ -42,6 +45,10 @@ public class MessageBO {
      */
     public boolean isTriggerBySelf() {
        return senderUserName.equals(receiverUserName);
+    }
+
+    public void delete() {
+        this.recordStatus = RecordStatus.Delete;
     }
 
 }

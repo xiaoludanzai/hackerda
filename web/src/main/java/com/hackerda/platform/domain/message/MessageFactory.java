@@ -26,7 +26,7 @@ public class MessageFactory {
 
     public List<AppNoticeMessageBO> createAppNoticeByReceiver(String userName, Integer startId, int count) {
 
-        List<MessageBO> messageList = messageRepository.findByUserName(userName, startId, count);
+        List<MessageBO> messageList = messageRepository.findReleaseByUserName(userName, startId, count);
 
         Set<String> receiver = messageList.stream().map(MessageBO::getReceiverUserName).collect(Collectors.toSet());
         Set<String> sender = messageList.stream().map(MessageBO::getSenderUserName).collect(Collectors.toSet());

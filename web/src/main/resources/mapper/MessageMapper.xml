@@ -11,6 +11,7 @@
     <result column="message_source_id" jdbcType="BIGINT" property="messageSourceId" />
     <result column="message_type_code" jdbcType="INTEGER" property="messageTypeCode" />
     <result column="has_read" jdbcType="TINYINT" property="hasRead" />
+    <result column="record_status" jdbcType="INTEGER" property="recordStatus" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
   </resultMap>
@@ -74,8 +75,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, sender_user_name, sender_identity_category_code, receiver_user_name, receiver_identity_category_code, 
-    message_trigger_source_code, message_source_id, message_type_code, has_read, gmt_create, 
-    gmt_modify
+    message_trigger_source_code, message_source_id, message_type_code, has_read, record_status, 
+    gmt_create, gmt_modify
   </sql>
   <select id="selectByExample" parameterType="com.hackerda.platform.infrastructure.database.model.MessageExample" resultMap="BaseResultMap">
     select
@@ -111,13 +112,13 @@
     insert into message (sender_user_name, sender_identity_category_code, 
       receiver_user_name, receiver_identity_category_code, 
       message_trigger_source_code, message_source_id, 
-      message_type_code, has_read, gmt_create, 
-      gmt_modify)
+      message_type_code, has_read, record_status, 
+      gmt_create, gmt_modify)
     values (#{senderUserName,jdbcType=VARCHAR}, #{senderIdentityCategoryCode,jdbcType=INTEGER}, 
       #{receiverUserName,jdbcType=VARCHAR}, #{receiverIdentityCategoryCode,jdbcType=INTEGER}, 
       #{messageTriggerSourceCode,jdbcType=INTEGER}, #{messageSourceId,jdbcType=BIGINT}, 
-      #{messageTypeCode,jdbcType=INTEGER}, #{hasRead,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModify,jdbcType=TIMESTAMP})
+      #{messageTypeCode,jdbcType=INTEGER}, #{hasRead,jdbcType=TINYINT}, #{recordStatus,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hackerda.platform.infrastructure.database.model.Message" useGeneratedKeys="true">
     insert into message
@@ -145,6 +146,9 @@
       </if>
       <if test="hasRead != null">
         has_read,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
       </if>
       <if test="gmtCreate != null">
         gmt_create,
@@ -177,6 +181,9 @@
       </if>
       <if test="hasRead != null">
         #{hasRead,jdbcType=TINYINT},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=INTEGER},
       </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -222,6 +229,9 @@
       <if test="record.hasRead != null">
         has_read = #{record.hasRead,jdbcType=TINYINT},
       </if>
+      <if test="record.recordStatus != null">
+        record_status = #{record.recordStatus,jdbcType=INTEGER},
+      </if>
       <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -244,6 +254,7 @@
       message_source_id = #{record.messageSourceId,jdbcType=BIGINT},
       message_type_code = #{record.messageTypeCode,jdbcType=INTEGER},
       has_read = #{record.hasRead,jdbcType=TINYINT},
+      record_status = #{record.recordStatus,jdbcType=INTEGER},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{record.gmtModify,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -277,6 +288,9 @@
       <if test="hasRead != null">
         has_read = #{hasRead,jdbcType=TINYINT},
       </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=INTEGER},
+      </if>
       <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
@@ -296,6 +310,7 @@
       message_source_id = #{messageSourceId,jdbcType=BIGINT},
       message_type_code = #{messageTypeCode,jdbcType=INTEGER},
       has_read = #{hasRead,jdbcType=TINYINT},
+      record_status = #{recordStatus,jdbcType=INTEGER},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

@@ -5,6 +5,7 @@ import com.hackerda.platform.application.event.CommentEvent;
 import com.hackerda.platform.domain.community.CommentBO;
 import com.hackerda.platform.domain.community.IdentityCategory;
 import com.hackerda.platform.domain.community.LikeBO;
+import com.hackerda.platform.domain.community.RecordStatus;
 import com.hackerda.platform.domain.message.MessageBO;
 import com.hackerda.platform.domain.message.MessageRepository;
 import com.hackerda.platform.domain.message.MessageTriggerSource;
@@ -33,6 +34,7 @@ public class MessageListener {
                 .senderUserName(commentBO.getUserName())
                 .senderIdentityCategory(category)
                 .hasRead(false)
+                .recordStatus(RecordStatus.Release)
                 .build();
 
         if(!messageBO.isTriggerBySelf()) {
@@ -57,6 +59,7 @@ public class MessageListener {
                 .senderUserName(likeBO.getUserName())
                 .senderIdentityCategory(category)
                 .hasRead(false)
+                .recordStatus(RecordStatus.Release)
                 .build();
 
         if(!messageBO.isTriggerBySelf()) {

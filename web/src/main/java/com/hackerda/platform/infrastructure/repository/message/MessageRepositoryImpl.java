@@ -1,6 +1,8 @@
 package com.hackerda.platform.infrastructure.repository.message;
 
+import com.github.pagehelper.PageHelper;
 import com.hackerda.platform.domain.community.IdentityCategory;
+import com.hackerda.platform.domain.community.RecordStatus;
 import com.hackerda.platform.domain.message.MessageBO;
 import com.hackerda.platform.domain.message.MessageRepository;
 import com.hackerda.platform.domain.message.MessageTriggerSource;
@@ -8,6 +10,7 @@ import com.hackerda.platform.domain.message.MessageType;
 import com.hackerda.platform.infrastructure.database.mapper.ext.MessageExtMapper;
 import com.hackerda.platform.infrastructure.database.model.Message;
 import com.hackerda.platform.infrastructure.database.model.MessageExample;
+import com.hackerda.platform.infrastructure.database.model.PostExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -46,11 +49,29 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<MessageBO> findByUserName(String userName, Integer startId, int count) {
+    public List<MessageBO> findReleaseByUserName(String userName, Integer startId, int count) {
         MessageExample example = new MessageExample();
-        example.createCriteria().andReceiverUserNameEqualTo(userName);
+        example.setOrderByClause("id desc");
+        MessageExample.Criteria criteria = example.createCriteria();
+        if(startId != null) {
+            criteria.andIdLessThan(startId.longValue());
+        }
 
-        return messageExtMapper.selectByReceiverUser(userName, startId, count).stream().map(this::toBO).collect(Collectors.toList());
+        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        PageHelper.startPage(0, count);
+
+        return messageExtMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MessageBO> find(MessageTriggerSource triggerSource, long messageSourceId) {
+        MessageExample example = new MessageExample();
+        example.createCriteria()
+                .andMessageSourceIdEqualTo(messageSourceId)
+                .andMessageTriggerSourceCodeEqualTo(triggerSource.getCode());
+
+
+        return messageExtMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
     }
 
     @Override
@@ -65,7 +86,9 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public long countHasNotRead(String receiveUserName) {
         MessageExample example = new MessageExample();
-        example.createCriteria().andReceiverUserNameEqualTo(receiveUserName).andHasReadEqualTo((byte) 0);
+        example.createCriteria()
+                .andReceiverUserNameEqualTo(receiveUserName)
+                .andHasReadEqualTo((byte) 0);
         return messageExtMapper.countByExample(example);
     }
 
@@ -85,6 +108,8 @@ public class MessageRepositoryImpl implements MessageRepository {
         record.setReceiverUserName(messageBO.getReceiverUserName());
         record.setReceiverIdentityCategoryCode(messageBO.getReceiverIdentityCategory().getCode());
 
+        record.setRecordStatus(messageBO.getRecordStatus().getCode());
+
         return record;
 
     }
@@ -102,6 +127,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 .receiverUserName(message.getReceiverUserName())
                 .receiverIdentityCategory(IdentityCategory.getByCode(message.getReceiverIdentityCategoryCode()))
                 .createTime(message.getGmtCreate())
+                .recordStatus(RecordStatus.getByCode(message.getRecordStatus()))
                 .build();
     }
 }
