@@ -50,7 +50,6 @@ public class IdentityCategoryRedisFilterScript {
 
         }
 
-
         System.out.println(identityCategoryRedisFilter.userChooseFilter(IdentityCategory.Anonymous));
     }
 

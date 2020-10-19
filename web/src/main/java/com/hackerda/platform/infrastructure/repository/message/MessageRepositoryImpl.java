@@ -57,7 +57,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             criteria.andIdLessThan(startId.longValue());
         }
 
-        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode())
+        .andReceiverUserNameEqualTo(userName);
         PageHelper.startPage(0, count);
 
         return messageExtMapper.selectByExample(example).stream().map(this::toBO).collect(Collectors.toList());
