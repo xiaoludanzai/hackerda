@@ -97,7 +97,7 @@ public class CommunityPostApp {
     public List<PostDetailBO> getRecommendPost() {
         List<Long> idList = recommendPostRecorder.getPostIdList(new Date());
         return posterRepository.findByIdList(idList)
-                .stream().filter(PostBO::isDelete)
+                .stream().filter(PostBO::isRelease)
                 .sorted(Comparator.comparing(PostBO::getId).reversed()).collect(Collectors.toList());
     }
 
