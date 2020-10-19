@@ -22,17 +22,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public void save(CommentBO commentBO) {
-        Comment comment = new Comment();
-        comment.setContent(commentBO.getContent());
-        comment.setUserName(commentBO.getUserName());
-        comment.setIdentityCode(commentBO.getIdentityCategory().getCode());
-        comment.setPostTime(commentBO.getPostTime());
-        comment.setPostUserName(commentBO.getPostUserName());
-        comment.setPostId(commentBO.getPostId());
-        comment.setRecordStatus(commentBO.getStatus().getCode());
-        comment.setRootCommentId(commentBO.getRootCommentId());
-        comment.setReplyCommentId(commentBO.getReplyCommentId());
-        comment.setReplyUserName(commentBO.getReplyUserName());
+        Comment comment = getCommentDO(commentBO);
 
         commentMapper.insertSelective(comment);
 
@@ -75,7 +65,25 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public void update(CommentBO commentBO) {
+        Comment comment = getCommentDO(commentBO);
+        comment.setId(commentBO.getId());
 
+        commentMapper.updateByPrimaryKeySelective(comment);
+    }
+
+    private Comment getCommentDO(CommentBO commentBO) {
+        Comment comment = new Comment();
+        comment.setContent(commentBO.getContent());
+        comment.setUserName(commentBO.getUserName());
+        comment.setIdentityCode(commentBO.getIdentityCategory().getCode());
+        comment.setPostTime(commentBO.getPostTime());
+        comment.setPostUserName(commentBO.getPostUserName());
+        comment.setPostId(commentBO.getPostId());
+        comment.setRecordStatus(commentBO.getStatus().getCode());
+        comment.setRootCommentId(commentBO.getRootCommentId());
+        comment.setReplyCommentId(commentBO.getReplyCommentId());
+        comment.setReplyUserName(commentBO.getReplyUserName());
+        return comment;
     }
 
     @Override

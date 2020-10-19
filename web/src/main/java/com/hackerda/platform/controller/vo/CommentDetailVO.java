@@ -23,14 +23,19 @@ public class CommentDetailVO {
 
     public CommentDetailVO(List<CommentVO> commentDetailList) {
 
-        Map<Long, List<CommentVO>> collect = commentDetailList.stream().collect(Collectors.groupingBy(CommentVO::getRootCommentId,
+        Map<Long, List<CommentVO>> collect = commentDetailList.stream()
+                .collect(Collectors.groupingBy(CommentVO::getRootCommentId,
                 Collectors.mapping(x -> x, Collectors.toList())));
 
         List<Overview> overviewList = collect.values().stream().map(value -> {
             value.sort(Comparator.comparing(CommentVO::getPostTime));
 
             Overview overview = new Overview();
-            overview.setRoot(value.get(0));
+
+            if(value.get(0).isRoot()) {
+                overview.setRoot(value.get(0));
+            }
+
             if (value.size() > 1) {
                 overview.setReplyList(value.subList(1, value.size()));
             } else {
@@ -39,6 +44,7 @@ public class CommentDetailVO {
 
             return overview;
         })
+                .filter(x -> x.getRoot() != null)
                 .sorted(Comparator.comparing(x -> x.getRoot().getPostTime()))
                 .collect(Collectors.toList());
 

@@ -59,8 +59,12 @@ public class CommunityCommentService {
     public CreateCommentResultVO deleteCommentById(String userName, long commentId) {
         CommentBO commentBO = commentRepository.findByIdList(Collections.singletonList(commentId)).stream().findFirst().orElse(null);
         CreateCommentResultVO vo = new CreateCommentResultVO();
-
-        vo.setRelease(communityCommentApp.deleteComment(userName, commentBO));
+        if (commentBO != null) {
+            vo.setRelease(communityCommentApp.deleteComment(userName, commentBO));
+        } else {
+            vo.setRelease(false);
+            vo.setErrMsg("评论不存在");
+        }
 
         return vo;
     }
@@ -86,7 +90,7 @@ public class CommunityCommentService {
             commentVO.setLikeCount(x.getLikeCount());
             commentVO.setPostUser(userNamePosterMap.get(x.getUserName()));
             
-            if(!x.isRoot()) {
+            if(!x.isRoot() && idMap.get(x.getReplyCommentId()) != null) {
                 CommentDetailBO replyDetailBO = idMap.get(x.getReplyCommentId());
                 commentVO.setReplyUser(userNamePosterMap.get(replyDetailBO.getUserName()));
             }
