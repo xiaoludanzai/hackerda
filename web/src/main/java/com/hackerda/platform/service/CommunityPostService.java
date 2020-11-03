@@ -111,7 +111,8 @@ public class CommunityPostService {
                 .setPostTime(post.getPostTime())
                 .setIdentityCode(post.getIdentityCategory().getCode())
                 .setAnonymous(post.getIdentityCategory().isAnonymous())
-                .setHasDelete(post.isDelete());
+                .setHasDelete(post.isDelete())
+                .setLastReplyTime(post.getLastReplyTime());
 
         List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
             ImageInfoVO infoVO = new ImageInfoVO();
@@ -130,8 +131,10 @@ public class CommunityPostService {
         return getPostDetailVO(userName, appId, openid, detailBOList);
     }
 
-    public PostDetailVO getRecentlyPost(String userName, long timestamp, int count, String appId, String openid) {
-        List<PostDetailBO> detailBOList = posterRepository.findShowPostByLastReply(new Date(timestamp), count);
+    public PostDetailVO getRecentlyPost(String userName, Long timestamp, int count, String appId, String openid) {
+
+        List<PostDetailBO> detailBOList =
+                posterRepository.findShowPostByLastReply(timestamp == null ? null : new Date(timestamp), count);
         return getPostDetailVO(userName, appId, openid, detailBOList);
     }
 
@@ -197,7 +200,13 @@ public class CommunityPostService {
                 .min(Long::compareUnsigned)
                 .orElse(-1L);
 
+        long nextTimestamp = postVOList.stream()
+                .map(x-> x.getLastReplyTime().getTime())
+                .min(Long::compareUnsigned)
+                .orElse(-1L);
+
         postDetailVO.setNextMaxId(nextMaxId);
+        postDetailVO.setNextTimestamp(nextTimestamp);
 
         return postDetailVO;
     }

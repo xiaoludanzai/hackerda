@@ -231,6 +231,7 @@ public class PosterRepositoryImpl implements PosterRepository {
         postDetailBO.setLikeCount(post.getLikeCount());
         postDetailBO.setPostUser(poster);
         postDetailBO.setStatus(RecordStatus.getByCode(post.getRecordStatus()));
+        postDetailBO.setLastReplyTime(post.getLastReplyTime());
         return postDetailBO;
     }
 }
