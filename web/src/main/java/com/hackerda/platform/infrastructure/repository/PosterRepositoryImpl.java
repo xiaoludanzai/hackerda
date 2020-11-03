@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -153,6 +154,21 @@ public class PosterRepositoryImpl implements PosterRepository {
     }
 
     @Override
+    public List<PostDetailBO> findShowPostByLastReply(Date lastReplyTime, int count) {
+        PostExample example = new PostExample();
+        example.setOrderByClause("last_reply_time desc");
+        PostExample.Criteria criteria = example.createCriteria();
+        if(lastReplyTime != null) {
+            criteria.andLastReplyTimeLessThan(lastReplyTime);
+        }
+        criteria.andRecordStatusEqualTo(RecordStatus.Release.getCode());
+        PageHelper.startPage(0, count);
+        List<Post> postList = postExtMapper.selectByExample(example);
+
+        return postList.stream().map(this::getPostDetailBO).collect(Collectors.toList());
+    }
+
+    @Override
     public List<PostDetailBO> findPostByUser(String userName, Integer startId, int count) {
         PostExample example = new PostExample();
         example.setOrderByClause("id desc");
@@ -189,6 +205,14 @@ public class PosterRepositoryImpl implements PosterRepository {
         PageHelper.startPage(0, 1);
 
         return postExtMapper.selectByExample(example).stream().findFirst().get().getId();
+    }
+
+    @Override
+    public void updateLastReplyTime(long id, Date lastReplyTime) {
+        Post post = new Post();
+        post.setId(id);
+        post.setLastReplyTime(lastReplyTime);
+        postExtMapper.updateByPrimaryKeySelective(post);
     }
 
 

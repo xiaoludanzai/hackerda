@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,6 +127,11 @@ public class CommunityPostService {
 
     public PostDetailVO getPostDetail(String userName, Integer startId, int count, String appId, String openid) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
+        return getPostDetailVO(userName, appId, openid, detailBOList);
+    }
+
+    public PostDetailVO getRecentlyPost(String userName, long timestamp, int count, String appId, String openid) {
+        List<PostDetailBO> detailBOList = posterRepository.findShowPostByLastReply(new Date(timestamp), count);
         return getPostDetailVO(userName, appId, openid, detailBOList);
     }
 
